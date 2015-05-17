@@ -1,5 +1,0 @@
-<<<<<<< HEAD
-°®µÏÉú
-=======
-abcdef
->>>>>>> parent of c1617e2... Revert "2"
