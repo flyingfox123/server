@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Magic">
+
+    <title>满易网管理平台</title>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="static/components/compatible/html5shiv.js"></script>
+    <script type="text/javascript" src="static/components/compatible/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- JQuery -->
+    <script type="text/javascript" src="static/components/jquery-1.11/jquery-1.11.1.js"></script>
+
+    <!-- ztree -->
+    <link rel="stylesheet" href="static/components/ztree3.5/css/zTreeStyle/zTreeStyle.css" type="text/css">
+    <Script type="text/javascript" src="static/components/ztree3.5/js/jquery.ztree.all-3.5.min.js"></Script>
+
+    <!-- JQueryValidate -->
+    <script type="text/javascript" charset="utf-8"
+            src="static/components/jquery-validation/1.9.0/jquery.validate.js"></script>
+    <script type="text/javascript" charset="utf-8"
+            src="static/components/jquery-validation/jquery.validate.extend.js"></script>
+    <link type="text/css" rel="stylesheet" href="static/components/jquery-validation/1.9.0/validate.css"/>
+    <script type="text/javascript" src="static/components/jquery-validation/1.9.0/messages_bs_cn.js"></script>
+
+    <!-- Bootstrap -->
+    <link href="static/components/bootstrap-3.1.1/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="static/components/bootstrap-3.1.1/css/bootstrap-theme.min.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" type="text/css" href="static/components/bootstrap-3.1.1/css/bootstrap.css">
+    <script type="text/javascript" src="static/components/bootstrap-3.1.1/js/bootstrap.js"></script>
+    <script type="text/javascript" src="static/components/bootstrap-validator/js/bootstrapValidator.min.js"></script>
+
+    <!-- AngularJs -->
+    <script type="text/javascript" src="static/components/angular-1.2.20/angular.js"></script>
+    <script type="text/javascript" src="static/components/angular-1.2.20/angular-resource.js"></script>
+    <script type="text/javascript" src="static/components/angular-1.2.20/angular-ui-router.js"></script>
+    <script type="text/javascript" src="static/components/angular-1.2.20/ui-bootstrap-tpls.js"></script>
+
+    <!-- MyJs -->
+    <script type="text/javascript" src="static/router/app.js"></script>
+    <script type="text/javascript" src="static/controller/LeftCtrl.js"></script>
+    <script type="text/javascript" src="static/controller/LoginCtrl.js"></script>
+    <script type="text/javascript" src="static/controller/UserCtrl.js"></script>
+    <script type="text/javascript" src="static/controller/RoleCtrl.js"></script>
+    <script type="text/javascript" src="static/controller/ResourceCtrl.js"></script>
+
+    <!--<script>
+        var sysUser = [{name: 'Mary Contrary', id: '1', age: '18', email : 'Mary@163.com'},
+            {name: 'Jack Sprat', id: '2', age: '20', email : 'Jack@163.com'},
+            {name: 'Jill Hill', id: '3', age: '21', email : 'Jill@163.com'}];
+        function userListController($scope) {
+            $scope.sysUser = sysUser;
+        }
+    </script>-->
+
+    <!-- 登录框css -->
+    <style type="text/css">
+        .body {
+            overflow:hidden;
+        }
+        .loginBox {
+            width: 420px;
+            height: 230px;
+            padding: 0 20px;
+            border: 1px solid #fff;
+            color: #000;
+            margin-top: 40px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 0 15px #222;
+            background: -moz-linear-gradient(top, #fff, #efefef 8%);
+            background: -webkit-gradient(linear, 0 0, 0 100%, from(#f6f6f6),
+            to(#f4f4f4));
+            font: 11px/1.5em 'Microsoft YaHei';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -210px;
+            margin-top: -115px;
+        }
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <div ui-view></div>
+    <div class="header">
+        <div ui-view="header"></div>
+    </div>
+    <hr>
+    <div class="left" style="float:left; width: 10%;">
+        <div ui-view="left"></div>
+    </div>
+    <div class="right" style="float:right; margin-left: 20px; width: 85%; height:600px; overflow:auto;">
+        <div ui-view="right"></div>
+    </div>
+    <div style="clear:both"></div>
+    <hr>
+    <div class="footer">
+        <div ui-view="footer"></div>
+    </div>
+</div>
+</body>
+</html>

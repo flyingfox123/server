@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manyi.usercenter.permission.support.dao.PermissionDao">
+
+    <resultMap id="BaseResultMap" type="com.manyi.usercenter.permission.bean.Permission">
+        <id column="ID" property="id"/>
+        <result column="PID" property="pid"/>
+        <result column="NAME" property="name"/>
+        <result column="CODE" property="code"/>
+        <result column="DESCRIPTION" property="description"/>
+        <result column="LEVEL" property="level"/>
+        <result column="URI" property="uri"/>
+        <result column="ISLEAF" property="isLeaf"/>
+        <result column="CREATOR" property="creator"/>
+        <result column="CREATETIME" property="createTime"/>
+        <result column="MODIFIER" property="modifier"/>
+        <result column="MODIFYTIME" property="modifyTime"/>
+        <result column="state" property="state"/>
+    </resultMap>
+
+    <parameterMap id="BaseParameterMap" type="com.manyi.usercenter.permission.bean.Permission">
+        <parameter property="id"/>
+        <parameter property="pid"/>
+        <parameter property="name"/>
+        <parameter property="code"/>
+        <parameter property="description"/>
+        <parameter property="level"/>
+        <parameter property="uri"/>
+        <parameter property="isLeaf"/>
+        <parameter property="creator"/>
+        <parameter property="createTime"/>
+        <parameter property="modifier"/>
+        <parameter property="modifyTime"/>
+        <parameter property="state"/>
+    </parameterMap>
+
+    <!-- 基础字段 -->
+    <sql id="Base_Column_List">
+      ID, PID, NAME, CODE, DESCRIPTION, LEVEL, URI, ISLEAF, CREATOR, CREATETIME, MODIFIER, MODIFYTIME, state
+    </sql>
+
+    <!-- 查询所有权限 -->
+    <select id="findAllPermission" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from T_PERMISSION
+        ORDER BY id
+    </select>
+
+    <!-- 查询指定权限 -->
+    <select id="findPermission" parameterType="String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from t_permission
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="name != null">
+                AND name like "%"#{name}"%"
+            </if>
+        </where>
+    </select>
+
+    <!-- 添加权限 -->
+    <insert id="addPermission" parameterMap="BaseParameterMap">
+        INSERT INTO
+        t_permission
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="pid != null">pid,</if>
+            <if test="name != null">name,</if>
+            <if test="code != null">code,</if>
+            <if test="description != null">description,</if>
+            <if test="level != null">level,</if>
+            <if test="uri != null">uri,</if>
+            <if test="isLeaf != null">isLeaf,</if>
+            <if test="creator != null">creator,</if>
+            <if test="createTime != null">createTime,</if>
+            <if test="modifier != null">modifier,</if>
+            <if test="modifyTime != null">modifyTime,</if>
+            <if test="state != null">state,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="pid != null">#{pid},</if>
+            <if test="name != null">#{name},</if>
+            <if test="code != null">#{code},</if>
+            <if test="description != null">#{description},</if>
+            <if test="level != null">#{level},</if>
+            <if test="uri != null">#{uri},</if>
+            <if test="isLeaf != null">#{isLeaf},</if>
+            <if test="creator != null">#{creator},</if>
+            <if test="createTime != null">,#{createTime}</if>
+            <if test="modifier != null">#{modifier},</if>
+            <if test="modifyTime != null">#{modifyTime},</if>
+            <if test="state != null">#{state}</if>
+        </trim>
+    </insert>
+
+    <!-- 修改权限 -->
+    <update id="updatePermission" parameterType="com.manyi.usercenter.permission.bean.Permission">
+        UPDATE
+          t_permission
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="code != null">code = #{code},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="uri != null">uri = #{uri},</if>
+            <if test="level != null">level = #{level},</if>
+            <if test="isLeaf != null">isLeaf = #{isLeaf},</if>
+            modifyTime=now()
+        </set>
+
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除权限 -->
+    <update id="deletePermission" parameterType="Long">
+        DELETE FROM
+          t_permission
+        WHERE id = #{id}
+    </update>
+
+</mapper>

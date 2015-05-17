@@ -1,0 +1,56 @@
+<div class='panel panel-info'>
+    <div class="panel-heading">
+        <h4 class="panel-title">用户管理</h4>
+
+        <div class="pull-right">
+            <a href="javascript:void(0);" ng-click="addUser()"><span class="badge">创建用户</span></a>
+        </div>
+    </div>
+    <div id="message" class="alert alert-success" ng-show="jsonResult">
+        {{jsonResult.message}}
+    </div>
+    <div class='panel-body'>
+        <table class="table table-bordered table-striped table-condensed">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>登陆名称</th>
+                <th>类型</th>
+                <th>状态</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat='user in sysUser'>
+                <td>{{$index+1}}</td>
+                <td>{{user.loginName}}</td>
+                <td>{{user.type}}</td>
+                <td>{{user.state}}</td>
+                <td>{{user.createTime}}</td>
+                <td>
+                    <div class='btn-group'>
+                        <a class='btn btn-mini dropdown-toggle' data-toggle='dropdown'
+                           href='javascript:void(0);'> <i class='glyphicon glyphicon-list'></i> <span
+                                class='caret'></span>
+                        </a>
+                        <ul class='dropdown-menu pull-right'>
+                            <li>
+                                <a href="javascript:void(0);" ng-click="editUser($index)">
+                                    <i class='glyphicon glyphicon-wrench'></i> 修改
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" ng-click="deleteColumn(user.id)">
+                                    <i class='glyphicon glyphicon-trash'></i> 删除
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>

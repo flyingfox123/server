@@ -1,0 +1,72 @@
+<script type="text/javascript" src="static/javascript/checkEditUser.js"></script>
+<!--<script type="text/javascript" src="static/components/bootstrap-validator/checkForm.js"></script>-->
+<div id="modal">
+    <div class="modal-header">
+        <h3>添加用户</h3>
+    </div>
+    <div class="modal-body">
+        <form id="userForm" class="form-horizontal">
+            <div id="message" class="alert alert-success" ng-show="jsonResult.result == 'failure'">
+                {{jsonResult.message}}
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-field-1">登录名称：&nbsp;<em
+                        style="color: #c9302c">*</em></label>
+
+                <div class="col-sm-9">
+                    <input type="text" id="form-field-1" name="loginName" ng-model="user.loginName" placeholder="请输入登录名"
+                           class="input-sm"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-field-2">登录密码：&nbsp;<em
+                        style="color: #c9302c">*</em></label>
+
+                <div class="col-sm-9">
+                    <input type="text" id="form-field-2" name="password" ng-model="user.password" placeholder="请输入密码"
+                           class="input-sm"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-field-3">用户昵称：&nbsp;<em
+                        style="color: #c9302c">*</em></label>
+
+                <div class="col-sm-9">
+                    <input type="text" id="form-field-3" name="nickName" ng-model="user.nickName" placeholder="请输入昵称"
+                           class="input-sm"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-field-4">用户年龄：&nbsp;<em
+                        style="color: #c9302c">*</em></label>
+
+                <div class="col-sm-9">
+                    <input type="text" id="form-field-4" name="age" ng-model="user.age" placeholder="请输入年龄"
+                           class="input-sm">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-field-5">用户邮箱：&nbsp;<em
+                        style="color: #c9302c">*</em></label>
+
+                <div class="col-sm-9">
+                    <input type="text" id="form-field-5" name="email" ng-model="user.email" required placeholder="email"
+                           class="input-sm col-xs-7">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-field-6">用户电话：&nbsp;<em
+                        style="color: #c9302c">*</em></label>
+
+                <div class="col-sm-9">
+                    <input type="text" id="form-field-6" name="phone" ng-model="user.phone" required placeholder="phone"
+                           class="input-sm">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-disabled="userForm.$invalid" ng-click="ok()">OK</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</div>

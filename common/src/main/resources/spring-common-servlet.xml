@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<!-- 扫描web包，应用Spring的注解 -->
+	<context:component-scan base-package="com.manyi.common.*" />
+
+	<!-- 启动注解驱动的Spring MVC功能 -->
+	<mvc:annotation-driven />
+
+	<!-- 激活 @Required @Autowired,JSR 250's @PostConstruct, @PreDestroy and @Resource
+		等标注 -->
+	<context:annotation-config />
+
+	<!-- 自定义任务 -->
+	<!-- <bean id="syncIndexAction" init-method="init" class="com.xhrd.jcms.commons.task.SyncIndex" /> -->
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
+
+	<!-- spring mybatis映射 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.manyi.common.message.support.dao;" />
+	</bean>
+
+	<!--<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">-->
+		<!--<property name="dataSource" ref="dataSource" />-->
+		<!--<property name="mapperLocations" value="classpath*:mapper/*.xml" />-->
+	<!--</bean>-->
+
+	<aop:config>
+		<aop:pointcut id="interceptorPointCuts"
+					  expression="execution(* com.manyi.common.*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="interceptorPointCuts" />
+	</aop:config>
+
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg type="javax.sql.DataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 数据源配置 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://10.186.115.103:3306/manyidb?useUnicode=true&amp;characterEncoding=utf-8" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+		<!--是否在从池中取出连接前进行检验,如果检验失败则从池中去除连接并尝试取出另一个-->
+		<property name="testOnBorrow" value="true"/>
+		<!--是否在归还到池中前进行检验-->
+		<property name="testOnReturn" value="true"/>
+		<!--连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除-->
+		<property name="testWhileIdle" value="true"/>
+		<!--SQL查询,用来验证从连接池取出的连接,在将连接返回给调用者之前.如果指定,则查询必须是一个SQL SELECT并且必须返回至少一行记录-->
+		<property name="validationQuery" value="SELECT 1 FROM DUAL"/>
+		<!--maxIdle: 最大空闲连接-->
+		<property name="maxIdle" value="5"/>
+		<!--maxActive: 最大连接数量-->
+		<property name="maxActive" value="20"/>
+		<!--连接在池中保持空闲而不被空闲连接回收器线程(如果有)回收的最小时间值，单位毫秒-->
+		<property name="minEvictableIdleTimeMillis" value="180000"/>
+		<!--在空闲连接回收器线程运行期间休眠的时间值,以毫秒为单位，如果设置为非正数,则不运行空闲连接回收器线程-->
+		<property name="timeBetweenEvictionRunsMillis" value="360000"/>
+	</bean>
+
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxIdle" value="8" />
+		<property name="testOnBorrow" value="true"/>
+		<property name="testOnReturn" value="true"/>
+		<!-- <property name="testWhileIdle" value="true"/> -->
+	</bean>
+
+	<bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool"  scope="singleton">
+		<constructor-arg index="0" ref="jedisPoolConfig" />
+		<constructor-arg index="1">
+			<list>
+				<bean class="redis.clients.jedis.JedisShardInfo">
+					<constructor-arg name="host" value="10.186.202.212" />
+					<constructor-arg name="port" value="7000" />
+					<constructor-arg name="timeout" value="2000" />
+					<constructor-arg name="weight" value="1" />
+				</bean>
+			</list>
+		</constructor-arg>
+	</bean>
+</beans>

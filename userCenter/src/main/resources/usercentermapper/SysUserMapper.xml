@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manyi.usercenter.user.support.dao.UserDao">
+
+    <!-- 基本用户返回值 -->
+    <resultMap id="Result_User" type="com.manyi.usercenter.user.support.entity.BaseUser">
+        <id column="ID" property="id"/>
+        <result column="LoginName" property="loginName"/>
+        <result column="Password" property="password"/>
+        <result column="SecretKey" property="secretKey"/>
+        <result column="Type" property="type"/>
+        <result column="State" property="state"/>
+    </resultMap>
+
+    <!-- 平台用户返回值 -->
+    <resultMap id="Result_PlatUser" type="com.manyi.usercenter.user.bean.PlatUser">
+        <result column="LoginName" property="loginName"/>
+        <result column="Password" property="passWord"/>
+        <result column="SecretKey" property="secretKey"/>
+        <result column="Type" property="type"/>
+        <result column="State" property="state"/>
+        <result column="UserId" property="userId"/>
+        <result column="Name" property="name"/>
+        <result column="Creator" property="creator"/>
+        <result column="Createtime" property="createTime"/>
+        <result column="Updatetime" property="updateTime"/>
+    </resultMap>
+
+    <!-- 基础用户字段 -->
+    <sql id="Base_User">
+        t_user.id, LoginName, Password, SecretKey, Type, t_user.State, t_user.Createtime
+    </sql>
+
+    <!-- 平台用户字段关联基础用户表 -->
+    <sql id="Relation_SysUser">
+        t_sysuser.id, UserId, Name, Createtime, Creator, Updatetime,LoginName, Password, SecretKey, Type, State
+    </sql>
+
+    <!-- 平台用户字段 -->
+    <sql id="Base_SysUser">
+        t_sysuser.id, UserId, Updatetime, Creator
+    </sql>
+
+    <!-- 企业用户字段关联基础用户表 -->
+    <sql id="Relation_Corporation">
+        t_corporation.id, Name, Email, Remark, UserId, Phone, LegalPerson, NickName,
+        LoginName, Password, SecretKey, Type, t_user.State
+    </sql>
+
+    <!-- 企业用户字段 -->
+    <sql id="Base_Corporation">
+        t_corporation.id, Name, Email, Remark, UserId, Phone, LegalPerson, NickName
+    </sql>
+
+    <!-- 个人用户字段关联基础用户表 -->
+    <sql id="Relation_Individual">
+        t_individual.id, UserId, Updatetime, PlateNo, PlateType, PlateLength, PlateLoad,
+        ExpectDestination, DriverName, IdCardNo, Owner, OwnerMobile, Description, PlateSerialNo,
+        LoginName, Password, SecretKey, Type, t_user.State
+    </sql>
+
+    <!-- 个人用户字段 -->
+    <sql id="Base_Individual">
+        t_individual.id, UserId, Updatetime, PlateNo, PlateType, PlateLength, PlateLoad,
+        ExpectDestination, DriverName, IdCardNo, Owner, OwnerMobile, Description, PlateSerialNo
+    </sql>
+
+    <!-- 通过用户名查询用户 -->
+    <select id="getUserByName" parameterType="String" resultMap="Result_User">
+        SELECT
+        <include refid="Base_User"/>
+        from t_user
+        WHERE LoginName = #{username}
+    </select>
+
+    <!-- 查询所有的平台用户 -->
+    <select id="queryAllSysUsers" resultMap="Result_PlatUser">
+        SELECT
+        <include refid="Relation_SysUser"/>
+        from t_sysuser
+        LEFT JOIN t_user on
+        t_sysuser.UserId = t_user.id
+    </select>
+
+    <!-- 创建基础用户 -->
+    <insert id="createUser" parameterType="com.manyi.usercenter.user.bean.PlatUser" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        t_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            LoginName, Password, SecretKey, Type, State, Createtime,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{loginName}, #{password}, #{secretKey}, #{type}, #{state}, now(),
+        </trim>
+    </insert>
+
+    <!-- 创建平台用户 -->
+    <insert id="createSysUser" parameterType="com.manyi.usercenter.user.support.entity.SysUser">
+        INSERT INTO
+        t_sysuser
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            userId, Name, Updatetime, creator,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{userId}, #{name}, now(), #{creator},
+        </trim>
+    </insert>
+
+    <!-- 修改平台用户状态 -->
+    <update id="updateSysUserStatus">
+        UPDATE
+          t_user
+        SET
+          State = #{state}
+        WHERE
+          id = #{userId}
+    </update>
+
+    <!-- 修改平台用户名称 -->
+    <update id="updateSysUserName">
+        UPDATE
+          t_sysuser
+        SET
+          Name = #{name}
+        WHERE
+          id = #{userId}
+    </update>
+
+    <!-- 删除基本用户 -->
+    <delete id="deleteUser" parameterType="long">
+        DELETE FROM
+          t_user
+        WHERE
+          id = #{id}
+    </delete>
+
+    <!-- 删除平台用户 -->
+    <delete id="deleteSysUser" parameterType="long">
+        DELETE FROM
+          t_sysuser
+        WHERE
+          userId = #{userId}
+    </delete>
+
+    <!-- 个体用户注册 -->
+    <insert id="createIndividual" parameterType="com.manyi.usercenter.user.support.entity.Individual">
+        INSERT INTO
+          t_individual
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            UserId, Updatetime, PlateNo, PlateType, PlateLength, PlateLoad, ExpectDestination,
+            DriverName, IdCardNo, Owner, OwnerMobile, Description, PlateSerialNo,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{userId},#{updateTime},#{platNo},#{plateType},#{plateLength},#{plateLoad},#{expectDestination},
+            #{driverName},#{idCardNo},#{owner},#{ownerMobile},#{description},#{plateSerialNo},
+        </trim>
+    </insert>
+
+    <!-- 个体用户修改信息 -->
+    <update id="updateIndividual" parameterType="com.manyi.usercenter.user.support.entity.Individual">
+        UPDATE
+          t_individual
+        <set>
+            <if test="updateTime != null">Updatetime = #{updateTime},</if>
+            <if test="plateNo != null">PlateNo = #{plateNo},</if>
+            <if test="plateType != null">PlateType = #{plateType},</if>
+            <if test="plateLength != null">PlateLength = #{plateLength},</if>
+            <if test="plateLoad != null">PlateLoad = #{plateLoad},</if>
+            <if test="expectDestination != null">ExpectDestination = #{expectDestination},</if>
+            <if test="driverName != null">DriverName = #{driverName},</if>
+            <if test="idCardNo != null">IdCardNo = #{idCardNo},</if>
+            <if test="owner != null">Owner = #{owner},</if>
+            <if test="ownerMobile != null">OwnerMobile = #{ownerMobile},</if>
+            <if test="description != null">Description = #{description},</if>
+            <if test="plateSerialNo != null">PlateSerialNo = #{plateSerialNo},</if>
+        </set>
+        WHERE
+          UserId = #{userId}
+    </update>
+
+    <!-- 企业用户注册 -->
+    <insert id="createCorporater" parameterType="com.manyi.usercenter.user.support.entity.Corporation">
+        INSERT INTO
+          t_corporation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            Name, Email, Remark, UserId, Phone, LegalPerson, NickName,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{name}, #{email}, #{remark}, #{userId}, #{phone}, #{legalPerson}, #{nickName},
+        </trim>
+    </insert>
+
+    <!-- 企业用户修改个人信息 -->
+    <update id="updateCorporater" parameterType="com.manyi.usercenter.user.support.entity.Corporation">
+        UPDATE
+            t_corporation
+        <set>
+            <if test="name != null">Name = #{name},</if>
+            <if test="nickName != null">NickName = #{nickName},</if>
+            <if test="email != null">Email = #{email},</if>
+            <if test="remark != null">Remark = #{remark},</if>
+            <if test="phone != null">Phone = #{phone},</if>
+            <if test="legalPerson != null">LegalPerson = #{legalPerson},</if>
+        </set>
+        WHERE
+            UserId = #{userId}
+    </update>
+
+    <!-- 根据Id获取当前基础用户信息 -->
+    <select id="getBaseUserById">
+        SELECT
+        <include refid="Base_User"/>
+        FROM t_user
+        WHERE
+          id = #{id}
+    </select>
+
+    <!-- 用户密码修改 -->
+    <update id="updatePassword" parameterType="com.manyi.usercenter.user.support.entity.BaseUser">
+        UPDATE
+          t_user
+        <set>
+            <if test="password != null">password = #{password},</if>
+            <if test="secretKey != null">secretKey = #{secretKey},</if>
+        </set>
+        WHERE
+          id = #{id}
+    </update>
+
+    <!-- 根据用户名查询角色 -->
+    <select id="findRoles" resultType="String">
+        SELECT
+        name
+        from t_role role ,t_userrole ur,t_user u
+        WHERE loginname=#{name} AND u.id=ur.userid AND ur.roleid=role.id
+    </select>
+
+    <!-- 根据用用户角色查询权限 -->
+    <select id="findPermissions" resultType="String">
+        SELECT
+        p.name
+        from t_role role ,t_roleperm rp,t_permission p
+        WHERE role.name=#{name} AND role.id=rp.roleid AND rp.permid=p.id
+    </select>
+
+</mapper>

@@ -1,0 +1,27 @@
+<div id="modal">
+    <div class="modal-header">
+        <h3>消费积分</h3>
+    </div>
+    <div class="modal-body">
+        <div id="message" class="alert alert-info" ng-show="jsonResult.result == 'failure'">
+            {{jsonResult.message}}
+        </div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-4 control-label no-padding-right">用户名：&nbsp;</label>
+
+                <div class="col-sm-6" style="margin-top: 7px;">
+                    {{message.userId}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label no-padding-right">商品test(消费积分)：&nbsp;</label>
+                <input   ng-model="message.growth"  >
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">消费积分</button>
+        <button class="btn btn-warning" ng-click="cancel()">返回</button>
+    </div>
+</div>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manyi.common.role.support.dao.RoleResDao">
+
+    <!-- 返回值 -->
+    <resultMap id="BaseResultMap" type="com.manyi.common.role.bean.SysRoleResRel">
+        <id column="ID" property="id"/>
+        <result column="ROLE_ID" property="roleId"/>
+        <result column="RES_ID" property="resId"/>
+        <result column="CREATOR" property="creator"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="MODIFIER" property="modifier"/>
+        <result column="MODIFY_TIME" property="modifyTime"/>
+    </resultMap>
+
+    <!-- 基础字段 -->
+    <sql id="Base_Column_List">
+        ID, ROLE_ID, RES_ID, CREATOR, CREATE_TIME, MODIFIER, MODIFY_TIME
+    </sql>
+
+    <!-- 查询所有角色 -->
+    <select id="getAllResByRoleId" parameterType="Long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM SYS_ROLE_RES_REL
+        WHERE
+        ROLE_ID = #{roleId}
+    </select>
+
+    <!-- 通过角色id，资源id查询关联表中的关联关系 -->
+    <select id="findByRoleRes" parameterType="com.manyi.common.role.bean.RoleResourceTreeNode" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM SYS_ROLE_RES_REL
+        <include refid="conditionSQL" />
+    </select>
+
+    <!-- 添加角色资源关联关系 -->
+    <insert id="addRoleRes" parameterType="com.manyi.common.role.bean.SysRoleResRel">
+        INSERT INTO
+        SYS_ROLE_RES_REL
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roleId != null">ROLE_ID,</if>
+            <if test="resId != null">RES_ID,</if>
+            <if test="creator != null">CREATOR,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="modifier != null">modifier,</if>
+            <if test="modifyTime != null">MODIFY_TIME,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="roleId != null">#{roleId},</if>
+            <if test="resId != null">#{resId},</if>
+            <if test="creator != null">#{creator},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="modifier != null">#{modifier},</if>
+            <if test="modifyTime != null">#{modifyTime},</if>
+        </trim>
+    </insert>
+
+    <!-- 通过角色id，资源id删除关联关系 -->
+    <delete id="deleteByRoleRes" parameterType="com.manyi.common.role.bean.SysRoleResRel">
+      DELETE FROM SYS_ROLE_RES_REL
+        <include refid="conditionSQL" />
+    </delete>
+
+    <!-- 通用条件 -->
+    <sql id="conditionSQL">
+        <trim prefix="where" prefixOverrides="AND">
+            <if test="roleId != null">
+                AND ROLE_ID = #{roleId}
+            </if>
+            <if test="resId != null">
+                AND RES_ID = #{resId}
+            </if>
+            <if test="createTime != null">
+                AND CREATE_TIME = #{createTime}
+            </if>
+            <if test="modifyTime != null">
+                AND MODIFY_TIME = #{modifyTime}
+            </if>
+        </trim>
+    </sql>
+
+    <!-- ========================================= 华丽丽的分割线 ========================================= -->
+
+    <!-- 添加角色 -->
+    <insert id="addRole" keyProperty="id" parameterType="com.manyi.common.role.bean.SysRole">
+        INSERT INTO
+        SYS_ROLE
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roleName != null">ROLENAME,</if>
+            <if test="code != null">CODE,</if>
+            <if test="description != null">description,</if>
+            <if test="status != null">status,</if>
+            <if test="creator != null">creator,</if>
+            <if test="createTime != null">CREATE_TIME,</if>
+            <if test="modifier != null">modifier,</if>
+            <if test="modifyTime != null">MODIFY_TIME,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="roleName != null">#{roleName},</if>
+            <if test="code != null">#{code},</if>
+            <if test="description != null">#{description},</if>
+            <if test="status != null">#{status},</if>
+            <if test="creator != null">#{creator},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="modifier != null">#{modifier},</if>
+            <if test="modifyTime != null">#{modifyTime},</if>
+        </trim>
+    </insert>
+
+    <!-- 编辑角色 -->
+    <update id="editRole" parameterType="com.manyi.common.role.bean.SysRole">
+        UPDATE
+        SYS_ROLE
+        <set>
+            <if test="roleName != null">ROLENAME = #{roleName}</if>
+            <if test="code != null">CODE = #{code},</if>
+            <if test="modifier != null">MODIFIER = #{modifier},</if>
+            <if test="modifyTime != null">MODIFY_TIME = {modifyTime},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除角色 -->
+    <update id="deleteRole" parameterType="Long">
+        DELETE FROM
+          SYS_ROLE
+        WHERE id = #{id}
+    </update>
+
+</mapper>

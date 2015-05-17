@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manyi.common.user.support.dao.UserDao">
+
+    <!-- 基础返回值 -->
+    <resultMap id="BaseResultMap" type="com.manyi.common.user.bean.SysUser">
+        <id column="ID" property="id"/>
+        <result column="LOGINNAME" property="loginName"/>
+        <result column="NICKNAME" property="nickName"/>
+        <result column="PASSWORD" property="password"/>
+        <result column="SALT" property="salt"/>
+        <result column="AGE" property="age"/>
+        <result column="BIRTHDAY" property="birthday" jdbcType="DATE"/>
+        <result column="EMAIL" property="email"/>
+        <result column="PHONE" property="phone"/>
+    </resultMap>
+
+    <!-- 基础参数 -->
+    <parameterMap id="BaseParameter" type="com.manyi.common.user.bean.SysUser">
+        <parameter property="id" />
+        <parameter property="loginName"/>
+        <parameter property="nickName"/>
+        <parameter property="password"/>
+        <parameter property="salt"/>
+        <parameter property="age"/>
+        <parameter property="birthday" jdbcType="DATE" />
+        <parameter property="email"/>
+        <parameter property="phone"/>
+    </parameterMap>
+
+    <!-- 基础字段 -->
+    <sql id="Base_Column_List">
+      id, loginName, nickName, password, salt, age, birthday, email, phone
+    </sql>
+
+    <!-- 通过用户名查询用户 -->
+    <select id="getUserByName" parameterType="String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from SYS_USER
+        WHERE loginName = #{username}
+    </select>
+
+    <!-- 查询所有用户 -->
+    <select id="queryAllUsers" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from SYS_USER
+    </select>
+
+    <!-- 创建用户 -->
+    <insert id="createUser" keyProperty="id" parameterMap="BaseParameter">
+        INSERT INTO
+          SYS_USER
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="loginName != null" >loginName,</if>
+            <if test="nickName != null" >nickName,</if>
+            <if test="password != null" >password,</if>
+            <if test="salt != null" >salt,</if>
+            <if test="age != null" >age,</if>
+            <if test="birthday != null" >birthday,</if>
+            <if test="email != null" >email,</if>
+            <if test="phone != null" >phone,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="loginName != null" >#{loginName},</if>
+            <if test="nickName != null" >#{nickName},</if>
+            <if test="password != null" >#{password},</if>
+            <if test="salt != null" >#{salt},</if>
+            <if test="age != null" >#{age},</if>
+            <if test="birthday != null" >#{birthday},</if>
+            <if test="email != null" >#{email},</if>
+            <if test="phone != null" >#{phone},</if>
+        </trim>
+    </insert>
+
+    <!-- 更新用户 -->
+    <update id="updateUser" parameterType="BaseParameter">
+        UPDATE
+          SYS_USER
+        SET NICKNAME = #{nickname}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除用户 -->
+    <update id="deleteUser" parameterType="Long">
+        DELETE FROM
+          SYS_USER
+        WHERE id = #{id}
+    </update>
+
+</mapper>

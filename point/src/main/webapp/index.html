@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html ng-app="myPoint">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Magic">
+
+    <title>Test Page</title>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="static/components/compatible/html5shiv.js"></script>
+    <script type="text/javascript" src="static/components/compatible/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- JQuery -->
+    <script type="text/javascript" src="static/components/jquery-1.11/jquery-1.11.1.js"></script>
+
+    <!-- JQueryValidate -->
+    <script type="text/javascript" charset="utf-8"
+            src="static/components/jquery-validation/1.9.0/jquery.validate.js"></script>
+    <script type="text/javascript" charset="utf-8"
+            src="static/components/jquery-validation/jquery.validate.extend.js"></script>
+    <link type="text/css" rel="stylesheet" href="static/components/jquery-validation/1.9.0/validate.css"/>
+    <script type="text/javascript" src="static/components/jquery-validation/1.9.0/messages_bs_cn.js"></script>
+
+    <!-- Bootstrap -->
+    <link href="static/components/bootstrap-3.1.1/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="static/components/bootstrap-3.1.1/css/bootstrap-theme.min.css" rel="stylesheet" media="screen">
+    <link rel="stylesheet" type="text/css" href="static/components/bootstrap-3.1.1/css/bootstrap.css">
+    <script type="text/javascript" src="static/components/bootstrap-3.1.1/js/bootstrap.js"></script>
+    <script type="text/javascript" src="static/components/bootstrap-validator/js/bootstrapValidator.min.js"></script>
+
+    <!-- AngularJs -->
+    <script type="text/javascript" src="static/components/angular-1.2.20/angular.js"></script>
+    <script type="text/javascript" src="static/components/angular-1.2.20/angular-resource.js"></script>
+    <script type="text/javascript" src="static/components/angular-1.2.20/angular-ui-router.js"></script>
+    <script type="text/javascript" src="static/components/angular-1.2.20/ui-bootstrap-tpls.js"></script>
+
+    <!-- MyJs -->
+    <script type="text/javascript" src="static/router/app.js"></script>
+    <script type="text/javascript" src="static/controller/LeftCtrl.js"></script>
+    <script type="text/javascript" src="static/controller/PointCtrl.js"></script>
+
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div ui-view="header"></div>
+    </div>
+    <hr>
+    <div class="left" style="float:left; width: 10%;">
+        <div ui-view="left"></div>
+    </div>
+    <div class="right" style="float:right; margin-left: 20px; width: 85%; height:500px; overflow:auto;">
+        <div ui-view="right"></div>
+    </div>
+    <div style="clear:both"></div>
+    <hr>
+    <div class="footer">
+        <div ui-view="footer"></div>
+    </div>
+</div>
+</body>
+</html>

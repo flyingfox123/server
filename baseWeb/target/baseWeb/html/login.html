@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>HTML5的标题</title>
+</head>
+<body>
+</body>
+</html>
+<div class="container">
+    <form>
+        <section class="loginBox row-fluid">
+            <h2>登录</h2>
+            <div id="message" ng-show="result.result=='failure'">
+                <p style="color: #c9302c">{{result.message}}</p>
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" ng-model="User.loginName" id="username" name="loginName" placeholder="账号">
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="password" ng-model="User.passWord" id="password" name="passWord" placeholder="密码">
+            </div>
+            <button class="btn btn-primary center-block" ng-click="gotoLogin()">提交</button>
+        </section>
+    </form>
+</div>

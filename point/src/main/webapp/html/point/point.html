@@ -1,0 +1,64 @@
+<style type="text/css">
+    .table tr td{
+        min-width:60px;
+    }
+    .table tr td:nth-child(3),.table tr th:nth-child(3){
+        min-width:100px;
+        text-align:center;
+
+    }
+</style>
+<div class='panel panel-info'>
+    <div class="panel-heading">
+        <h4 class="panel-title">用户积分</h4>
+    </div>
+    <div class='panel-body'>
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <th>用户</th>
+                <th>总积分</th>
+                <th>用户等级</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat='message in PointList'>
+                <td>{{message.userId}}</td>
+
+                <td>{{message.point}}</td>
+
+                <td>{{message.level}}</td>
+
+                <td>
+                    <div class='btn-group'>
+                        <a class='btn btn-mini dropdown-toggle' data-toggle='dropdown'
+                           href='javascript:void(0);'> <i class='glyphicon glyphicon-list'></i> <span
+                                class='caret'></span>
+                        </a>
+                        <ul class='dropdown-menu pull-right'>
+                            <li>
+                                <a href="javascript:void(0);" ng-click="addPoint($index)">
+                                    <i class='glyphicon glyphicon-wrench'></i> 充值获取积分
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" ng-click="getPointLog($index)">
+                                    <i class='glyphicon glyphicon-trash'></i> 查看积分历史
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="javascript:void(0);" ng-click="usePoint($index)">
+                                    <i class='glyphicon glyphicon-trash'></i> 使用积分
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>

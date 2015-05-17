@@ -1,0 +1,61 @@
+<div class='panel panel-info'>
+    <div class="panel-heading">
+        <h4 class="panel-title">资源管理</h4>
+
+        <div class="pull-right">
+            <a href="javascript:void(0);" ng-click="addResource()"><span class="badge">创建资源</span></a>
+        </div>
+    </div>
+    <div id="message" class="alert alert-success" ng-show="jsonResult">
+        {{jsonResult.message}}
+    </div>
+    <div class='panel-body'>
+        <table class="table table-bordered table-striped table-condensed">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>资源名称</th>
+                <th>资源代码</th>
+                <th>资源级别</th>
+                <th>资源地址</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat='resource in sysResource'>
+                <td>{{$index+1}}</td>
+                <td>{{resource.name}}</td>
+                <td>{{resource.code}}</td>
+                <td>{{resource.level}}</td>
+                <td>{{resource.uri}}</td>
+                <td ng-switch on="resource.status">
+                    <span style="color: green" ng-switch-when="E">可用</span>
+                    <span style="color: red" ng-switch-when="D">不可用</span>
+                </td>
+                <td>
+                    <div class='btn-group'>
+                        <a class='btn btn-mini dropdown-toggle' data-toggle='dropdown'
+                           href='javascript:void(0);'> <i class='glyphicon glyphicon-list'></i> <span
+                                class='caret'></span>
+                        </a>
+                        <ul class='dropdown-menu pull-right'>
+                            <li>
+                                <a href="javascript:void(0);" ng-click="editResource($index)">
+                                    <i class='glyphicon glyphicon-wrench'></i> 修改
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" ng-click="deleteColumn($index)">
+                                    <i class='glyphicon glyphicon-trash'></i> 删除
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>

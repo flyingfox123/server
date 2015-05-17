@@ -1,0 +1,39 @@
+<div class='panel panel-info'>
+    <div class="panel-heading">
+        <h4 class="panel-title">增加评价策略</h4>
+    </div>
+    <div id="message" class="alert alert-success" ng-show="jsonResult">
+        {{jsonResult.message}}
+    </div>
+    <div class='panel-body'>
+        <table id="tab" class="table table-bordered table-striped table-condensed">
+            <thead>
+            </thead>
+            <tbody>
+            <tr>
+                <td>策略名称</td><td><input type="text" id="form-field-1" name="gradeStrategyName" ng-model="currentScoreStrategy.gradeStrategyName" required placeholder="gradeStrategyName"
+                                        class="input-sm"></td>
+            </tr>
+            <tr>
+                <td>分制</td><td><input type="text" id="form-field-2" name="scoreRule" ng-model="currentScoreStrategy.scoreRule" required placeholder="scoreRule"
+                                      class="input-sm"></td>
+            </tr>
+
+            <tr>
+                <td>条目名称：</td>
+                <td> <input type="text" id="form-field-3" name="name" ng-model="scoreStrategy.strategyItem.name" required placeholder="name"
+                            class="input-sm col-xs-9"></td>
+                <td>权重：</td>
+                <td> <input type="text" id="form-field-4" name="weight" ng-model="scoreStrategy.strategyItem.weight" required placeholder="weight"
+                            class="input-sm col-xs-9"></td>
+            </tr>
+            <tr><td><button class="btn btn-primary" onclick="addItem('tab')">增加一行</button></td></tr>
+            </tbody>
+        </table>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">提交评价</button>
+            <button class="btn btn-warning" ng-click="cancel()">返回</button>
+        </div>
+    </div>
+</div>
+</div>

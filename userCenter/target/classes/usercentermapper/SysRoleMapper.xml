@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manyi.usercenter.role.support.dao.RoleDao">
+
+    <!-- 返回值 -->
+    <resultMap id="BaseResultMap" type="com.manyi.usercenter.role.bean.SysRole">
+        <id column="ID" property="id"/>
+        <result column="name" property="name"/>
+        <result column="DESCRIPTION" property="description"/>
+        <result column="state" property="state"/>
+        <result column="creator" property="creator"/>
+        <result column="CreateTime" property="createTime" jdbcType="DATE"/>
+        <result column="MODIFIER" property="modifier"/>
+        <result column="MODIFY_TIME" property="modifyTime" />
+    </resultMap>
+
+    <!-- 请求参数 -->
+    <parameterMap id="BaseParameterMap" type="com.manyi.usercenter.role.bean.SysRole">
+        <parameter property="id"/>
+        <parameter property="name"/>
+        <parameter property="description"/>
+        <parameter property="state"/>
+        <parameter property="creator"/>
+        <parameter property="createTime" jdbcType="DATE"/>
+        <parameter property="modifier"/>
+        <parameter property="modifyTime"/>
+    </parameterMap>
+
+    <!-- 基础字段 -->
+    <sql id="Base_Column_List">
+      ID, name, DESCRIPTION, state, CREATOR, CREATETIME, MODIFIER, MODIFYTIME
+    </sql>
+
+    <!-- 获取所有角色 -->
+    <select id="getAllRoles" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from t_role
+    </select>
+
+    <!-- 根据条件获取角色 -->
+    <select id="getRoles" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from t_role
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="name != null">
+                AND name like "%"#{name}"%"
+            </if>
+        </where>
+    </select>
+
+    <!-- 添加角色 -->
+    <insert id="addRole" parameterMap="BaseParameterMap">
+        INSERT INTO
+        t_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="description != null">description,</if>
+            <if test="state != null">state,</if>
+            <if test="creator != null">creator,</if>
+            CREATETIME
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="description != null">#{description},</if>
+            <if test="state != null">#{state},</if>
+            <if test="creator != null">#{creator},</if>
+            now()
+        </trim>
+    </insert>
+
+    <!-- 编辑角色 -->
+    <update id="editRole" parameterMap="BaseParameterMap">
+        UPDATE
+        t_role
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="modifier != null">MODIFIER = #{modifier},</if>
+            MODIFYTIME = now()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除角色 -->
+    <update id="deleteRole" parameterType="Long">
+        DELETE FROM
+          t_role
+        WHERE id = #{id}
+    </update>
+
+
+</mapper>

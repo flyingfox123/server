@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manyi.usercenter.role.support.dao.RolePermissionDao">
+
+    <!-- 返回值 -->
+    <!--<resultMap id="BaseResultMap" type="com.manyi.usercenter.role.bean.RolePerm">-->
+        <!--<id column="id" property="id"/>-->
+        <!--<result column="PermId" property="permId"/>-->
+        <!--<result column="RoleId" property="roleId"/>-->
+        <!--<result column="name" property="name"/>-->
+        <!--<result column="url" property="url"/>-->
+        <!--<result column="roles" property="roles"/>-->
+        <!--<result column="permissions" property="permissions"/>-->
+    <!--</resultMap>-->
+    <resultMap id="BaseResultMap" type="com.manyi.usercenter.role.bean.RolePerm">
+        <id column="id" property="id"/>
+        <result column="PermId" property="permId"/>
+        <result column="RoleId" property="roleId"/>
+    </resultMap>
+
+
+    <!-- 基础字段 -->
+    <sql id="Base_Column_List">
+      ID, permId, roleId
+    </sql>
+
+    <!--&lt;!&ndash; 获取所有角色 &ndash;&gt;-->
+    <!--<select id="findRolePermission" resultMap="BaseResultMap">-->
+        <!--SELECT-->
+        <!--<include refid="Base_Column_List"/>-->
+        <!--from t_roleperm-->
+        <!--<where>-->
+            <!--<if test="permId != null">permId=#{permId}</if>-->
+            <!--<if test="roleId != null">AND roleId=#{roleId}</if>-->
+        <!--</where>-->
+    <!--</select>-->
+
+    <!--&lt;!&ndash; 根据用用户角色查询权限 &ndash;&gt;-->
+    <!--<select id="findRolePermission" resultMap="BaseResultMap">-->
+        <!--SELECT-->
+        <!--rp.id id,p.id permId,role.id roleId,p.name name,p.uri url,role.name roles,p.name permissions-->
+        <!--from t_roleperm rp,t_role role,t_permission p-->
+        <!--WHERE role.id=rp.roleid AND rp.permid=p.id-->
+    <!--</select>-->
+
+    <!-- 根据用用户角色查询权限 -->
+    <select id="findRolePermission" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        id,permId,roleId
+        from t_roleperm
+        <where>
+        <if test="permId != null">permId=#{permId}</if>
+        <if test="roleId != null">AND roleId=#{roleId}</if>
+        </where>
+    </select>
+
+    <insert id="bindRolePermissions" parameterType="String">
+        INSERT INTO
+        t_roleperm
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roleId != null">roleId,</if>
+            <if test="permId != null">permId,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="roleId != null">#{roleId},</if>
+            <if test="permId != null">#{permId},</if>
+        </trim>
+    </insert>
+
+    <!-- 删除角色 -->
+    <update id="unbindRolePermissions">
+        DELETE FROM
+        t_roleperm
+        WHERE roleId = #{roleId}
+        AND permId = #{permId}
+    </update>
+
+
+
+
+</mapper>

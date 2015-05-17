@@ -1,0 +1,47 @@
+<div id="modal">
+    <div class="modal-header">
+        <h3>评价</h3>
+    </div>
+    <div class="modal-body">
+        <div id="message" class="alert alert-info" ng-show="jsonResult.result == 'failure'">
+            {{jsonResult.message}}
+        </div>
+        <form class="form-horizontal">
+            <div class="form-group">
+
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label no-padding-right">商品信息：&nbsp;</label>
+                <input  disabled="true" ng-model="message.commodityID" >
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label no-padding-right">被评价方：&nbsp;</label>
+                <input  disabled="true"  ng-model="message.gradedID" >
+
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label no-padding-right">订单信息：&nbsp;</label>
+                <input    ng-model="message.tradeOrder">
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-sm-4 control-label no-padding-right">评价内容：&nbsp;</label>
+                <textarea rows="3" cols="35" ng-model="message.evaluateContent"></textarea>
+
+            </div>
+            <div class="form-group">
+                <label class="col-sm-4 control-label no-padding-right">总评分数：&nbsp;</label>
+                <input type="number" ng-model="message.totalScore">
+                <span><em style="color: #c12e2a">注：商品和交易方的分数和</em></span>
+
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">提交评价</button>
+        <button class="btn btn-warning" ng-click="cancel()">返回</button>
+    </div>
+</div>

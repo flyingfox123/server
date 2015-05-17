@@ -1,0 +1,49 @@
+<div id="modal">
+    <div class="modal-header">
+        <h3>修改资源</h3>
+    </div>
+    <div class="modal-body">
+        <form id="editUser" class="form-horizontal">
+            <div id="message" class="alert alert-info" ng-show="jsonResult.result == 'failure'">
+                {{jsonResult.message}}
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-field-1">资源名称：</label>
+
+                <div class="col-sm-9">
+                    <input type="text" id="form-field-1" name="name" ng-model="resource.name" placeholder="roleName"
+                           class="input-sm"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-field-2">资源代码：</label>
+
+                <div class="col-sm-9">
+                    <input type="text" id="form-field-2" name="code" ng-model="resource.code" placeholder="code"
+                           class="input-sm">
+                    <span>岁</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-field-3">资源链接：</label>
+
+                <div class="col-sm-9">
+                    <input type="text" id="form-field-3" name="uri" ng-model="resource.uri"
+                           placeholder="description" class="input-sm col-xs-9">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right">资源状态：</label>
+
+                <div class="col-sm-9" style="margin-top:4px;">
+                    <input type="radio" name="status" ng-model="resource.status"><span>有效</span>
+                    <input type="radio" name="status" ng-model="resource.status"><span>无效</span>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">OK</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</div>

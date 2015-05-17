@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manyi.common.permission.support.dao.ResourceDao">
+
+    <resultMap id="BaseResultMap" type="com.manyi.common.permission.bean.SysResource">
+        <id column="ID" property="id"/>
+        <result column="PID" property="pid"/>
+        <result column="NAME" property="name"/>
+        <result column="CODE" property="code"/>
+        <result column="LEVEL" property="level"/>
+        <result column="URI" property="uri"/>
+        <result column="STATUS" property="status"/>
+    </resultMap>
+    
+    <parameterMap id="BaseParameterMap" type="com.manyi.common.permission.bean.SysResource">
+        <parameter property="id" />
+        <parameter property="pid" />
+        <parameter property="name" />
+        <parameter property="code" />
+        <parameter property="level" />
+        <parameter property="uri" />
+        <parameter property="status" />
+    </parameterMap>
+
+    <!-- 基础字段 -->
+    <sql id="Base_Column_List">
+      ID, PID, NAME, CODE, LEVEL, URI, STATUS
+    </sql>
+
+    <!-- 查询所有资源 -->
+    <select id="findAllResources" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from SYS_RESOURCE
+        ORDER BY id
+    </select>
+
+    <!-- 添加资源 -->
+    <insert id="addResource" parameterType="">
+        INSERT INTO
+        SYS_RESOURCE
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="name != null" >name,</if>
+            <if test="code != null" >code,</if>
+            <if test="level != null" >level,</if>
+            <if test="uri != null" >uri,</if>
+            <if test="status != null" >status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="name != null" >#{name},</if>
+            <if test="code != null" >#{code},</if>
+            <if test="level != null" >#{level},</if>
+            <if test="uri != null" >#{uri},</if>
+            <if test="status != null" >#{status},</if>
+        </trim>
+    </insert>
+
+    <!-- 更新资源 -->
+    <update id="editResource" parameterMap="BaseParameterMap">
+        UPDATE
+          SYS_RESOURCE
+        SET name = #{name}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除资源 -->
+    <update id="deleteResource" parameterType="Long">
+        DELETE FROM
+          SYS_RESOURCE
+        WHERE id = #{id}
+    </update>
+
+</mapper>

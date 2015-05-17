@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manyi.point.support.dao.ExpDao">
+
+
+    <!-- 级别-->
+    <resultMap id="ExpResultMap" type="com.manyi.point.support.entity.DimensionExp">
+
+        <result column="id" property="id"/>
+        <result column="dimensionCode" property="dimensionCode"/>
+        <result column="preferentialCode" property="preferentialCode"/>
+        <result column="exp" property="exp"/>
+        <result column="dateLimit" property="dateLimit"/>
+        <result column="startDate" property="startDate"/>
+        <result column="endDate" property="endDate"/>
+        <result column="comments" property="comments"/>
+    </resultMap>
+
+
+    <!-- 基础字段 -->
+
+    <sql id="EXP_BASE">
+        id, dimensionCode, preferentialCode, exp, dateLimit, startDate,  endDate,   comments
+    </sql>
+    <!-- 获取级别列表 -->
+    <select id="getExpList" resultMap="ExpResultMap">
+        SELECT
+        <include refid="EXP_BASE"/>
+        FROM smp_v1_dimensionexp
+        WHERE
+        dimensionCode = #{code}
+    </select>
+
+</mapper>
