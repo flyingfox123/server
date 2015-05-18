@@ -8,6 +8,7 @@ import com.manyi.common.message.bean.MessageSend;
 import com.manyi.common.message.bean.MessageTemplate;
 import com.manyi.common.message.support.dao.MessageDao;
 import com.manyi.common.message.util.*;
+import com.manyi.common.util.ReadPropertiesUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,18 @@ public class MessageServiceImpl implements MessageService {
 
     private  static final Logger logger = LoggerFactory.getLogger(MessageServiceImpl.class);
 
+    private  static String defaultTemplateId = ReadPropertiesUtil.readProperties("message.properties").getProperty("defaultTemplateId");
+
+    public static String smsParam = ReadPropertiesUtil.readProperties("message.properties").getProperty("smsParam");
+
+    public static String activeTime = ReadPropertiesUtil.readProperties("message.properties").getProperty("activeTime");
+
+    public static String smsHttpUrl = ReadPropertiesUtil.readProperties("message.properties").getProperty("smsHttpUrl");
+
     @Autowired
     private MessageDao messageDao;
 
-    private static Map<String,MessageTemplate>  messageTemplateMap = new HashMap<String, MessageTemplate>();
+    public static Map<String,MessageTemplate>  messageTemplateMap = new HashMap<String, MessageTemplate>();
 
     /**
      * 生成验证码
@@ -57,11 +66,13 @@ public class MessageServiceImpl implements MessageService {
     public boolean isIdentificationCodeValid(String mobile,String type,String code) throws BusinessException {
         boolean isMobileNO = IsMobileNo.isMobileNO(mobile);
         if (isMobileNO==false){
+            logger.error("手机号错误:"+mobile);
             throw new BusinessException(Type.WRONG_PHONENO);
         }
         Pattern p = Pattern.compile("\\d{6}");
         Matcher m = p.matcher(code);
         if(!m.matches()){
+            logger.error(mobile+"验证码错误:"+code);
             throw new BusinessException(Type.WORONG_CODE);
         }
         IdentificationCode identificationCode = new IdentificationCode();
@@ -84,6 +95,7 @@ public class MessageServiceImpl implements MessageService {
     public String queryIdentificationCode(IdentificationCode identificationCode) throws BusinessException {
         boolean isMobileNO = IsMobileNo.isMobileNO(identificationCode.getMobile());
         if (isMobileNO==false){
+            logger.error("手机号错误:"+identificationCode.getMobile());
             throw new BusinessException(Type.WRONG_PHONENO);
         }
         IdentificationCode IdentificationCode = messageDao.queryIdentificationCode(identificationCode);
@@ -138,24 +150,26 @@ public class MessageServiceImpl implements MessageService {
         messageDao.updateMessage(messageSend);
     }
 
-    public void sendMessage(List<MessageSend> messageSendList) throws Exception {
-        for (MessageSend messageSend : messageSendList) {
-            String smsJson = MessageParaToJson.messageParaToJson(messageSend.getMobile(),messageSend.getContent());
-            DoHttpRequest.DoHttpRequest(smsJson,messageSend.getMobile());
-        }
+    @Override
+    public void sendMessage(MessageSend messageSend) throws Exception {
+            String Json = MessageParaToJson.messageParaToJson(messageSend.getMobile(),messageSend.getContent());
+            String param = smsParam + "=" + Json;
+            DoHttpRequest.DoHttpRequest(smsHttpUrl,param,"POST");
     }
 
-    public void sendMessageCode(String mobile,String type,String templateId) throws Exception {
+    public void  sendMessageCode(String mobile,String type,String templateId) throws Exception {
         if("".equals(templateId)){
-            templateId="MessageCode";
+            templateId=defaultTemplateId;
         }//验证手机是否正确
         boolean isMobileNO = IsMobileNo.isMobileNO(mobile);
         if (isMobileNO==false){
+            logger.error("手机号错误:"+mobile);
             throw new BusinessException(Type.TEMPLATEID_NULL);
         }
         //生成验证码并保存
         String smsCode = createIdentificationCode();
         IdentificationCode identificationCod = new IdentificationCode();
+        identificationCod.setActiveTime(activeTime);
         identificationCod.setMobile(mobile);
         identificationCod.setCode(smsCode);
         identificationCod.setCreateTime(new Date());
@@ -167,13 +181,44 @@ public class MessageServiceImpl implements MessageService {
         String smsContent = queryTemplate(templateId);
         smsContent = MessageBindPara.MessageBindPara(smsContent,Paras);
         String json = MessageParaToJson.messageParaToJson(mobile,smsContent);
-        DoHttpRequest.DoHttpRequest(json,mobile);
+        String param = smsParam + "=" + json;
+        DoHttpRequest.DoHttpRequest(smsHttpUrl,param,"POST");
     }
+    public void sendRealtimeMessage(String userId,String mobile,String type,String templateId,Map paras) throws Exception {
+        if("".equals(templateId)){
+            templateId=defaultTemplateId;
+        }//验证手机是否正确
+        boolean isMobileNO = IsMobileNo.isMobileNO(mobile);
+        if (isMobileNO==false){
+            logger.error("手机号错误:"+mobile);
+            throw new BusinessException(Type.TEMPLATEID_NULL);
+        }
+        //查询短信模板
+        String smsContent = queryTemplate(templateId);
+        smsContent = MessageBindPara.MessageBindPara(smsContent,paras);
 
+        MessageSend messageSend = new MessageSend();
+        messageSend.setUserId(userId);
+        messageSend.setMobile(mobile);
+        messageSend.setCreateTime(new Date());
+        messageSend.setContent(smsContent);
+        messageSend.setType(type);
+        messageSend.setState("sent");
+        messageSend.setSendTime(new Date());
+
+        smsContent = MessageBindPara.MessageBindPara(smsContent,paras);
+        String json = MessageParaToJson.messageParaToJson(mobile,smsContent);
+        String param = smsParam + "=" + json;
+        DoHttpRequest.DoHttpRequest(smsHttpUrl,param,"POST");
+
+        //保存已发送短信
+        saveMessage(messageSend);
+    }
     @Override
     public void sendMessageService(String userId,String mobile,String type,String templateId,Map paras) throws BusinessException {
         boolean isMobileNO = IsMobileNo.isMobileNO(mobile);
         if (isMobileNO==false){
+            logger.error("手机号错误:"+mobile);
             throw new BusinessException(Type.TEMPLATEID_NULL);
         }
         //查询短信模板

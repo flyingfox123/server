@@ -42,6 +42,7 @@
         <parameter property="state"/>
         <parameter property="type"/>
         <parameter property="mobile"/>
+        <parameter property="activeTime"/>
     </parameterMap>
 
     <!-- 保存短信的请求参数 -->
@@ -62,7 +63,7 @@
         t_MessageCode
         (CREATETIME,EXPIREDTIME,STATE,CODE,TYPE,MOBILE)
         VALUES
-        (NOW(), DATE_ADD(NOW(),INTERVAL 60 MINUTE) ,#{state},#{code},#{type},#{mobile})
+        (NOW(), DATE_ADD(NOW(),INTERVAL #{activeTime} SECOND) ,#{state},#{code},#{type},#{mobile})
     </insert>
 
     <!-- 根据手机号查询验证码g -->
@@ -82,7 +83,7 @@
     <!-- 查询短信 -->
     <select id="queryMessage" resultMap="Result_MessageSend" parameterMap="Param_MessageSend">
         SELECT
-        ID,USERID,CREATETIME,STATE,CONTENT,SENDTIME,TYPE
+        ID,USERID,CREATETIME,STATE,CONTENT,SENDTIME,TYPE,MOBILE
         FROM t_Message WHERE 1=1
         <if test="id != null">AND ID=#{id}</if>
         <if test="mobile != null">AND MOBILE=#{mobile}</if>
@@ -119,6 +120,7 @@
             <if test="state != null">STATE,</if>
             <if test="mobile != null">MOBILE,</if>
             <if test="type != null">TYPE,</if>
+            <if test="sendTime != null">SENDTIME,</if>
             CREATETIME
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -127,7 +129,8 @@
             <if test="state != null">#{state},</if>
             <if test="mobile != null">#{mobile},</if>
             <if test="type != null">#{type},</if>
-            NOW()
+            <if test="sendTime != null">#{sendTime},</if>
+            #{createTime}
         </trim>
     </insert>
 

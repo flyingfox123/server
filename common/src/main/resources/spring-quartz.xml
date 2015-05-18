@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+	<!-- 要调用的工作类 -->
+	<bean id="queryUnsentMessageTask" class="com.manyi.common.message.util.QueryUnsentMessageTask"></bean>
+
+	<!-- 定义调用对象和调用对象的方法 -->
+	<bean id="queryUnsentMessageTaskMethod"
+		  class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 调用的类 -->
+		<property name="targetObject">
+			<ref bean="queryUnsentMessageTask" />
+		</property>
+		<!-- 调用类中的方法 -->
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+	</bean>
+
+	<!-- 定义触发时间 -->
+	<bean id="doQueryTime" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="queryUnsentMessageTaskMethod" />
+		</property>
+		<!-- cron表达式 -->
+		<property name="cronExpression">
+			<!--每分钟执行-->
+			<value>/10 * * * * ?</value>
+		</property>
+	</bean>
+
+	<!-- 要调用的工作类 -->
+	<bean id="sendMessageTask" class="com.manyi.common.message.util.SendMessageTask"></bean>
+
+	<!-- 定义调用对象和调用对象的方法 -->
+	<bean id="sendMessageTaskMethod"
+		  class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 调用的类 -->
+		<property name="targetObject">
+			<ref bean="sendMessageTask" />
+		</property>
+		<!-- 调用类中的方法 -->
+		<property name="targetMethod">
+			<value>run</value>
+		</property>
+		<!--是否并发执行-->
+		<!--<property name="concurrent" value="false"></property>-->
+	</bean>
+
+	<!-- 定义触发时间 -->
+	<bean id="doSendTime" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="sendMessageTaskMethod" />
+		</property>
+		<!-- cron表达式 -->
+		<property name="cronExpression">
+			<!--每分钟执行-->
+			<value>/15 * * * * ?</value>
+		</property>
+	</bean>
+	 <!--总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序-->
+	<bean id="quartzScheduler"
+		  class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="quartzProperties">
+			<props>
+				<prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop>
+				<!--最大线程数量-->
+				<prop key="org.quartz.threadPool.threadCount">3</prop>
+			</props>
+		</property>
+		<property name="triggers">
+			<list>
+				<ref bean="doQueryTime" />
+				<ref bean="doSendTime" />
+			</list>
+		</property>
+	</bean>
+</beans>

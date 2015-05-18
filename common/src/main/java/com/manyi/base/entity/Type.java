@@ -37,7 +37,9 @@ public enum Type
     // 非短信验证码
     WORONG_CODE("000005"),
     NO_EXP( "02005" ),
+    PARAM_ERROR("000006"),
 
+   ORDER_STATUS_ERROR("000007"),
     PARA_NULL("005001"),
     PHONEERR_NULL("005002")
     ;

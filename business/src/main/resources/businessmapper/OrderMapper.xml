@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manyi.business.order.support.dao.OrderDao">
+
+    <!-- 订单-->
+    <resultMap id="OrderResultMap" type="com.manyi.business.order.bean.Order">
+        <result column="id" property="id"/>
+        <result column="seqNo" property="seqNo"/>
+        <result column="state" property="state"/>
+        <result column="createTime" property="createTime"/>
+        <result column="validateTime" property="validateTime"/>
+        <result column="paidAmount" property="paidAmount"/>
+        <result column="payableAmount" property="payableAmount"/>
+        <result column="discountAmount" property="discountAmount"/>
+        <result column="userId" property="userId"/>
+        <result column="description" property="description"/>
+        <result column="type" property="type"/>
+        <result column="payChannel" property="payChannel"/>
+    </resultMap>
+
+    <!-- 订单项 -->
+    <resultMap id="OrderItemResultMap" type="com.manyi.business.order.bean.OrderItem">
+        <result column="id" property="id"/>
+        <result column="orderId" property="orderId"/>
+        <result column="state" property="state"/>
+        <result column="createTime" property="createTime"/>
+        <result column="validateTime" property="validateTime"/>
+        <result column="payableAmount" property="payableAmount"/>
+        <result column="type" property="type"/>
+        <result column="seqNo" property="seqNo"/>
+        <result column="expiredTime" property="expiredTime"/>
+        <result column="userId" property="userId"/>
+        <result column="description" property="description"/>
+    </resultMap>
+
+
+
+
+    <!-- 订单基础字段 -->
+    <sql id="ORDER_BASE">
+        id, seqNo, state, createTime, validateTime, paidAmount, payableAmount, discountAmount,userId,description,type, payChannel
+    </sql>
+    <!-- 订单项基础字段 -->
+    <sql id="ORDER_ITEM_BASE">
+        id, orderId, state, createTime, validateTime, payableAmount, type, seqNo, expiredTime,userId ,description
+    </sql>
+
+
+
+    <!-- 根据订单id获取订单 -->
+    <select id="getOrderBySeq" resultType="com.manyi.business.order.bean.Order">
+        SELECT
+        <include refid="ORDER_BASE"/>
+        FROM t_order
+        WHERE
+        seqNo = #{seqNo}
+    </select>
+
+
+    <!-- 根据订单id获取订单 -->
+    <select id="getOrderItemBySeq" resultType="com.manyi.business.order.bean.OrderItem">
+        SELECT
+        <include refid="ORDER_ITEM_BASE"/>
+        FROM t_orderItem
+        WHERE
+        seqNo = #{seqNo}
+    </select>
+
+
+    <!-- 根据订单id获取订单 -->
+    <select id="getOrderById" resultType="com.manyi.business.order.bean.Order">
+        SELECT
+        <include refid="ORDER_BASE"/>
+        FROM t_order
+        WHERE
+        id = #{id}
+    </select>
+
+
+    <!-- 根据订单id获取订单 -->
+    <select id="getOrderItemById" resultType="com.manyi.business.order.bean.OrderItem">
+        SELECT
+        <include refid="ORDER_ITEM_BASE"/>
+        FROM t_orderItem
+        WHERE
+        id = #{id}
+    </select>
+
+
+
+    <!-- 创建订单 -->
+    <insert id="createOrder" parameterType="com.manyi.business.order.bean.Order"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        t_order
+        (seqNo, state, validateTime, paidAmount, payableAmount, discountAmount,userId,description,type, payChannel)
+        values
+        (#{seqNo},#{state},#{validateTime},#{paidAmount} ,#{payableAmount}
+         ,#{discountAmount},#{userId},#{description},#{type},#{payChannel})
+    </insert>
+
+
+
+    <!-- 创建订单项 -->
+    <insert id="creatOrderItem" parameterType="com.manyi.business.order.bean.OrderItem"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        t_orderItem
+        ( orderId, state, createTime, validateTime, payableAmount, type, seqNo, expiredTime,userId,description)
+        values
+        (#{orderId},#{state},#{createTime},#{validateTime},#{payableAmount} ,#{type}
+        ,#{seqNo},#{expiredTime},#{userId},#{description})
+    </insert>
+
+
+    <!-- 修改订单 -->
+    <update id="updateOrder" parameterType="com.manyi.business.order.bean.Order">
+        UPDATE
+        t_order
+        <set>
+            <if test="state != null">state = #{state},</if>
+            <if test="validateTime != null">validateTime = #{validateTime},</if>
+            <if test="paidAmount != null">paidAmount = #{paidAmount},</if>
+            <if test="payableAmount != null">payableAmount = #{payableAmount},</if>
+            <if test="payableAmount != null">payableAmount = #{payableAmount},</if>
+            <if test="payChannel != 0">payChannel = #{payChannel},</if>
+
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+
+    <!-- 修改订单项 -->
+    <update id="updateOrderItem" parameterType="com.manyi.business.order.bean.OrderItem">
+        UPDATE
+        t_orderItem
+        <set>
+            <if test="state != null">state = #{state},</if>
+            <if test="validateTime != null">validateTime = #{validateTime},</if>
+            <if test="expiredTime != null">expiredTime = #{expiredTime},</if>
+            <if test="description != null">description = #{description},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 获取订单对应的订单项-->
+    <select id="queryItemByOrder" resultMap="OrderItemResultMap">
+        SELECT
+        <include refid="ORDER_ITEM_BASE"/>
+        FROM t_orderItem
+        WHERE
+        orderId = #{orderId}
+    </select>
+
+
+    <!-- 条件查询订单 -->
+    <select id="queryOrder" resultMap="OrderResultMap" parameterType="com.manyi.business.order.bean.QueryOrderCondition">
+        SELECT
+        <include refid="ORDER_BASE"/>
+        FROM t_order
+        <trim prefix="where" prefixOverrides="AND">
+            <if test="seqNo != null">
+                AND seqNo = #{seqNo}
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+            <if test="userId != 0">
+            AND userId = #{userId}
+        </if>
+            <if test="type != 0">
+                AND type = #{type}
+            </if>
+
+        </trim>
+        <if test="pageSize != 0">
+            limit #{pageNum},#{pageSize}
+        </if>
+    </select>
+
+    <!-- 条件查询订单数量 -->
+    <select id="queryOrderPageCount" resultType="java.lang.Integer" parameterType="com.manyi.business.order.bean.QueryOrderCondition">
+        SELECT
+        COUNT(*)
+        FROM t_order
+        <trim prefix="where" prefixOverrides="AND">
+            <if test="seqNo != null">
+                AND seqNo = #{seqNo}
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+            <if test="userId != 0">
+                AND userId = #{userId}
+            </if>
+            <if test="type != 0">
+                AND type = #{type}
+            </if>
+        </trim>
+    </select>
+
+
+
+    <!-- 条件查询订单项-->
+    <select id="queryOrderItem" resultMap="OrderItemResultMap" parameterType="com.manyi.business.order.bean.QueryOrderItemResult">
+        SELECT
+        <include refid="ORDER_ITEM_BASE"/>
+        FROM t_orderItem
+        <trim prefix="where" prefixOverrides="AND">
+            <if test="seqNo != null">
+                AND seqNo = #{seqNo}
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+            <if test="userId != 0">
+                AND userId = #{userId}
+            </if>
+            <if test="orderId != 0">
+                AND orderId = #{orderId}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+        </trim>
+        <if test="pageSize != 0">
+            limit #{pageNum},#{pageSize}
+        </if>
+    </select>
+
+
+    <!-- 条件查询订单项-->
+    <select id="queryOrderItemCount" resultType="java.lang.Integer" parameterType="com.manyi.business.order.bean.QueryOrderItemResult">
+        SELECT
+        COUNT(*)
+        FROM t_orderItem
+        <trim prefix="where" prefixOverrides="AND">
+            <if test="seqNo != null">
+                AND seqNo = #{seqNo}
+            </if>
+            <if test="state != null">
+                AND state = #{state}
+            </if>
+            <if test="userId != 0">
+                AND userId = #{userId}
+            </if>
+            <if test="orderId != 0">
+                AND orderId = #{orderId}
+            </if>
+            <if test="type != null">
+                AND type = #{type}
+            </if>
+        </trim>
+    </select>
+
+
+</mapper>

@@ -23,6 +23,9 @@ public class IdentificationCode {
 
     public String mobile;
 
+    //有效时间
+    public String activeTime;
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -77,5 +80,13 @@ public class IdentificationCode {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getActiveTime() {
+        return activeTime;
+    }
+
+    public void setActiveTime(String activeTime) {
+        this.activeTime = activeTime;
     }
 }

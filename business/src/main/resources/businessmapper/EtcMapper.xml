@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manyi.business.etc.support.dao.EtcDao">
+
+    <!-- 创建ETC -->
+    <insert id="addETC" parameterType="com.manyi.business.etc.bean.Etc"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        t_etc
+        (ETCCode, plateNum, orderItemId)
+        values
+        (#{ETCCode},#{plateNum},#{orderItemId})
+    </insert>
+
+
+    <!-- 创建ETC发票 -->
+    <insert id="addETCInvoice" parameterType="com.manyi.business.etc.bean.EtcInvoice"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        t_etcinvoice
+        (invoiceHeader, amount, postAddress,phone,orderItemId)
+        values
+        (#{invoiceHeader},#{amount},#{postAddress},#{phone},#{orderItemId})
+    </insert>
+
+
+
+
+
+</mapper>

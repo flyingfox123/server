@@ -78,6 +78,12 @@ public class RedisClientTemplate {
         return result;
     }
 
+
+    /**
+     *判断key值是否存在
+     * @param key
+     * @return
+     */
     public Boolean exists(String key) {
         Boolean result = false;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -96,6 +102,11 @@ public class RedisClientTemplate {
         return result;
     }
 
+    /**
+     * 查看对用key值得数据类型
+     * @param key
+     * @return
+     */
     public String type(String key) {
         String result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -116,7 +127,7 @@ public class RedisClientTemplate {
     }
 
     /**
-     * 在某段时间后实现
+     * 设置key值，在某段时间后失效
      *
      * @param key
      * @param seconds
@@ -167,6 +178,11 @@ public class RedisClientTemplate {
         return result;
     }
 
+    /**
+     *  查看某个key的剩余生存时间,单位【秒】.永久生存或者不存在的都返回-1
+     * @param key
+     * @return
+     */
     public Long ttl(String key) {
         Long result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -563,6 +579,11 @@ public class RedisClientTemplate {
         return result;
     }
 
+    /**
+     * 删除key值。
+     * @param key
+     * @return
+     */
     public Long del(String key) {
         Long result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -581,7 +602,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+    //删除hash表key中的元素field
     public Long hdel(String key, String field) {
         Long result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -678,6 +699,7 @@ public class RedisClientTemplate {
     }
 
     // ================list ====== l表示 list或 left, r表示right====================
+    //从右侧插入
     public Long rpush(String key, String string) {
         Long result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -696,7 +718,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+    //从左侧插入
     public Long lpush(String key, String string) {
         Long result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -715,7 +737,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+     //查看list长度
     public Long llen(String key) {
         Long result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -734,7 +756,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+    //从start位置到end位置列出key相关的list
     public List<String> lrange(String key, long start, long end) {
         List<String> result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -753,7 +775,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+     //删除下表start到end除外的key list的元素
     public String ltrim(String key, long start, long end) {
         String result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -772,7 +794,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+    // 获取列表指定下标的值
     public String lindex(String key, long index) {
         String result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -810,7 +832,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+    // 删除列表指定的值 ，第二个参数为删除的个数（有重复时），后add进去的值先被删，类似于出栈
     public Long lrem(String key, long count, String value) {
         Long result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -829,7 +851,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+    // 列表元素出栈 左侧
     public String lpop(String key) {
         String result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -848,7 +870,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+    // 列表元素出栈 右侧
     public String rpop(String key) {
         String result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -870,6 +892,7 @@ public class RedisClientTemplate {
 
     //return 1 add a not exist value ,
     //return 0 add a exist value
+    //向集合中添加元素
     public Long sadd(String key, String member) {
         Long result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -888,7 +911,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+     //查看集合中所有的元素
     public Set<String> smembers(String key) {
         Set<String> result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -907,7 +930,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+    //集合key中删除元素memeber
     public Long srem(String key, String member) {
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
 
@@ -963,7 +986,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+      //判断集合key中是否存在member
     public Boolean sismember(String key, String member) {
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
         Boolean result = null;
@@ -999,7 +1022,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+    //向数字集合key中添加数字score，key值为member
     public Long zadd(String key, double score, String member) {
         Long result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -1017,7 +1040,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+    //按照权重值排序由低到高排序
     public Set<String> zrange(String key, int start, int end) {
         Set<String> result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -1035,7 +1058,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+    //集合key中删除元素member
     public Long zrem(String key, String member) {
         Long result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -1173,7 +1196,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+    //统计zset集合中的元素中个数
     public Long zcard(String key) {
         Long result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -1233,7 +1256,11 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+    // 排序
+        /*
+         * list中存字符串时必须指定参数为alpha，如果不使用SortingParams，而是直接使用sort("list")，
+         * 会出现"ERR One or more scores can't be converted into double"
+         */
     public List<String> sort(String key, SortingParams sortingParameters) {
         List<String> result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -1253,7 +1280,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+     //统计key集合中min-max之间元素的个数
     public Long zcount(String key, double min, double max) {
         Long result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -1814,6 +1841,14 @@ public class RedisClientTemplate {
         return result;
     }
 
+    /**
+     * hash功能
+     * @param key
+     * @param field
+     * @param value
+     * @return
+     */
+    //向hash表key中添加key：field；value：value
     public Long hset(byte[] key, byte[] field, byte[] value) {
         Long result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -1833,7 +1868,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+    //hash表key中获取field
     public byte[] hget(byte[] key, byte[] field) {
         byte[] result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -1895,7 +1930,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+      //批量获取hash表中的值
     public List<byte[]> hmget(byte[] key, byte[]... fields) {
         List<byte[]> result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -1916,7 +1951,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+    //hash表key中新增key：field；和值为long型的value ，如果不存在就新增元素，如果存在就在之前元素的基础上增加value
     public Long hincrBy(byte[] key, byte[] field, long value) {
         Long result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -1937,7 +1972,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+    //判断hash表key中是否存在field
     public Boolean hexists(byte[] key, byte[] field) {
         Boolean result = false;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -1958,7 +1993,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+    //判断hash表key中删除field
     public Long hdel(byte[] key, byte[] field) {
         Long result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -2000,7 +2035,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+     //获取hash表中的所有的key值
     public Set<byte[]> hkeys(byte[] key) {
         Set<byte[]> result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -2021,7 +2056,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+    //列出hash表key中的所有元素
     public Collection<byte[]> hvals(byte[] key) {
         Collection<byte[]> result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();
@@ -2629,7 +2664,7 @@ public class RedisClientTemplate {
         }
         return result;
     }
-
+      //查看key集合中member的权重
     public Double zscore(byte[] key, byte[] member) {
         Double result = null;
         ShardedJedis shardedJedis = redisDataSource.getRedisClient();

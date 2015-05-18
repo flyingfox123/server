@@ -75,9 +75,9 @@ public interface MessageService {
 
     /**
      * 发送短信
-     * @param messageSendList
+     * @param messageSend
      */
-    public void sendMessage(List<MessageSend> messageSendList) throws Exception;
+    public void sendMessage(MessageSend messageSend) throws Exception;
 
     /**
      * 发送短信验证码接口（外部调用）
@@ -94,4 +94,15 @@ public interface MessageService {
      * @return
      */
     public void sendMessageService(String userId,String mobile,String type,String templateId,Map paras) throws BusinessException;
+
+    /**
+     *
+     * @param userId
+     * @param mobile
+     * @param type
+     * @param templateId
+     * @param paras
+     * @throws Exception
+     */
+    public void sendRealtimeMessage(String userId,String mobile,String type,String templateId,Map paras) throws Exception;
 }

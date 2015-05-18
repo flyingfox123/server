@@ -13,7 +13,6 @@
     <module>point</module>
     <module>common</module>
     <module>userCenter</module>
-    <module>userCenter</module>
   </modules>
   <name>server Maven Webapp</name>
   <url>http://maven.apache.org</url>

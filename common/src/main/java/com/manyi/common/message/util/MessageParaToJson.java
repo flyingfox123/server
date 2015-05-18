@@ -6,7 +6,6 @@ import com.manyi.common.message.bean.DataJson;
 import com.manyi.common.message.bean.ReqHeaderJson;
 import com.manyi.common.util.ReadPropertiesUtil;
 
-import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -46,15 +45,10 @@ public class MessageParaToJson {
         datajson.setMobile(mobile);
         datajson.setContent(content);
         datajson.setChannelID(channelID);
-
         datajson.setSign(sign);
         map.put("reqHeader",reqHeaderJson);
         map.put("data",datajson);
         String json = objectMapper.writeValueAsString(map);
         return json;
-    }
-
-    public static void main(String args[]) {
-        System.out.println(sign);
     }
 }

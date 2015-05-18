@@ -55,16 +55,15 @@
             <version>1.7.9</version>
         </dependency>
 
-        <!-- dubbo -->
+        <!-- dubbo-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>dubbo</artifactId>
             <version>2.4.9</version>
-            <!-- 去掉依赖的spring -->
             <exclusions>
                 <exclusion>
-                    <artifactId>spring</artifactId>
                     <groupId>org.springframework</groupId>
+                    <artifactId>spring</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
