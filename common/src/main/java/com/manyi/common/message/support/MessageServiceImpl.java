@@ -1,5 +1,6 @@
 package com.manyi.common.message.support;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.manyi.base.entity.Type;
 import com.manyi.base.exception.BusinessException;
 import com.manyi.common.message.MessageService;
@@ -157,14 +158,16 @@ public class MessageServiceImpl implements MessageService {
             DoHttpRequest.DoHttpRequest(smsHttpUrl,param,"POST");
     }
 
-    public void  sendMessageCode(String mobile,String type,String templateId) throws Exception {
+    public boolean  sendMessageCode(String mobile,String type,String templateId) throws Exception {
+        boolean result=false;
+        ObjectMapper objectMapper = new ObjectMapper();
         if("".equals(templateId)){
             templateId=defaultTemplateId;
         }//验证手机是否正确
         boolean isMobileNO = IsMobileNo.isMobileNO(mobile);
         if (isMobileNO==false){
             logger.error("手机号错误:"+mobile);
-            throw new BusinessException(Type.TEMPLATEID_NULL);
+            throw new BusinessException(Type.WRONG_PHONENO);
         }
         //生成验证码并保存
         String smsCode = createIdentificationCode();
@@ -174,7 +177,6 @@ public class MessageServiceImpl implements MessageService {
         identificationCod.setCode(smsCode);
         identificationCod.setCreateTime(new Date());
         identificationCod.setType(type);
-        saveIdentificationCode(identificationCod);
         Map<String,String> Paras = new HashMap<String,String>();
         Paras.put("smsCode",smsCode);
         //查询短信模板
@@ -182,7 +184,15 @@ public class MessageServiceImpl implements MessageService {
         smsContent = MessageBindPara.MessageBindPara(smsContent,Paras);
         String json = MessageParaToJson.messageParaToJson(mobile,smsContent);
         String param = smsParam + "=" + json;
-        DoHttpRequest.DoHttpRequest(smsHttpUrl,param,"POST");
+        String smsResult  = DoHttpRequest.DoHttpRequest(smsHttpUrl,param,"POST");
+        Map maps = objectMapper.readValue(smsResult, Map.class);
+        Map rspHeader = (Map)maps.get("rspHeader");
+        String rspCode = (String)rspHeader.get("rspCode");
+        if("00000000".equals(rspCode)){
+            result=true;
+            saveIdentificationCode(identificationCod);
+        }
+        return result;
     }
     public void sendRealtimeMessage(String userId,String mobile,String type,String templateId,Map paras) throws Exception {
         if("".equals(templateId)){
@@ -191,7 +201,7 @@ public class MessageServiceImpl implements MessageService {
         boolean isMobileNO = IsMobileNo.isMobileNO(mobile);
         if (isMobileNO==false){
             logger.error("手机号错误:"+mobile);
-            throw new BusinessException(Type.TEMPLATEID_NULL);
+            throw new BusinessException(Type.WRONG_PHONENO);
         }
         //查询短信模板
         String smsContent = queryTemplate(templateId);
@@ -219,7 +229,7 @@ public class MessageServiceImpl implements MessageService {
         boolean isMobileNO = IsMobileNo.isMobileNO(mobile);
         if (isMobileNO==false){
             logger.error("手机号错误:"+mobile);
-            throw new BusinessException(Type.TEMPLATEID_NULL);
+            throw new BusinessException(Type.WRONG_PHONENO);
         }
         //查询短信模板
         String smsContent = queryTemplate(templateId);

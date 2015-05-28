@@ -7,13 +7,23 @@ public class EtcResult {
 
     private String orderItemSeq ;
 
-    private String state;
+    private Integer state;
 
-    public String getState() {
+    private String invoiceNo;
+
+    public String getInvoiceNo() {
+        return invoiceNo;
+    }
+
+    public void setInvoiceNo(String invoiceNo) {
+        this.invoiceNo = invoiceNo;
+    }
+
+    public Integer getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(Integer state) {
         this.state = state;
     }
 

@@ -1,16 +1,13 @@
 package com.manyi.usercenter.user.support;
 
 import com.manyi.base.entity.Constant;
+import com.manyi.base.entity.Type;
 import com.manyi.base.exception.BusinessException;
 import com.manyi.common.message.MessageService;
-import com.manyi.common.util.RandomUtil;
-import com.manyi.common.util.ReadPropertiesUtil;
 import com.manyi.usercenter.shiro.util.PasswordHelper;
-import com.manyi.usercenter.shiro.util.ShiroUser;
 import com.manyi.usercenter.user.UserService;
-import com.manyi.usercenter.user.bean.CorpUser;
-import com.manyi.usercenter.user.bean.IndivUser;
-import com.manyi.usercenter.user.bean.PlatUser;
+import com.manyi.usercenter.user.bean.*;
+import com.manyi.usercenter.user.support.dao.UserRoleDao;
 import com.manyi.usercenter.user.support.entity.BaseUser;
 import com.manyi.usercenter.user.support.entity.Corporation;
 import com.manyi.usercenter.user.support.entity.Individual;
@@ -38,6 +35,9 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Autowired
+    private UserRoleDao userRoleDao;
+
+    @Autowired
     private MessageService messageService;
 
     @Override
@@ -48,6 +48,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<PlatUser> queryAllSysUsers() {
         return userDao.queryAllSysUsers();
+    }
+
+    @Override
+    public BaseUser getUserByEtc(String etcNo) {
+        return null;
+    }
+
+    @Override
+    public void addVehicle(VehicleBean vehicleBean) {
+        userDao.addVehicle(vehicleBean);
     }
 
     /**
@@ -75,16 +85,7 @@ public class UserServiceImpl implements UserService {
         sysUser.setCreator(1);  // 先写死一个id，之后改成由ShiroUser里获取
         sysUser.setName(platUser.getName());
         userDao.createSysUser(sysUser);
-
-        System.out.println(sysUser.getId());
-    }
-
-    public static void main(String args[]){
-        BaseUser baseUser=new BaseUser();
-        baseUser.setLoginName("admin");
-        baseUser.setPassword("123456");
-        baseUser.setSecretKey("df9579fbb577baeff08052de67a8ce86");
-        PasswordHelper.encryptPassword(baseUser);
+        System.out.println("当前插入的个人用户id为：" + sysUser.getId());
     }
 
     @Override
@@ -110,46 +111,65 @@ public class UserServiceImpl implements UserService {
         userDao.deleteSysUser(userId);
     }
 
+    @Override
+    public Individual getIndividualById(Long id) {
+        return userDao.getIndividualById(id);
+    }
+
     /**
-     * 注册个人用户
+     * 注册司机用户
      * 1、创建基本用户
      * 2、创建个人用户
      */
     @Override
-    public void registerIndividual(IndivUser indivUser) {
-
-        Date date = new Date();
+    public void registerIndividual(UserBean userBean) {
 
         BaseUser baseUser = new BaseUser();
-        baseUser.setLoginName(indivUser.getLoginName());
-        baseUser.setCreateTime(date);
-        baseUser.setType(Constant.PlatUser);
+        baseUser.setLoginName(userBean.getLoginName());
+        baseUser.setType(Constant.Individual);
         baseUser.setState(Constant.ENABLE);
+        baseUser.setPassword(userBean.getPassWord());
         // 存入密钥和密码
         PasswordHelper.encryptPassword(baseUser);
         userDao.createUser(baseUser);
+        System.out.println("baseUser:" + baseUser.getId());
 
         Individual individual = new Individual();
-        individual.setDescription(indivUser.getDescription());
-        individual.setDriverName(indivUser.getDriverName());
-        individual.setExpectDestination(indivUser.getExpectDestination());
-        individual.setIdCardNo(indivUser.getIdCardNo());
-        individual.setOwner(indivUser.getOwner());
-        individual.setOwnerMobile(indivUser.getOwnerMobile());
-        individual.setPlateLength(indivUser.getPlateLength());
-        individual.setPlateLoad(indivUser.getPlateLoad());
-        individual.setPlateNo(indivUser.getPlateNo());
-        individual.setPlateSerialNo(indivUser.getPlateSerialNo());
-        individual.setPlateType(indivUser.getPlateType());
-        individual.setUpdateTime(date);
         individual.setUserId(baseUser.getId());
+        individual.setPhone(userBean.getLoginName());
         userDao.createIndividual(individual);
+        System.out.println("baseUser:"+individual.getId());
+
+        //增加个人用户角色对应关系
+        userRoleDao.addUserRole(Long.valueOf(baseUser.getId()),Long.valueOf(com.manyi.usercenter.util.Constant.INDIVIDUAL.getValue()));
+    }
+
+    /**
+     * 更新司机用户信息
+     * @param individualBean
+     */
+    @Override
+    public void updateIndividual(IndividualBean individualBean) {
+        Individual individual = new Individual();
+        individual.setBirthDay(individualBean.getBirthDay());
+        individual.setDescription(individualBean.getDescription());
+        individual.setDriverName(individualBean.getDriverName());
+        individual.setHeadPic(individualBean.getHeadPic());
+        individual.setIdCardNo(individualBean.getIdCardNo());
+        individual.setPhone(individualBean.getPhone());
+        individual.setSexual(individualBean.getSexual());
+        individual.setUserId(individualBean.getUserId());
+        individual.setSecretKey(individualBean.getSecretKey());
+        userDao.updateIndividual(individual);
     }
 
     @Override
-    public void updateIndividualInfo(Individual individual) {
-        individual.setUpdateTime(new Date());
-        userDao.updateIndividual(individual);
+    public List<Individual> getIndividual(String loginName) throws BusinessException {
+        if (loginName==null||"".equals(loginName)){
+            throw new BusinessException(Type.PARA_NULL);
+        }
+        List<Individual> list = userDao.getIndividual(loginName);
+        return list;
     }
 
     /**
@@ -160,25 +180,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public void registerCorporation(CorpUser corpUser) {
 
-        Date date = new Date();
-
         BaseUser baseUser = new BaseUser();
         baseUser.setLoginName(corpUser.getLoginName());
-        baseUser.setCreateTime(date);
-        baseUser.setType(Constant.PlatUser);
+        baseUser.setPassword(corpUser.getPassword());
+        baseUser.setType(Constant.CorpUser);
         baseUser.setState(Constant.ENABLE);
-        // 存入密钥和密码
         PasswordHelper.encryptPassword(baseUser);
         userDao.createUser(baseUser);
 
         Corporation corporation = new Corporation();
-        corporation.setEmail(corpUser.getEmail());
-        corporation.setLegalPerson(corpUser.getLegalPerson());
-        corporation.setName(corpUser.getName());
-        corporation.setPhone(corpUser.getPhone());
-        corporation.setRemark(corpUser.getRemark());
         corporation.setUserId(baseUser.getId());
-
         userDao.createCorporater(corporation);
     }
 
@@ -202,42 +213,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updatePassword(long userId, String password) {
+    public void updatePassword(String loginName, String password) {
         BaseUser baseUser = new BaseUser();
-        baseUser.setId(userId);
+        baseUser.setLoginName(loginName);
         baseUser.setPassword(password);
         PasswordHelper.encryptPassword(baseUser);
+
         userDao.updatePassword(baseUser);
     }
 
     @Override
-    public void sendMessageCode(String phoneNum,String type,String templateId) throws Exception {
-        messageService.sendMessageCode(phoneNum,type,templateId);
+    public boolean sendMessageCode(String phoneNum,String type,String templateId) throws Exception {
+        return messageService.sendMessageCode(phoneNum,type,templateId);
     }
 
     @Override
     public boolean verifyMessageCode(String phone, String type,String msgCode) throws BusinessException {
-        boolean isSuccess = messageService.isIdentificationCodeValid(phone,type,msgCode);
-        return isSuccess;
+        return messageService.isIdentificationCodeValid(phone,type,msgCode);
     }
 
     @Override
-    public boolean isEffective(String code) {
-        //从缓存中取出验证码，及发送时间，检查时间是否过期
-        String sendTime = "12423243";
-        String effectiveTime = "";//(String)properties.get("failturetime");
-        long min = Long.valueOf(effectiveTime);
-        long mm=min*60*1000;
-        if((System.currentTimeMillis()-Long.valueOf(sendTime))<mm){
-            return true;
-        }
-        return false;
+    public boolean sendMegCodeForResetPass(String phoneNum, String type, String templateId) throws Exception {
+        return messageService.sendMessageCode(phoneNum,type,templateId);
     }
 
     @Override
-    public String createToke(String deviceId, String userName) {
-        return null;
+    public boolean verifyMegCodeForResetPass(String phone, String type, String msgCode) throws BusinessException {
+        return messageService.isIdentificationCodeValid(phone,type,msgCode);
     }
+
 
     @Override
     public Set<String> findRoles(String username) {
@@ -253,6 +257,11 @@ public class UserServiceImpl implements UserService {
             resultList.addAll(userDao.findPermissions(rolename));
         }
         return new HashSet<String>(resultList);
+    }
+
+    @Override
+    public void addUserRole(String userId, String roleId) {
+        userRoleDao.addUserRole(Long.valueOf(userId),Long.valueOf(roleId));
     }
 
 

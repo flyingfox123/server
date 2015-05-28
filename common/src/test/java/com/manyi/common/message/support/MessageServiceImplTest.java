@@ -9,7 +9,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -21,10 +23,29 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(locations={"classpath:spring-common-servlet-test.xml"})
+@TransactionConfiguration(transactionManager="transactionManager",defaultRollback=true)
+@Transactional
 public class MessageServiceImplTest {
 
     @Autowired
     public MessageServiceImpl messageServiceImpl;
+
+    @Test
+    public void testQueryUnsentMessage() throws Exception {
+        List<MessageSend> messageSendList0 = messageServiceImpl.queryUnsentMessage();
+        int a=messageSendList0.size();
+        MessageSend messageSend = new MessageSend();
+        messageSend.setType("testQuery");
+        messageSend.setState("unsent");
+        messageSend.setMobile("15665888893");
+        messageSend.setUserId("5431111");
+        messageSend.setCreateTime(new Date());
+        messageSend.setContent("您的验证码为876430,请在有效时间内使用");
+        messageServiceImpl.saveMessage(messageSend);
+        List<MessageSend> messageSendList = messageServiceImpl.queryUnsentMessage();
+        int b=messageSendList.size();
+        assertEquals(a+1,b);
+    }
 
     @Test
     public void testCreateIdentificationCode() throws Exception {
@@ -87,7 +108,7 @@ public class MessageServiceImplTest {
     @Test
     public void testQueryTemplate() throws Exception {
         try {
-            String templateId="MessageCode";
+            String templateId="registerCode";
             //String templateId = null;
             String content = messageServiceImpl.queryTemplate(templateId);
             assertEquals(content,"您申请了手机号码注册，验证码为：<smsCode>,两分钟内有效，请在注册页面中及时输入以完成注册。");
@@ -172,29 +193,13 @@ public class MessageServiceImplTest {
     }
 
     @Test
-    public void testQueryUnsentMessage() throws Exception {
-        List<MessageSend> messageSendList0 = messageServiceImpl.queryUnsentMessage();
-        assertEquals(messageSendList0.size()==0,true);
-        MessageSend messageSend = new MessageSend();
-        messageSend.setType("testQuery");
-        messageSend.setState("unsent");
-        messageSend.setMobile("15665888893");
-        messageSend.setUserId("5431111");
-        messageSend.setCreateTime(new Date());
-        messageSend.setContent("您的验证码为876430,请在有效时间内使用");
-        messageServiceImpl.saveMessage(messageSend);
-        List<MessageSend> messageSendList = messageServiceImpl.queryUnsentMessage();
-        assertEquals(messageSendList.size()>0,true);
-    }
-
-    @Test
     public void testSendMessageCode() throws Exception {
         IdentificationCode identificationCode = new IdentificationCode();
         identificationCode.setMobile("15665888893");
         identificationCode.setType("test");
         String code = messageServiceImpl.queryIdentificationCode(identificationCode);
         assertNull(code);
-        messageServiceImpl.sendMessageCode("15665888893","test","");
+        messageServiceImpl.sendMessageCode("15665888893","test","registerCode");
         code = messageServiceImpl.queryIdentificationCode(identificationCode);
         assertNotNull(code);
     }

@@ -1,6 +1,7 @@
 package com.manyi.usercenter.user.support.dao;
 
 import com.manyi.usercenter.user.bean.PlatUser;
+import com.manyi.usercenter.user.bean.VehicleBean;
 import com.manyi.usercenter.user.support.entity.BaseUser;
 import com.manyi.usercenter.user.support.entity.Corporation;
 import com.manyi.usercenter.user.support.entity.Individual;
@@ -79,6 +80,20 @@ public interface UserDao {
     void updateIndividual(Individual individual);
 
     /**
+     * 查询司机用户信息
+     * @param loginName
+     * @return
+     */
+    List<Individual> getIndividual(String loginName);
+
+    /**
+     * 根据ID查询司机信息
+     * @param id
+     * @return
+     */
+    Individual getIndividualById(@Param("id")Long id);
+
+    /**
      * 创建企业用户
      * @param corporation
      */
@@ -98,10 +113,10 @@ public interface UserDao {
 
     /**
      * 根据Id获取当前基础用户信息
-     * @param userId
+     * @param id
      * @return
      */
-    BaseUser getBaseUserById(long userId);
+    BaseUser getBaseUserById(@Param("id")Long id);
 
     /**
      * 查询用户角色
@@ -116,4 +131,8 @@ public interface UserDao {
      * @return
      */
     List<String> findPermissions(@Param("name")String rolename);
+
+    void addVehicle(VehicleBean vehicleBean);
+
+
 }

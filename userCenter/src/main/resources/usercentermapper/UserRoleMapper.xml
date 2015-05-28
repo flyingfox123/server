@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manyi.usercenter.user.support.dao.UserRoleDao">
+
+
+
+    <!-- 创建基础用户 -->
+    <insert id="addUserRole" parameterType="String">
+        INSERT INTO
+        t_UserRole
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            UserId, RoleId,UpdateTime
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{userId}, #{roleId}, now()
+        </trim>
+    </insert>
+
+
+</mapper>

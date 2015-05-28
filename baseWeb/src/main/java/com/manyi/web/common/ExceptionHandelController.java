@@ -2,6 +2,7 @@ package com.manyi.web.common;
 
 import com.manyi.base.entity.Message;
 import com.manyi.base.exception.BusinessException;
+import com.manyi.common.bean.response.ResponseBean;
 import com.manyi.web.util.ExceptionParse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +21,8 @@ public class ExceptionHandelController {
      */
     @RequestMapping(value = "/exceptionhandle")
     @ResponseBody
-    public Message exceptionHandle(HttpServletRequest request) {
-        Message message = ExceptionParse.parseException(request);
-        return message;
+    public ResponseBean exceptionHandle(HttpServletRequest request) {
+        ResponseBean responseBean = ExceptionParse.parseException(request);
+        return responseBean;
     }
 }

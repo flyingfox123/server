@@ -5,7 +5,15 @@ package com.manyi.usercenter.util;
  */
 public enum Constant {
     TOKEN("token"),
-    LOGINNAME("loginName");
+    LOGINNAME("loginName"),
+    REGESTERUSER("regesterUser"),
+    RESETPASS("resetPass"),
+    REGISTERCODE("registerCode"),
+    FINDPASSWORD("findPassword"),
+    INDIVIDUAL("13"),
+    CORPORATION("14"),
+    PICDIR("pic"),
+    HEADPICDIR("headPic");
 
     private String value;
 

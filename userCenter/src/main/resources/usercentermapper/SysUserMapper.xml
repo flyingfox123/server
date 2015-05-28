@@ -26,6 +26,25 @@
         <result column="Updatetime" property="updateTime"/>
     </resultMap>
 
+    <!-- 司机用户返回值 -->
+    <resultMap id="Result_Individual" type="com.manyi.usercenter.user.support.entity.Individual">
+        <result column="id" property="id"/>
+        <result column="State" property="State"/>
+        <result column="CreateTime" property="createTime"/>
+        <result column="LoginName" property="loginName"/>
+        <result column="Password" property="passWord"/>
+        <result column="SecretKey" property="secretKey"/>
+        <result column="UserId" property="userId"/>
+        <result column="UpdateTime" property="updateTime"/>
+        <result column="DriverName" property="driverName"/>
+        <result column="IdCardNo" property="idCardNo"/>
+        <result column="Description" property="description"/>
+        <result column="Sexual" property="sexual"/>
+        <result column="Phone" property="phone"/>
+        <result column="BirthDay" property="birthDay"/>
+        <result column="HeadPic" property="headPic"/>
+    </resultMap>
+
     <!-- 基础用户字段 -->
     <sql id="Base_User">
         t_user.id, LoginName, Password, SecretKey, Type, t_user.State, t_user.Createtime
@@ -52,18 +71,12 @@
         t_corporation.id, Name, Email, Remark, UserId, Phone, LegalPerson, NickName
     </sql>
 
-    <!-- 个人用户字段关联基础用户表 -->
+    <!-- 司机用户字段关联基础用户表 -->
     <sql id="Relation_Individual">
-        t_individual.id, UserId, Updatetime, PlateNo, PlateType, PlateLength, PlateLoad,
-        ExpectDestination, DriverName, IdCardNo, Owner, OwnerMobile, Description, PlateSerialNo,
-        LoginName, Password, SecretKey, Type, t_user.State
+        t_individual.id,LoginName,Type, UserId, Updatetime, DriverName, IdCardNo, Description,State,CreateTime,
+        Sexual,Phone,BirthDay,HeadPic
     </sql>
 
-    <!-- 个人用户字段 -->
-    <sql id="Base_Individual">
-        t_individual.id, UserId, Updatetime, PlateNo, PlateType, PlateLength, PlateLoad,
-        ExpectDestination, DriverName, IdCardNo, Owner, OwnerMobile, Description, PlateSerialNo
-    </sql>
 
     <!-- 通过用户名查询用户 -->
     <select id="getUserByName" parameterType="String" resultMap="Result_User">
@@ -143,50 +156,52 @@
     </delete>
 
     <!-- 个体用户注册 -->
-    <insert id="createIndividual" parameterType="com.manyi.usercenter.user.support.entity.Individual">
+    <insert id="createIndividual" parameterType="com.manyi.usercenter.user.support.entity.Individual" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO
           t_individual
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            UserId, Updatetime, PlateNo, PlateType, PlateLength, PlateLoad, ExpectDestination,
-            DriverName, IdCardNo, Owner, OwnerMobile, Description, PlateSerialNo,
+            UserId
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            #{userId},#{updateTime},#{platNo},#{plateType},#{plateLength},#{plateLoad},#{expectDestination},
-            #{driverName},#{idCardNo},#{owner},#{ownerMobile},#{description},#{plateSerialNo},
+            #{userId}
         </trim>
     </insert>
 
-    <!-- 个体用户修改信息 -->
+    <!-- 司机用户修改信息 -->
     <update id="updateIndividual" parameterType="com.manyi.usercenter.user.support.entity.Individual">
         UPDATE
           t_individual
         <set>
-            <if test="updateTime != null">Updatetime = #{updateTime},</if>
-            <if test="plateNo != null">PlateNo = #{plateNo},</if>
-            <if test="plateType != null">PlateType = #{plateType},</if>
-            <if test="plateLength != null">PlateLength = #{plateLength},</if>
-            <if test="plateLoad != null">PlateLoad = #{plateLoad},</if>
-            <if test="expectDestination != null">ExpectDestination = #{expectDestination},</if>
+            Updatetime = now(),
             <if test="driverName != null">DriverName = #{driverName},</if>
             <if test="idCardNo != null">IdCardNo = #{idCardNo},</if>
-            <if test="owner != null">Owner = #{owner},</if>
-            <if test="ownerMobile != null">OwnerMobile = #{ownerMobile},</if>
+            <if test="sexual != null">Sexual = #{sexual},</if>
+            <if test="phone != null">Phone = #{phone},</if>
+            <if test="birthDay != null">BirthDay = #{birthDay},</if>
+            <if test="headPic != null">HeadPic = #{headPic},</if>
+            <if test="phone != null">Phone = #{phone},</if>
             <if test="description != null">Description = #{description},</if>
-            <if test="plateSerialNo != null">PlateSerialNo = #{plateSerialNo},</if>
         </set>
         WHERE
           UserId = #{userId}
     </update>
+
+    <!-- 查询司机用户 -->
+    <select id="getIndividual" resultMap="Result_Individual">
+        SELECT
+        <include refid="Relation_Individual"/>
+        from t_user,t_individual WHERE t_user.LoginName=#{loginName} AND t_user.id=t_individual.UserId
+    </select>
 
     <!-- 企业用户注册 -->
     <insert id="createCorporater" parameterType="com.manyi.usercenter.user.support.entity.Corporation">
         INSERT INTO
           t_corporation
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            Name, Email, Remark, UserId, Phone, LegalPerson, NickName,
+            UserId
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            #{name}, #{email}, #{remark}, #{userId}, #{phone}, #{legalPerson}, #{nickName},
+            #{userId}
         </trim>
     </insert>
 
@@ -207,12 +222,19 @@
     </update>
 
     <!-- 根据Id获取当前基础用户信息 -->
-    <select id="getBaseUserById">
+    <select id="getBaseUserById" parameterType="java.lang.Long">
         SELECT
         <include refid="Base_User"/>
         FROM t_user
         WHERE
           id = #{id}
+    </select>
+
+    <!-- 根据Id获取司机用户信息 -->
+    <select id="getIndividualById" parameterType="java.lang.Long" resultMap="Result_Individual">
+        SELECT
+        <include refid="Relation_Individual"/>
+        from t_user,t_individual WHERE t_user.id=#{id} AND t_user.id=t_individual.UserId
     </select>
 
     <!-- 用户密码修改 -->
@@ -224,7 +246,7 @@
             <if test="secretKey != null">secretKey = #{secretKey},</if>
         </set>
         WHERE
-          id = #{id}
+          LoginName = #{loginName}
     </update>
 
     <!-- 根据用户名查询角色 -->
@@ -243,4 +265,16 @@
         WHERE role.name=#{name} AND role.id=rp.roleid AND rp.permid=p.id
     </select>
 
+
+    <!-- 增加车辆信息 -->
+    <insert id="addVehicle" parameterType="com.manyi.usercenter.user.bean.VehicleBean">
+        INSERT INTO
+        t_vehicle
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            UserId,PlateNo,VehicleBrand,LoadHeight,AxlesNum,PlateLength,PlateType,LuCard,OilWear,CreateTime
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{userId},#{plateNo},#{vehicleBrand},#{loadHeight},#{axlesNum},#{plateLength},#{plateType},#{luCard},#{oilWear},now()
+        </trim>
+    </insert>
 </mapper>

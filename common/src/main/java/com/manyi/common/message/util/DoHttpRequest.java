@@ -18,7 +18,7 @@ public class DoHttpRequest {
 
     private static final Logger logger = LoggerFactory.getLogger(DoHttpRequest.class);
 
-    public static void DoHttpRequest(String url,String param,String type) throws Exception {
+    public static String DoHttpRequest(String url,String param,String type) throws Exception {
         String result = "";
         BufferedReader in = null;
         if ("POST".equals(type)) {
@@ -36,7 +36,7 @@ public class DoHttpRequest {
 
                 // 设置通用的请求属性
                 conn.setRequestProperty("accept", "*/*");
-                conn.setRequestProperty("connection", "Keep-Alive");
+                //conn.setRequestProperty("connection", "Keep-Alive");
                 conn.setRequestProperty("user-agent",
                         "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
                 conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -70,7 +70,7 @@ public class DoHttpRequest {
                         in.close();
                     }
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    logger.error("发送 POST 请求出现异常！" + ex);
                     throw ex;
                 }
             }
@@ -91,10 +91,6 @@ public class DoHttpRequest {
                 conn.connect();
                 // 获取所有响应头字段
                 Map<String, List<String>> map = conn.getHeaderFields();
-                // 遍历所有的响应头字段
-                for (String key : map.keySet()) {
-                    System.out.println(key + "--->" + map.get(key));
-                }
                 // 定义BufferedReader输入流来读取URL的响应
                 in = new BufferedReader(
                         new InputStreamReader(conn.getInputStream()));
@@ -113,9 +109,11 @@ public class DoHttpRequest {
                         in.close();
                     }
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    logger.error("发送GET请求出现异常！" + ex);
+                    throw ex;
                 }
             }
         }
+        return result;
     }
 }

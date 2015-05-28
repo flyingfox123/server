@@ -2,6 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.manyi.business.etc.support.dao.EtcDao">
 
+
+
+    <!-- 订单-->
+    <resultMap id="EtcCountResultMap" type="com.manyi.business.etc.bean.EtcDescription">
+        <result column="id" property="id"/>
+        <result column="ETCCode" property="ETCCode"/>
+        <result column="plateNum" property="plateNum"/>
+    </resultMap>
+
+
     <!-- 创建ETC -->
     <insert id="addETC" parameterType="com.manyi.business.etc.bean.Etc"
             useGeneratedKeys="true" keyProperty="id">
@@ -11,6 +21,8 @@
         values
         (#{ETCCode},#{plateNum},#{orderItemId})
     </insert>
+
+
 
 
     <!-- 创建ETC发票 -->
@@ -24,7 +36,49 @@
     </insert>
 
 
+    <!-- 获取用户给ETC充值的数量 -->
+    <select id="getETCCurrentCount" resultType="java.lang.Integer">
+        SELECT
+        COUNT(*)
+        FROM t_etccounter
+        WHERE
+        userId = #{userId}
+        AND
+        ETCCode = #{ETCCode}
+    </select>
 
 
+    <!-- 创建ETC预充值计数 -->
+    <insert id="createETCCount" parameterType="com.manyi.business.etc.bean.Etc"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        t_etccounter
+        (ETCCode, plateNum,num,userId)
+        values
+        (#{ETCCode},#{plateNum},1,#{userId})
+    </insert>
+
+    <!-- 修改计数-->
+    <update id="addETCCount">
+        UPDATE
+        t_etccounter
+        SET
+        num = num +1
+        WHERE
+        userId = #{userId}
+        AND
+        ETCCode = #{ETCCode}
+    </update>
+
+
+    <!-- 获取订单对应的订单项-->
+    <select id="queryUserEtcCount" resultMap="EtcCountResultMap">
+        SELECT
+        id, ETCCode, plateNum
+        FROM t_etccounter
+        WHERE
+        userId = #{userId}
+        ORDER BY num DESC
+    </select>
 
 </mapper>

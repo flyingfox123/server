@@ -41,7 +41,9 @@ public enum Type
 
    ORDER_STATUS_ERROR("000007"),
     PARA_NULL("005001"),
-    PHONEERR_NULL("005002")
+    PHONEERR_NULL("005002"),
+    PASSWORD_WRONG("005003"),
+    NOTPIC("005004")
     ;
 
 

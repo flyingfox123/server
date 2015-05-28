@@ -56,7 +56,7 @@ public class JWTValidate {
      * @throws InvalidKeyException
      * @throws IOException
      */
-    public boolean validate(String token,String loginName) throws SignatureException, NoSuchAlgorithmException, JWTVerifyException, InvalidKeyException, IOException {
+    public boolean validate(String token,String loginName) throws NoSuchAlgorithmException, JWTVerifyException, InvalidKeyException, IOException {
         BaseUser baseUser = userService.getUserByName(loginName);
         try {
 
@@ -68,6 +68,8 @@ public class JWTValidate {
             }
         }catch (JWTExpiredException e){
             //newToken = jwtCreater.createToken(loginName, baseUser.getSecretKey(), String.valueOf(baseUser.getId()));
+            return false;
+        }catch (SignatureException e){
             return false;
         }
         return false;

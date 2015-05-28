@@ -1,13 +1,10 @@
 package com.manyi.usercenter.user;
 
 import com.manyi.base.exception.BusinessException;
-import com.manyi.usercenter.user.bean.CorpUser;
-import com.manyi.usercenter.user.bean.IndivUser;
-import com.manyi.usercenter.user.bean.PlatUser;
+import com.manyi.usercenter.user.bean.*;
 import com.manyi.usercenter.user.support.entity.BaseUser;
 import com.manyi.usercenter.user.support.entity.Corporation;
 import com.manyi.usercenter.user.support.entity.Individual;
-import com.manyi.usercenter.user.support.entity.SysUser;
 
 import java.util.List;
 import java.util.Set;
@@ -25,6 +22,20 @@ public interface UserService {
     BaseUser getUserByName(String username);
 
     /**
+     * 通过id获取用户信息
+     * @param id
+     * @return
+     */
+    Individual getIndividualById(Long id);
+
+    /**
+     * 通过etc卡号查询用户信息
+     * @param etcNo
+     * @return
+     */
+    BaseUser getUserByEtc(String etcNo);
+
+    /**
      * 查询所有平台用户
      * @return
      */
@@ -35,7 +46,7 @@ public interface UserService {
      * @param platUser
      * @return
      */
-    void createSysUser(PlatUser platUser);
+    void createSysUser(PlatUser platUser) throws BusinessException;
 
     /**
      * 修改平台用户
@@ -46,6 +57,7 @@ public interface UserService {
      */
     void updateSysUser(long userId, String status, String name);
 
+
     /**
      * 删除平台用户
      * @param id
@@ -55,15 +67,21 @@ public interface UserService {
 
     /**
      * 司机注册
-     * @param indivUser
+     * @param userBean
      */
-    void registerIndividual(IndivUser indivUser);
+    void registerIndividual(UserBean userBean);
 
     /**
-     * 司机修改个人信息
-     * @param individual
+     * 修改司机用户
      */
-    void updateIndividualInfo(Individual individual);
+    void updateIndividual(IndividualBean individualBean);
+
+    /**
+     * 获取司机信息通过登录名
+     * @param loginName
+     * @return
+     */
+    public List<Individual> getIndividual(String loginName) throws BusinessException;
 
     /**
      * 企业用户注册
@@ -84,10 +102,10 @@ public interface UserService {
 
     /**
      * 用户修改密码
-     * @param userId
+     * @param loginName
      * @param password
      */
-    void updatePassword(long userId, String password);
+    void updatePassword(String loginName, String password);
 
     /**
      * 用户注册发送验证码
@@ -95,24 +113,37 @@ public interface UserService {
      * @param type
      * @param templateId
      */
-    void sendMessageCode(String phoneNum,String type,String templateId) throws Exception;
+    boolean sendMessageCode(String phoneNum,String type,String templateId) throws Exception;
 
+    /**
+     * 用户注册校验验证码
+     * @param phone
+     * @param type
+     * @param msgCode
+     * @return
+     * @throws BusinessException
+     */
     boolean verifyMessageCode(String phone,String type,String msgCode) throws BusinessException;
 
     /**
-     * 校验验证码
-     * @param code
-     * @return
+     * 用户找回密码发送验证码
+     * @param phoneNum
+     * @param type
+     * @param templateId
+     * @throws Exception
      */
-    boolean isEffective(String code);
+    boolean sendMegCodeForResetPass(String phoneNum,String type,String templateId) throws Exception;
 
     /**
-     * 创建
-     * @param deviceId
-     * @param userName
+     * 用户找回密码
+     * @param phone
+     * @param type
+     * @param msgCode
      * @return
+     * @throws BusinessException
      */
-    String createToke(String deviceId,String userName);
+    boolean verifyMegCodeForResetPass(String phone,String type,String msgCode) throws BusinessException;
+
 
     /**
      * 根据用户名查询角色
@@ -127,4 +158,13 @@ public interface UserService {
      * @return
      */
     public Set<String> findPermissions(String username);
+
+    /**
+     * 增加用户角色对应关系
+     * @param userId
+     * @param roleId
+     */
+    void addUserRole(String userId,String roleId);
+
+    void addVehicle(VehicleBean vehicleBean);
 }

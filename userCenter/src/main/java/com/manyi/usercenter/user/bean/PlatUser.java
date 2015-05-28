@@ -19,6 +19,19 @@ public class PlatUser implements Serializable {
     private String name;
     private long userId;
     private Date updateTime;
+    private String oldPassWord;
+
+    public void setPassWord(String passWord) {
+        this.passWord = passWord;
+    }
+
+    public String getOldPassWord() {
+        return oldPassWord;
+    }
+
+    public void setOldPassWord(String oldPassWord) {
+        this.oldPassWord = oldPassWord;
+    }
 
     public String getName() {
         return name;

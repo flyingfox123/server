@@ -17,7 +17,7 @@ import org.apache.shiro.util.ByteSource;
 public class PasswordHelper {
 
     private static RandomNumberGenerator randomNumberGenerator = new SecureRandomNumberGenerator();
-    private static String algorithmName = "md5";
+    private static String algorithmName = "SHA-1";
     private static final int hashIterations = 2;
 
     /**

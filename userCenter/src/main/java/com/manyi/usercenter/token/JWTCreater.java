@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.JWTVerifyException;
 import com.manyi.common.redis.RedisClientTemplate;
 import com.manyi.common.util.ReadPropertiesUtil;
+import com.manyi.usercenter.user.support.entity.SysUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -38,19 +39,15 @@ public class JWTCreater {
         HashMap<String,Object> claims = new HashMap<String, Object>();
         long expireTime = getExpireTime();
         claims.put("iss",userName);
-        claims.put("exp",expireTime);
+        //claims.put("exp",expireTime);
         claims.put("userId",userId);
+        claims.put("time", System.currentTimeMillis());
         JWTSigner signer = new JWTSigner(secretKey);
         String token = signer.sign(claims);
         redisClient.set(userId,token);
         return token;
     }
 
-//    public static void main(String args[]){
-//        JWTCreater jwtCreater = new JWTCreater();
-//        String token=jwtCreater.createToken("admin", "se", "1");
-//        System.out.println(token);
-//    }
     /**
      * 计算token失效时间，以秒为单位
      * @return

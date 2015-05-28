@@ -84,7 +84,7 @@ public interface MessageService {
      * @param mobile
      * @return
      */
-    public void sendMessageCode(String mobile,String type,String templateId) throws Exception;
+    public boolean sendMessageCode(String mobile,String type,String templateId) throws Exception;
 
     /**
      * 发送短信接口（外部调用）

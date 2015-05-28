@@ -59,18 +59,18 @@
         <!--<property name="cacheManager" ref="cacheManager"/>-->
     </bean>
 
-    <bean id="roleOrFilter" class="com.manyi.usercenter.shiro.filter.CustomRolesAuthorizationFilter"/>
+    <bean id="tokenValidateFilter" class="com.manyi.usercenter.shiro.filter.CustomRolesAuthorizationFilter"/>
     <bean id="statelessAuthcFilter" class="com.manyi.usercenter.shiro.filter.StatelessAuthcFilter"/>
 
     <bean id="filterChainManager" class="com.manyi.usercenter.shiro.filter.CustomDefaultFilterChainManager">
-        <!--<property name="loginUrl" value="/html/index.html"/>-->
+        <property name="loginUrl" value="/usercenter/reLogin"/>
         <!--<property name="successUrl" value="/index"/>-->
         <property name="unauthorizedUrl" value="/usercenter/unauthorized"/>
 
         <property name="customFilters">
             <util:map>
                 <!--<entry key="authc" value-ref="formAuthenticationFilter"/>-->
-                <entry key="roleOr" value-ref="roleOrFilter"/><!--角色or过滤-->
+                <entry key="tokeValidate" value-ref="tokenValidateFilter"/><!--角色or过滤-->
                 <entry key="statelessAuthc" value-ref="statelessAuthcFilter"/>
             </util:map>
         </property>
@@ -85,7 +85,8 @@
                 /index.html = anon
                 /logout = logout
                 /unauthorized.jsp = authc
-                /admin/sysRole/** = statelessAuthc[user]
+                /admin/sysRole/** = tokeValidate,statelessAuthc[user,individual]
+                /usercenter/auth/** = tokeValidate,statelessAuthc[user,individual]
                 <!--/** = anon-->
                 <!--/admin/**=role[admin]-->
                 <!--/** = user,sysUser-->

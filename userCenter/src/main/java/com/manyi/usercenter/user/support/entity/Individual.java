@@ -1,7 +1,7 @@
 package com.manyi.usercenter.user.support.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * Created by Magic on 2015/4/15.
@@ -11,19 +11,22 @@ public class Individual implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private long id;
+    private String loginName;
+    private String password;
+    private String secretKey;
+    private String type;
+    private String State;
+    private Date createTime;
+
     private long userId;
     private Date updateTime;
-    private String plateNo;
-    private String plateType;
-    private Double plateLength;
-    private Double plateLoad;
-    private String expectDestination;
     private String driverName;
     private String idCardNo;
-    private String owner;
-    private String ownerMobile;
     private String description;
-    private String plateSerialNo;
+    private String sexual;
+    private String phone;
+    private String birthDay;
+    private String headPic;
 
     public long getId() {
         return id;
@@ -31,6 +34,54 @@ public class Individual implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getLoginName() {
+        return loginName;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getState() {
+        return State;
+    }
+
+    public void setState(String state) {
+        State = state;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     public long getUserId() {
@@ -49,46 +100,6 @@ public class Individual implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public String getPlateNo() {
-        return plateNo;
-    }
-
-    public void setPlateNo(String plateNo) {
-        this.plateNo = plateNo;
-    }
-
-    public String getPlateType() {
-        return plateType;
-    }
-
-    public void setPlateType(String plateType) {
-        this.plateType = plateType;
-    }
-
-    public Double getPlateLength() {
-        return plateLength;
-    }
-
-    public void setPlateLength(Double plateLength) {
-        this.plateLength = plateLength;
-    }
-
-    public Double getPlateLoad() {
-        return plateLoad;
-    }
-
-    public void setPlateLoad(Double plateLoad) {
-        this.plateLoad = plateLoad;
-    }
-
-    public String getExpectDestination() {
-        return expectDestination;
-    }
-
-    public void setExpectDestination(String expectDestination) {
-        this.expectDestination = expectDestination;
-    }
-
     public String getDriverName() {
         return driverName;
     }
@@ -105,22 +116,6 @@ public class Individual implements Serializable {
         this.idCardNo = idCardNo;
     }
 
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-
-    public String getOwnerMobile() {
-        return ownerMobile;
-    }
-
-    public void setOwnerMobile(String ownerMobile) {
-        this.ownerMobile = ownerMobile;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -129,11 +124,35 @@ public class Individual implements Serializable {
         this.description = description;
     }
 
-    public String getPlateSerialNo() {
-        return plateSerialNo;
+    public String getSexual() {
+        return sexual;
     }
 
-    public void setPlateSerialNo(String plateSerialNo) {
-        this.plateSerialNo = plateSerialNo;
+    public void setSexual(String sexual) {
+        this.sexual = sexual;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getBirthDay() {
+        return birthDay;
+    }
+
+    public void setBirthDay(String birthDay) {
+        this.birthDay = birthDay;
+    }
+
+    public String getHeadPic() {
+        return headPic;
+    }
+
+    public void setHeadPic(String headPic) {
+        this.headPic = headPic;
     }
 }

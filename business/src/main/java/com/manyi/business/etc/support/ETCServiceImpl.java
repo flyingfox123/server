@@ -113,7 +113,7 @@ public class ETCServiceImpl implements ETCService
             {
                 throw new BusinessException(Type.PARAM_ERROR);
             }
-            if(res.getState().equals("success") )
+            if(res.getState().intValue() == 0 )
             {
                   item.setState(OrderItemStatus.SUCCESS);
                   orderDao.updateOrderItem(item);
@@ -135,7 +135,7 @@ public class ETCServiceImpl implements ETCService
 
     private void checkParam(ETCPreChargeRequest request) throws BusinessException {
 
-        if(null == request || null == request.getState()
+        if(null == request
                 || null== request.getOrderSeq() || null ==request.getList())
         {
             throw new BusinessException(Type.PARAM_ERROR);
@@ -165,21 +165,18 @@ public class ETCServiceImpl implements ETCService
         {
             throw new BusinessException(Type.PARAM_ERROR);
         }
-        if(callBack.getState().equals("success"))
+        if(callBack.getState().intValue() == 0)
         {
             item.setState(OrderItemStatus.SUCCESS);
             orderDao.updateOrderItem(item);
         }
 
-        else if(callBack.getState().equals("failed"))
+        else
         {
             item.setState(OrderItemStatus.FAILED);
             orderDao.updateOrderItem(item);
         }
 
-        else {
-            throw new BusinessException(Type.PARAM_ERROR);
-        }
 
     }
 }

@@ -71,6 +71,9 @@
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="10485760" />
+	</bean>
 
 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
 		<constructor-arg type="javax.sql.DataSource" ref="dataSource" />
@@ -78,11 +81,10 @@
 
 	<!-- 数据源配置 -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://10.186.202.213/manyidb?useUnicode=true&amp;characterEncoding=utf-8" />
-		<!--<property name="url" value="jdbc:mysql://192.168.56.103/manyidb?useUnicode=true&amp;characterEncoding=utf-8" />-->
-		<property name="username" value="root" />
-		<property name="password" value="root" />
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
 		<!--是否在从池中取出连接前进行检验,如果检验失败则从池中去除连接并尝试取出另一个-->
 		<property name="testOnBorrow" value="true"/>
 		<!--是否在归还到池中前进行检验-->

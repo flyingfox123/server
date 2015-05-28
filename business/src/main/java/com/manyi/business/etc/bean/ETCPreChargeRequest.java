@@ -9,7 +9,7 @@ public class ETCPreChargeRequest {
 
     private String orderSeq ;
 
-    private String state;
+    private Integer state;
 
     private List<EtcResult> list;
 
@@ -21,11 +21,12 @@ public class ETCPreChargeRequest {
         this.orderSeq = orderSeq;
     }
 
-    public String getState() {
+
+    public Integer getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(Integer state) {
         this.state = state;
     }
 
