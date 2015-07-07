@@ -2,11 +2,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>userCenter</artifactId>
-    <groupId>userCenter</groupId>
+    <parent>
+        <groupId>com.manyi</groupId>
+        <artifactId>server</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.manyi</groupId>
+    <artifactId>usercenter</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>userCenter Maven Webapp</name>
+    <name>userCenter</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -129,8 +135,15 @@
 
         <!--moduleDependency-->
         <dependency>
-            <groupId>common</groupId>
+            <groupId>com.manyi</groupId>
             <artifactId>common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!--moduleDependency-->
+        <dependency>
+            <groupId>com.manyi</groupId>
+            <artifactId>point</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

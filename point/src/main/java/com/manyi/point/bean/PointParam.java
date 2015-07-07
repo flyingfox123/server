@@ -7,11 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Administrator on 2015/4/8.
+ * @Description:
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public class PointParam {
 
-    private int userId;
+    private long userId;
 
     private String serviceId;
 
@@ -26,19 +29,13 @@ public class PointParam {
    // private List<Variable> variables;
 
 
-    public  PointParam(int userId1,String ServiceId1,String eventCode1,String opUserId1)
+    public  PointParam(long userId1)
     {
-        this.eventCode = eventCode1;
-        this.opUserId = opUserId1;
-        this.serviceId = ServiceId1;
         this.userId = userId1;
     }
 
-    public  PointParam(int userId1,String ServiceId1,String eventCode1,String opUserId1,Map<String,Float> params1)
+    public  PointParam(long userId1,Map<String,Float> params1)
     {
-        this.eventCode = eventCode1;
-        this.opUserId = opUserId1;
-        this.serviceId = ServiceId1;
         this.userId = userId1;
         this.params =params1;
     }
@@ -67,11 +64,11 @@ public class PointParam {
         this.remarks = remarks;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 

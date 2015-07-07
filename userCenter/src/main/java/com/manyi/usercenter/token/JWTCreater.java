@@ -25,6 +25,8 @@ public class JWTCreater {
 
     private static final Properties properties = ReadPropertiesUtil.readProperties("user.properties");
     private static final int expireTime = Integer.valueOf(properties.getProperty("tokenexp"));
+    private static final int SECONDS=60;
+    private static final long MISECOND=1000L;
 
     @Autowired
     private RedisClientTemplate redisClient;
@@ -54,8 +56,8 @@ public class JWTCreater {
      */
     private long getExpireTime(){
         long curr = System.currentTimeMillis();
-        curr+=expireTime*60*1000L;
-        return curr/1000L;
+        curr+=expireTime*SECONDS*MISECOND;
+        return curr/MISECOND;
     }
 
     /**

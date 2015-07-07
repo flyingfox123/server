@@ -5,11 +5,24 @@ import com.manyi.base.entity.Pagination;
 import java.util.List;
 
 /**
- * Created by Administrator on 2015/4/12.
+ * @Description:
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public class PointLogResult extends Pagination{
 
    private List<PointLogBean>   list ;
+
+    private long totalPoint;
+
+    public long getTotalPoint() {
+        return totalPoint;
+    }
+
+    public void setTotalPoint(long totalPoint) {
+        this.totalPoint = totalPoint;
+    }
 
     public List<PointLogBean> getList() {
         return list;

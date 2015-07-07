@@ -1,0 +1,65 @@
+<div class='panel panel-info'>
+    <div class="panel-heading">
+        <h4 class="panel-title">对账异常详情查询</h4>
+    </div>
+    <div class='panel-body'>
+        <div id="modal">
+            <div class="modal-body">
+                <form>
+                    对账状态:<select autofocus="autofocus" ng-model="checkDetailBean.state">
+                    <option value="">全部</option>
+                    <option value="1">满易网无记录</option>
+                    <option value="2">满易网有记录</option>
+                    <option value="3">数据不一致</option>
+                    </select>&nbsp;&nbsp;
+                    对账日期:
+                    <input onclick="WdatePicker();"  type="text" name="createDateStart" value="" onchange="" ng-model="checkDetailBean.createDateStart" />-
+                    <input onclick="WdatePicker();"  type="text" name="createDateEnd" value="" onchange="" ng-model="checkDetailBean.createDateEnd"/>
+                    <button class="btn btn-primary" ng-click="query()">查询</button>
+                    <button  class="btn btn-primary" type="reset"  ng-click="reset()">清空</button>
+                </form>
+            </div>
+        </div>
+        <table class="table table-bordered table-striped table-condensed">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>账单编号</th>
+                <th>对账结果</th>
+                <th>渠道交易流水</th>
+                <th>对账时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat='checkDetail in checkDetailList'>
+                <td>{{$index+1}}</td>
+                <td>{{checkDetail.billNo}}</td>
+                <td>{{checkDetail.stateCn}}</td>
+                <td>{{checkDetail.channelBillNo}}</td>
+                <td>{{checkDetail.createDate}}</td>
+
+                <td>
+                    <div class='btn-group'>
+                        <a class='btn btn-mini dropdown-toggle' data-toggle='dropdown'
+                           href='javascript:void(0);'> <i class='glyphicon glyphicon-list'></i> <span
+                                class='caret'></span>
+                        </a>
+                        <ul class='dropdown-menu pull-right'>
+                            <li>
+                                <a href="javascript:void(0);" ng-click="getExceptionDetail($index)">
+                                    <i class='glyphicon glyphicon-wrench'></i> 查看异常详情
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+
+
+</div>
+
+</div>

@@ -3,32 +3,32 @@
 <mapper namespace="com.manyi.point.support.dao.ExpDao">
 
 
-    <!-- 级别-->
-    <resultMap id="ExpResultMap" type="com.manyi.point.support.entity.DimensionExp">
-
-        <result column="id" property="id"/>
-        <result column="dimensionCode" property="dimensionCode"/>
-        <result column="preferentialCode" property="preferentialCode"/>
-        <result column="exp" property="exp"/>
-        <result column="dateLimit" property="dateLimit"/>
-        <result column="startDate" property="startDate"/>
-        <result column="endDate" property="endDate"/>
-        <result column="comments" property="comments"/>
-    </resultMap>
-
-
     <!-- 基础字段 -->
 
     <sql id="EXP_BASE">
         id, dimensionCode, preferentialCode, exp, dateLimit, startDate,  endDate,   comments
     </sql>
+    <!--&lt;!&ndash; 获取级别列表 &ndash;&gt;-->
+    <!--<select id="getExpList" resultMap="ExpResultMap">-->
+        <!--SELECT-->
+        <!--<include refid="EXP_BASE"/>-->
+        <!--FROM smp_v1_dimensionexp-->
+        <!--WHERE-->
+        <!--dimensionCode = #{code}-->
+    <!--</select>-->
+
+    <!-- 基础字段 -->
+
+    <sql id="EVENT_BASE">
+        id, EventCode, Type, Description, exp, datelimit,startDate,  endDate,   frequency,time
+    </sql>
     <!-- 获取级别列表 -->
-    <select id="getExpList" resultMap="ExpResultMap">
+    <select id="getPointEventByCode" resultType="com.manyi.point.bean.PointEvent">
         SELECT
-        <include refid="EXP_BASE"/>
-        FROM smp_v1_dimensionexp
+        <include refid="EVENT_BASE"/>
+        FROM t_pointevent
         WHERE
-        dimensionCode = #{code}
+        EventCode = #{eventCode}
     </select>
 
 </mapper>

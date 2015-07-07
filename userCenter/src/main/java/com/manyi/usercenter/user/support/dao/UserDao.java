@@ -1,11 +1,7 @@
 package com.manyi.usercenter.user.support.dao;
 
-import com.manyi.usercenter.user.bean.PlatUser;
-import com.manyi.usercenter.user.bean.VehicleBean;
-import com.manyi.usercenter.user.support.entity.BaseUser;
-import com.manyi.usercenter.user.support.entity.Corporation;
-import com.manyi.usercenter.user.support.entity.Individual;
-import com.manyi.usercenter.user.support.entity.SysUser;
+import com.manyi.usercenter.user.bean.*;
+import com.manyi.usercenter.user.support.entity.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -23,10 +19,29 @@ public interface UserDao {
     BaseUser getUserByName(String username);
 
     /**
+     * 根据传入用户实体查询用户基本信息
+     * @param platUser
+     * @return
+     */
+    BaseUser getUser(PlatUser platUser);
+
+    /**
      * 查询所有平台用户
      * @return
      */
     List<PlatUser> queryAllSysUsers();
+
+    /**
+     * 查询平台用户
+     * @return
+     */
+    List<PlatUser> querySysUser(PlatUser platUser);
+
+    /**
+     * 查询平台用户数量
+     * @return
+     */
+    int querySysUserCount(PlatUser platUser);
 
     /**
      * 创建基础用户
@@ -87,6 +102,20 @@ public interface UserDao {
     List<Individual> getIndividual(String loginName);
 
     /**
+     * 查询司机用户信息
+     * @param individualBean
+     * @return
+     */
+    List<Individual> findIndividual(IndividualBean individualBean);
+
+    /**
+     * 查询司机用户数量
+     * @param individualBean
+     * @return
+     */
+    int findIndividualCount(IndividualBean individualBean);
+
+    /**
      * 根据ID查询司机信息
      * @param id
      * @return
@@ -98,6 +127,18 @@ public interface UserDao {
      * @param corporation
      */
     void createCorporater(Corporation corporation);
+
+    /**
+     * 查询企业用户
+     * @param corporation
+     */
+    List<CorpUser> queryCorporationInfo(Corporation corporation);
+
+    /**
+     * 查询企业用户数量
+     * @param corporation
+     */
+    int queryCorporationCount(Corporation corporation);
 
     /**
      * 修改企业用户信息
@@ -132,7 +173,53 @@ public interface UserDao {
      */
     List<String> findPermissions(@Param("name")String rolename);
 
+    /**
+     * 增加车辆信息
+     * @param vehicleBean
+     */
     void addVehicle(VehicleBean vehicleBean);
 
+    /**
+     * 根据userId查询车辆信息
+     * @param vehicleBean
+     * @return
+     */
+    List<Vehicle> findVehicle(VehicleBean vehicleBean);
 
+    /**
+     * 更新车辆信息
+     * @param vehicleBean
+     */
+    void updateVehicle(VehicleBean vehicleBean);
+
+    /**
+     * 增加地址信息
+     * @param addressBean
+     */
+    void addAddress(AddressBean addressBean);
+
+    /**
+     * 查询地址信息
+     * @param addressBean
+     * @return
+     */
+    List<Address> findAddress(AddressBean addressBean);
+
+    /**
+     * 更新地址
+     * @param addressBean
+     */
+    void updateAddress(AddressBean addressBean);
+
+    /**
+     * 删除地址
+     * @param addressBean
+     */
+    void deleteAddress(AddressBean addressBean);
+
+    /**
+     * 设置所有地址为非默认
+     * @param addressBean
+     */
+    void setAllAddressNoDef(AddressBean addressBean);
 }

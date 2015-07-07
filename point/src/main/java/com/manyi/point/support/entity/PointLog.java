@@ -3,11 +3,11 @@ package com.manyi.point.support.entity;
 import java.sql.Date;
 
 /**
- * Created by Administrator on 2015/4/8.
+ * @Description:
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
-
-
-
 public class PointLog {
 
     private int id;
@@ -16,7 +16,7 @@ public class PointLog {
 
     private String calcFormula;
 
-    private Date createTime;
+    private String  createTime;
 
     private int point;
 
@@ -61,11 +61,12 @@ public class PointLog {
         this.calcFormula = calcFormula;
     }
 
-    public Date getCreateTime() {
+
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 

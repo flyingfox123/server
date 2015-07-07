@@ -45,6 +45,54 @@
         <result column="HeadPic" property="headPic"/>
     </resultMap>
 
+    <!-- 车辆信息返回值 -->
+    <resultMap id="Result_Vehicle" type="com.manyi.usercenter.user.support.entity.Vehicle">
+        <result column="id" property="id"/>
+        <result column="UserId" property="userId"/>
+        <result column="PlateNo" property="plateNo"/>
+        <result column="VehicleBrand" property="vehicleBrand"/>
+        <result column="LoadHeight" property="loadHeight"/>
+        <result column="AxlesNum" property="axlesNum"/>
+        <result column="PlateLength" property="plateLength"/>
+        <result column="PlateType" property="plateType"/>
+        <result column="LuCard" property="luCard"/>
+        <result column="OilWear" property="oilWear"/>
+        <result column="CreateTime" property="createTime"/>
+        <result column="LoginName" property="loginName"/>
+        <result column="vehicleId" property="vehicleId"/>
+    </resultMap>
+
+    <!-- 地址信息返回值 -->
+    <resultMap id="Result_Address" type="com.manyi.usercenter.user.support.entity.Address">
+        <result column="id" property="id"/>
+        <result column="UserId" property="userId"/>
+        <result column="Name" property="name"/>
+        <result column="Mobile" property="mobile"/>
+        <result column="PostCode" property="postCode"/>
+        <result column="Province" property="province"/>
+        <result column="City" property="city"/>
+        <result column="Area" property="area"/>
+        <result column="Address" property="address"/>
+        <result column="FullAddress" property="fullAddress"/>
+        <result column="IsDefault" property="isDefault"/>
+        <result column="Remark" property="remark"/>
+        <result column="CreateTime" property="createTime"/>
+    </resultMap>
+
+    <!-- 企业用户信息返回值 -->
+    <resultMap id="Result_CorpUser" type="com.manyi.usercenter.user.bean.CorpUser">
+        <result column="id" property="id"/>
+        <result column="UserId" property="userId"/>
+        <result column="Name" property="name"/>
+        <result column="phone" property="phone"/>
+        <result column="loginName" property="loginName"/>
+        <result column="password" property="password"/>
+        <result column="createTime" property="createTime"/>
+        <result column="nickName" property="nickName"/>
+        <result column="email" property="email"/>
+        <result column="remark" property="remark"/>
+        <result column="legalPerson" property="legalPerson"/>
+    </resultMap>
     <!-- 基础用户字段 -->
     <sql id="Base_User">
         t_user.id, LoginName, Password, SecretKey, Type, t_user.State, t_user.Createtime
@@ -86,6 +134,17 @@
         WHERE LoginName = #{username}
     </select>
 
+    <!-- 查询用户信息 -->
+    <select id="getUser" parameterType="com.manyi.usercenter.user.bean.PlatUser" resultMap="Result_User">
+        SELECT
+        <include refid="Base_User"/>
+        from t_user
+        <where>
+            <if test="id!=0">ID=#{id}</if>
+            <if test="loginName!=null">AND LoginName=#{loginName}</if>
+        </where>
+    </select>
+
     <!-- 查询所有的平台用户 -->
     <select id="queryAllSysUsers" resultMap="Result_PlatUser">
         SELECT
@@ -95,6 +154,30 @@
         t_sysuser.UserId = t_user.id
     </select>
 
+    <!-- 查询平台用户 -->
+    <select id="querySysUser" resultMap="Result_PlatUser" parameterType="com.manyi.usercenter.user.bean.PlatUser" >
+        SELECT
+        <include refid="Relation_SysUser"/>
+        from t_sysuser
+        , t_user
+        WHERE t_sysuser.UserId = t_user.id
+        <if test="loginName!=''">AND t_user.LoginName=#{loginName}</if>
+        <if test="userId>0">AND t_sysuser.userId=#{userId}</if>
+        <if test="pageSize != 0">
+            limit #{pageNum},#{pageSize}
+        </if>
+    </select>
+
+    <!-- 查询平台用户数量 -->
+    <select id="querySysUserCount" resultType="java.lang.Integer" parameterType="com.manyi.usercenter.user.bean.PlatUser" >
+        SELECT
+        count(t_sysuser.UserId)
+        from t_sysuser,
+         t_user
+        WHERE t_sysuser.UserId = t_user.id
+        <if test="loginName!=''">AND t_user.LoginName=#{loginName}</if>
+        <if test="userId>0">AND t_sysuser.userId=#{userId}</if>
+    </select>
     <!-- 创建基础用户 -->
     <insert id="createUser" parameterType="com.manyi.usercenter.user.bean.PlatUser" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO
@@ -108,7 +191,7 @@
     </insert>
 
     <!-- 创建平台用户 -->
-    <insert id="createSysUser" parameterType="com.manyi.usercenter.user.support.entity.SysUser">
+    <insert id="createSysUser" parameterType="com.manyi.usercenter.user.support.entity.SysUser" keyProperty="id" useGeneratedKeys="true">
         INSERT INTO
         t_sysuser
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -160,10 +243,10 @@
         INSERT INTO
           t_individual
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            UserId
+            UserId,phone
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            #{userId}
+            #{userId},#{phone}
         </trim>
     </insert>
 
@@ -193,6 +276,25 @@
         from t_user,t_individual WHERE t_user.LoginName=#{loginName} AND t_user.id=t_individual.UserId
     </select>
 
+    <!-- 查询司机用户 -->
+    <select id="findIndividual" parameterType="com.manyi.usercenter.user.bean.IndividualBean" resultMap="Result_Individual">
+        SELECT
+        <include refid="Relation_Individual"/>
+        from t_user,t_individual WHERE t_user.id=t_individual.UserId
+        <if test="phone != ''"> AND t_individual.Phone=#{phone}  </if>
+        <if test="userId>0">AND t_individual.UserId=#{userId}</if>
+        <if test="pageSize != 0">
+            limit #{pageNum},#{pageSize}
+        </if>
+    </select>
+    <!-- 查询司机用户 -->
+    <select id="findIndividualCount" parameterType="com.manyi.usercenter.user.bean.IndividualBean" resultType="java.lang.Integer">
+        SELECT
+        count(*)
+        from t_user,t_individual WHERE t_user.id=t_individual.UserId
+        <if test="phone != ''"> AND t_individual.Phone=#{phone}  </if>
+        <if test="userId>0">AND t_individual.UserId=#{userId}</if>
+    </select>
     <!-- 企业用户注册 -->
     <insert id="createCorporater" parameterType="com.manyi.usercenter.user.support.entity.Corporation">
         INSERT INTO
@@ -204,6 +306,23 @@
             #{userId}
         </trim>
     </insert>
+
+    <select id="queryCorporationInfo" parameterType="com.manyi.usercenter.user.support.entity.Corporation" resultMap="Result_CorpUser">
+        SELECT t.Email,t.LegalPerson,t.Name,t.Phone,t.UserId,t.NickName,t.Remark,u.LoginName
+        FROM t_corporation t ,t_user u WHERE t.UserId=u.Id
+        <if test="phone != ''"> AND t.Phone=#{phone}  </if>
+        <if test="userId>0">AND t.UserId=#{userId}</if>
+        <if test="pageSize != 0">
+            limit #{pageNum},#{pageSize}
+        </if>
+    </select>
+
+    <select id="queryCorporationCount" parameterType="com.manyi.usercenter.user.support.entity.Corporation" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM t_corporation t ,t_user u WHERE t.UserId=u.Id
+        <if test="phone != ''"> AND t.Phone=#{phone}  </if>
+        <if test="userId>0">AND t.UserId=#{userId}</if>
+    </select>
 
     <!-- 企业用户修改个人信息 -->
     <update id="updateCorporater" parameterType="com.manyi.usercenter.user.support.entity.Corporation">
@@ -222,7 +341,7 @@
     </update>
 
     <!-- 根据Id获取当前基础用户信息 -->
-    <select id="getBaseUserById" parameterType="java.lang.Long">
+    <select id="getBaseUserById" parameterType="java.lang.Long" resultMap="Result_User">
         SELECT
         <include refid="Base_User"/>
         FROM t_user
@@ -277,4 +396,97 @@
             #{userId},#{plateNo},#{vehicleBrand},#{loadHeight},#{axlesNum},#{plateLength},#{plateType},#{luCard},#{oilWear},now()
         </trim>
     </insert>
+
+    <!-- 查询车辆信息 -->
+    <select id="findVehicle" resultMap="Result_Vehicle">
+        SELECT
+        t_user.ID,t_vehicle.ID vehicleId,UserId,PlateNo,VehicleBrand,LoadHeight,AxlesNum,PlateLength,PlateType,LuCard,OilWear,t_vehicle.CreateTime,LoginName
+        from t_vehicle,t_user
+        <where>
+
+            <if test="id != null">t_vehicle.ID=#{id}</if>
+            <if test="userId != null">AND UserId=#{userId}</if>
+            <if test="luCard != null">AND LuCard=#{luCard}</if>
+            AND t_user.ID=t_vehicle.userId
+        </where>
+    </select>
+
+    <!--修改车辆信息-->
+    <update id="updateVehicle" parameterType="com.manyi.usercenter.user.bean.VehicleBean">
+        UPDATE
+        t_vehicle
+        <set>
+            <if test="plateNo != null">PlateNo = #{plateNo},</if>
+            <if test="vehicleBrand != null">VehicleBrand = #{vehicleBrand},</if>
+            <if test="loadHeight != null">LoadHeight = #{loadHeight},</if>
+            <if test="axlesNum != null">AxlesNum = #{axlesNum},</if>
+            <if test="plateLength != null">PlateLength = #{plateLength},</if>
+            <if test="luCard != null">LuCard = #{luCard},</if>
+            <if test="plateType != null">PlateType = #{plateType},</if>
+            <if test="oilWear != null">OilWear = #{oilWear},</if>
+        </set>
+        WHERE
+        UserId = #{userId}
+    </update>
+
+    <!-- 增加地址信息 -->
+    <insert id="addAddress" parameterType="com.manyi.usercenter.user.bean.AddressBean">
+        INSERT INTO
+        t_address
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            UserId,Name,Mobile,PostCode,Province,City,Area,Address,FullAddress,IsDefault,Remark,CreateTime
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{userId},#{name},#{mobile},#{postCode},#{province},#{city},#{area},#{address},#{fullAddress},#{isDefault},#{remark},now()
+        </trim>
+    </insert>
+
+
+    <!-- 查询地址信息 -->
+    <select id="findAddress" resultMap="Result_Address">
+        SELECT
+        ID,UserId,Name,Mobile,PostCode,Province,City,Area,Address,FullAddress,IsDefault,Remark,CreateTime
+        from t_address
+        <where>
+
+            <if test="id != null">ID=#{id}</if>
+            <if test="userId != null">AND UserId=#{userId}</if>
+        </where>
+    </select>
+
+    <!--修改地址信息-->
+    <update id="updateAddress" parameterType="com.manyi.usercenter.user.bean.AddressBean">
+        UPDATE
+        t_address
+        <set>
+            <if test="name != null">Name = #{name},</if>
+            <if test="mobile != null">Mobile = #{mobile},</if>
+            <if test="postCode != null">PostCode = #{postCode},</if>
+            <if test="province != null">Province = #{province},</if>
+            <if test="city != null">City = #{city},</if>
+            <if test="area != null">Area = #{area},</if>
+            <if test="address != null">Address = #{address},</if>
+            <if test="fullAddress != null">FullAddress = #{fullAddress},</if>
+            <if test="remark != null">Remark = #{remark},</if>
+            <if test="isDefault != null">IsDefault = #{isDefault},</if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <!--删除地址-->
+    <delete id="deleteAddress" parameterType="com.manyi.usercenter.user.bean.AddressBean">
+        DELETE FROM t_address
+        WHERE
+        ID = #{id}
+    </delete>
+
+    <!--修改所有地址为非默认-->
+    <update id="setAllAddressNoDef" parameterType="com.manyi.usercenter.user.bean.AddressBean">
+        UPDATE
+        t_address
+           set IsDefault = 'N'
+        WHERE
+        UserId = #{userId}
+    </update>
 </mapper>

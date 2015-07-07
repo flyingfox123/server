@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manyi.common.messagePush.support.dao.PushMessageDao">
+
+    <resultMap id="Result_PUSHED_MESSAGE" type="com.manyi.common.messagePush.bean.PushedMessage">
+        <id column="id" property="id"/>
+        <result column="content" property="content"/>
+        <result column="title" property="title"/>
+        <result column="sendTime" property="sendTime"/>
+        <result column="invalidTime" property="invalidTime"/>
+        <result column="type" property="type"/>
+        <result column="userId" property="userId"/>
+        <result column="readMark" property="readMark"/>
+        <result column="url" property="url"/>
+        <result column="isSended" property="isSended"/>
+    </resultMap>
+
+    <!-- 保存验证码 -->
+    <insert id="addPushedMessage" parameterType="com.manyi.common.messagePush.bean.PushedMessage">
+        INSERT INTO
+        t_pushedmessage
+        (content,title,sendTime,invalidTime,type,userId,readMark,url,isSended)
+        VALUES
+        (#{content},#{title},#{sendTime},#{invalidTime},#{type},#{userId},#{readMark},#{url},#{isSended})
+    </insert>
+
+    <!-- 条件查询订单项-->
+    <select id="queryPushedMessage" resultMap="Result_PUSHED_MESSAGE" parameterType="com.manyi.common.messagePush.bean.QueryPushMessageCondition">
+        SELECT
+        id, content,title,sendTime,invalidTime,type,userId,readMark,url,isSended
+        FROM t_pushedmessage
+        <trim prefix="where" prefixOverrides="AND">
+            <if test="currentTime != null">
+                AND  invalidTime >= #{currentTime}
+                AND  sendTime &lt;= #{currentTime}
+            </if>
+            <if test="type != 0">
+                AND type = #{type}
+            </if>
+            <if test="userId != 0">
+                AND userId = #{userId}
+            </if>
+            <if test="readMark != null">
+                AND readMark = #{readMark}
+            </if>
+            <if test="isSended != null">
+                AND isSended = #{isSended}
+            </if>
+
+        </trim>
+        ORDER BY sendTime DESC
+        <if test="pageSize != 0">
+            limit #{pageNum},#{pageSize}
+        </if>
+    </select>
+
+
+    <!-- 修改订单 -->
+    <update id="updatePushedMessage" parameterType="com.manyi.common.messagePush.bean.PushedMessage">
+        UPDATE
+        t_pushedmessage
+        <set>
+            <if test="readMark != null">readMark = #{readMark},</if>
+            <if test="isSended != null">isSended = #{isSended},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+</mapper>

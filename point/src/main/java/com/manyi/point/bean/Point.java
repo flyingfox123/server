@@ -1,18 +1,18 @@
 package com.manyi.point.bean;
 
 import com.manyi.base.entity.State;
-
 /**
- * Created by Administrator on 2015/4/8.
+ * @Description:
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
-
-
 
 public class Point {
 
     private int id;
 
-    private int userId;
+    private long userId;
 
     private String serviceId;
 
@@ -32,11 +32,11 @@ public class Point {
         this.id = id;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 

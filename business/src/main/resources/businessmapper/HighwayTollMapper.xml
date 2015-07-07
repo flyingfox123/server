@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manyi.business.highwaytoll.support.dao.HighwayTollDao">
+
+    <resultMap id="Result_HighwayToll" type="com.manyi.business.highwaytoll.bean.HistoryRouteBean">
+        <id column="ID" property="Id"/>
+        <result column="CREATEDATE" property="createDate"/>
+        <result column="USERID" property="userId"/>
+        <result column="BEGINROUTE" property="beginRoute"/>
+        <result column="ENDROUTE" property="endRoute"/>
+        <result column="STARTCITY" property="startCity"/>
+        <result column="ENDCITY" property="endCity"/>
+        <result column="STARTX" property="startX"/>
+        <result column="STARTY" property="startY"/>
+        <result column="ENDX" property="endX"/>
+        <result column="ENDY" property="endY"/>
+    </resultMap>
+
+    <!-- 保存历史路线 -->
+    <insert id="saveHistoryRoute" parameterType="com.manyi.business.highwaytoll.bean.HistoryRouteBean">
+      INSERT INTO t_routehis (USERID,BEGINROUTE,ENDROUTE,STARTCITY,ENDCITY,CREATEDATE,STARTX,STARTY,ENDX,ENDY)
+        VALUES
+        ( #{userId} ,#{beginRoute},#{endRoute},#{startCity},#{endCity},NOW(),#{startX},#{startY},#{endX},#{endY} )
+    </insert>
+
+    <!-- 根据手机号查询验证码g -->
+    <select id="getHistoryRoute" resultMap="Result_HighwayToll" parameterType="java.lang.Long">
+      SELECT id,userid, beginroute,endroute,startCity,endCity,startx,starty,endx,endy ,DATE_FORMAT( createdate, '%Y-%m-%d') createdate FROM t_routehis t WHERE t.userId=  #{userId} GROUP BY beginroute,endroute ORDER BY createDate DESC
+    </select>
+
+    <!-- 根据手机号查询验证码g -->
+    <delete id="deleteHistoryRoute" parameterType="java.lang.Long">
+       DELETE  FROM t_routehis WHERE userId= #{userId}
+    </delete>
+
+</mapper>

@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 /**
- * Created by Magic on 2015/1/29.
+ * @author ZhangYuFeng on 2015/6/15 0015,15:11.
+ * @Description:
+ * @version: 1.0.0
+ * @reviewer:
  */
 @Controller
 @RequestMapping("/usercenter")
@@ -58,6 +61,11 @@ public class LoginController {
             }else{
                 responseBean.setState(JsonResult.FAILURE);
                 responseBean.setErrMsg("用户不存在~");
+                return responseBean;
+            }
+            if("D".equals(baseUser1.getState())){
+                responseBean.setState(JsonResult.FAILURE);
+                responseBean.setErrMsg("用户已停用！");
                 return responseBean;
             }
             String loginPassword = PasswordHelper.encryptPassword(password, secretKey);

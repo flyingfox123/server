@@ -2,8 +2,12 @@ package com.manyi.business.order.bean;
 
 import com.manyi.base.entity.Pagination;
 
+
 /**
- * Created by Administrator on 2015/5/5.
+ * @Description: ETC业务实现类
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public class QueryOrderCondition extends Pagination {
 

@@ -3,7 +3,10 @@ package com.manyi.point.bean;
 import java.sql.Date;
 
 /**
- * Created by Administrator on 2015/4/9.
+ * @Description:
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public class PointLogBean {
 
@@ -13,7 +16,7 @@ public class PointLogBean {
 
     private String calcFormula;
 
-    private Date createTime;
+    private String createTime;
 
     private int value;
 
@@ -23,9 +26,9 @@ public class PointLogBean {
 
     private String eventCode;
 
-    private String eventName;
+    private String description;
 
-    private char eventType ;
+    private int eventType ;
 
     private int userId;
 
@@ -53,11 +56,11 @@ public class PointLogBean {
         this.calcFormula = calcFormula;
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
@@ -93,19 +96,20 @@ public class PointLogBean {
         this.eventCode = eventCode;
     }
 
-    public String getEventName() {
-        return eventName;
+
+    public String getDescription() {
+        return description;
     }
 
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public char getEventType() {
+    public int getEventType() {
         return eventType;
     }
 
-    public void setEventType(char eventType) {
+    public void setEventType(int eventType) {
         this.eventType = eventType;
     }
 

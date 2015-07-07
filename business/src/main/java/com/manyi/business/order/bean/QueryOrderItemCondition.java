@@ -2,12 +2,16 @@ package com.manyi.business.order.bean;
 
 import com.manyi.base.entity.Pagination;
 
+
 /**
- * Created by Administrator on 2015/5/5.
+ * @Description: ETC业务实现类
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public class QueryOrderItemCondition extends Pagination {
 
-    private long  orderId;
+    private String  orderSeq;
 
     private long userId;
 
@@ -17,12 +21,22 @@ public class QueryOrderItemCondition extends Pagination {
 
     private  String seqNo;
 
+    private long orderId;
+
     public long getOrderId() {
         return orderId;
     }
 
     public void setOrderId(long orderId) {
         this.orderId = orderId;
+    }
+
+    public String getOrderSeq() {
+        return orderSeq;
+    }
+
+    public void setOrderSeq(String orderSeq) {
+        this.orderSeq = orderSeq;
     }
 
     public long getUserId() {

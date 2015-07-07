@@ -1,19 +1,22 @@
 package com.manyi.point.bean;
 
 /**
- * Created by Administrator on 2015/4/8.
+ * @Description:
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public class UpdatePointParam extends PointParam{
 
 
     private  int newPoint;
     //操作员更新积分行为
-    public static String eventCode = "0000001";
+    public static final String eventCode = "0000001";
 
 
-    public  UpdatePointParam(int userId1,String ServiceId1 ,String opUserId1 , int newPoint1)
+    public  UpdatePointParam(long userId1, int newPoint1)
     {
-        super(userId1, ServiceId1,eventCode, opUserId1);
+        super(userId1);
         this.newPoint = newPoint1;
     }
 

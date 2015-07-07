@@ -3,7 +3,10 @@ package com.manyi.base.entity;
 import java.lang.Object;
 
 /**
- * Created by Administrator on 2015/3/18.
+ * @Description: 消息类
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public class Message
 {
@@ -28,6 +31,11 @@ public class Message
 
     }
 
+    public Integer getCodeMsg() {
+        return codeMsg;
+    }
+
+
     public Object getResponse() {
         return response;
     }
@@ -44,9 +52,7 @@ public class Message
         this.errorMsg = errorMsg;
     }
 
-    public Integer getCodeMsg() {
-        return codeMsg;
-    }
+
 
     public void setCodeMsg(Integer codeMsg) {
         this.codeMsg = codeMsg;

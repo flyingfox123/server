@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manyi.business.pay.account.support.dao.AccountDao">
+
+    <!-- 账户返回值 -->
+    <resultMap id="Resp_Account" type="com.manyi.business.pay.account.support.entity.Account">
+        <id column="AccountId" property="accountId"/>
+        <result column="UserId" property="userId"/>
+        <result column="Balance" property="balance"/>
+        <result column="RealName" property="realName"/>
+        <result column="IdCardNo" property="idCardNo"/>
+        <result column="CreateTime" property="createTime"/>
+        <result column="UpdateTime" property="updateTime"/>
+        <result column="Type" property="type"/>
+        <result column="State" property="state"/>
+    </resultMap>
+
+    <!-- 账户银行卡返回值 -->
+    <resultMap id="Resp_AccBankCard" type="com.manyi.business.pay.account.support.entity.AccBankCard">
+        <id column="AccCardId" property="accCardId"/>
+        <result column="AccountId" property="accountId"/>
+        <result column="Mobile" property="mobile"/>
+        <result column="CardNo" property="cardNo"/>
+        <result column="BankName" property="bankName"/>
+        <result column="CrBankType" property="crBankType"/>
+        <result column="BankBranch" property="bankBranch"/>
+        <result column="ProvNo" property="provNo"/>
+        <result column="LBankNo" property="lBankNo"/>
+        <result column="Type" property="type"/>
+        <result column="Usage" property="usage"/>
+        <result column="BindState" property="bindState"/>
+    </resultMap>
+
+    <!-- 账户字段 -->
+    <sql id="Column_Account">
+        AccountId, UserId, Balance, RealName, IdCardNo, CreateTime, UpdateTime, Type, State
+    </sql>
+
+    <!-- 账户银行卡字段 -->
+    <sql id="Column_AccBankCard">
+        AccCardId, AccountId, Mobile, CardNo, BankName, BankCode, CrBankType, BankBranch, Type, `Usage`, BindState, ProvNo, LBankNo
+    </sql>
+
+    <!-- 账户、银行卡关联字段 -->
+    <sql id="Column_AccWithBankCard">
+        t_account.AccountId, UserId, Balance, RealName, IdCardNo, t_account.CreateTime, UpdateTime, t_account.Type, t_account.State,
+        AccCardId, Mobile, CardNo, BankName, BankCode, CrBankType, BankBranch, `Usage`, BindState, ProvNo, LBankNo
+    </sql>
+
+    <!-- 获取账户信息 -->
+    <select id="getAccountInfo" parameterType="long" resultType="com.manyi.business.pay.account.bean.AccountInfoBean">
+        SELECT
+          <include refid="Column_AccWithBankCard"/>
+        FROM
+          t_account
+        LEFT JOIN t_accbankcard
+        ON
+          t_account.AccountId = t_accbankcard.AccountId
+        WHERE UserId = #{userId}
+    </select>
+
+    <!-- 获取账户信息 -->
+    <select id="getAccountInfoByAccId" parameterType="long" resultType="com.manyi.business.pay.account.bean.AccountInfoBean">
+        SELECT
+        <include refid="Column_AccWithBankCard"/>
+        FROM
+        t_account
+        LEFT JOIN t_accbankcard
+        ON
+        t_account.AccountId = t_accbankcard.AccountId
+        WHERE t_account.AccountId = #{accountId}
+    </select>
+
+    <!-- 新增账户 -->
+    <insert id="saveAccount" parameterType="com.manyi.business.pay.account.support.entity.Account" keyProperty="accountId" useGeneratedKeys="true">
+        INSERT INTO
+        t_account
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            UserId, Balance, RealName, IdCardNo, CreateTime, UpdateTime, Type, State,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{userId}, #{balance}, #{realName}, #{idCardNo}, now(), now(), #{type}, #{state},
+        </trim>
+    </insert>
+
+    <!-- 新增账户银行卡 -->
+    <insert id="saveAccBankCard" parameterType="com.manyi.business.pay.account.support.entity.AccBankCard" keyProperty="accCardId" useGeneratedKeys="true">
+        INSERT INTO
+        t_accbankcard
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            AccountId, Mobile, CardNo, BankName, BankCode, CrBankType, BankBranch, ProvNo, Type, `Usage`, BindState
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{accountId}, #{mobile}, #{cardNo}, #{bankName}, #{bankCode}, #{crBankType}, #{bankBranch}, #{provNo}, #{type}, #{usage}, #{bindState}
+        </trim>
+    </insert>
+
+    <!-- 修改账户信息 -->
+    <update id="updateAccount" parameterType="com.manyi.business.pay.account.support.entity.Account">
+        UPDATE
+        t_account
+        <set>
+            UpdateTime = now(),
+            <if test="idCardNo != null">IdCardNo = #{idCardNo},</if>
+            <if test="realName != null">RealName = #{realName},</if>
+        </set>
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+            <if test="userId!=0">UserId=#{userId}</if>
+            <if test="accountId!=0">AND AccountId=#{accountId}</if>
+        </trim>
+    </update>
+
+    <!-- 修改账户银行卡信息 -->
+    <update id="updateAccBankCard" parameterType="com.manyi.business.pay.account.support.entity.AccBankCard">
+        UPDATE
+        t_accbankcard
+        <set>
+            <if test="mobile != null">Mobile = #{mobile},</if>
+            <if test="cardNo != null">CardNo = #{cardNo},</if>
+            <if test="bankName != null">BankName = #{bankName},</if>
+            <if test="bankCode != null">BankCode = #{bankCode},</if>
+            <if test="bankBranch != null">BankBranch = #{bankBranch},</if>
+            <if test="provNo != null">ProvNo = #{provNo},</if>
+            <if test="lBankNo != null">LBankNo = #{lBankNo},</if>
+            <if test="provNo != null">ProvNo = #{provNo},</if>
+        </set>
+        <where>
+            <if test="accountId!=0">AccountId=#{accountId}</if>
+        </where>
+    </update>
+
+    <!-- 分页查询账户 -->
+    <select id="queryAccount" parameterType="com.manyi.business.pay.account.bean.AccountInfoBean" resultType="com.manyi.business.pay.account.bean.AccountInfoBean">
+        SELECT
+        LoginName,
+        <include refid="Column_AccWithBankCard"/>
+        FROM
+        t_account
+        LEFT JOIN t_accbankcard ON
+        t_account.AccountId = t_accbankcard.AccountId
+        LEFT JOIN t_user ON
+        t_user.Id = t_account.UserId
+        <trim prefix="where" prefixOverrides="AND">
+            <if test="userId != null and userId != 0">AND UserId = #{userId}</if>
+            <if test="state != null and state != ''">AND t_account.State = #{state}</if>
+            <if test="realName != null and realName != ''">AND RealName LIKE CONCAT('%',#{realName},'%')</if>
+            <if test="mobile != null and mobile != ''">AND Mobile = #{mobile}</if>
+            <if test="startTime != null and startTime != ''">AND t_account.CreateTime &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">AND t_account.CreateTime &lt;= #{endTime}</if>
+        </trim>
+        ORDER BY t_account.CreateTime DESC
+      <!--LIMIT #{pageStart}, #{pageSize}-->
+    </select>
+
+<!-- 统计账户 -->
+    <select id="countAccount" parameterType="com.manyi.business.pay.account.bean.AccountInfoBean" resultType="long">
+        SELECT
+         COUNT(t_account.AccountId)
+        FROM
+        t_account
+        LEFT JOIN t_accbankcard ON
+        t_account.AccountId = t_accbankcard.AccountId
+        LEFT JOIN t_user ON
+        t_user.Id = t_account.UserId
+        <trim prefix="where" prefixOverrides="AND">
+            <if test="userId != null and userId != 0">AND UserId = #{userId}</if>
+            <if test="state != null and state != ''">AND t_account.State = #{state}</if>
+            <if test="realName != null and realName != ''">AND RealName LIKE CONCAT('%',#{realName},'%')</if>
+            <if test="mobile != null and mobile != ''">AND Mobile = #{mobile}</if>
+            <if test="startTime != null and startTime != ''">AND t_account.CreateTime &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">AND t_account.CreateTime &lt;= #{endTime}</if>
+        </trim>
+    </select>
+
+    <!-- 修改账户状态 -->
+    <update id="updateAccountState" parameterType="com.manyi.business.pay.account.support.entity.Account">
+        UPDATE
+        t_account
+        <set>
+            State = #{state},
+        </set>
+        <where>
+            AccountId = #{accountId}
+        </where>
+    </update>
+
+</mapper>

@@ -4,8 +4,12 @@ import com.manyi.business.order.bean.OrderItem;
 
 import java.sql.Date;
 
+
 /**
- * Created by Administrator on 2015/5/11.
+ * @Description: ETC业务实现类
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public class Etc extends OrderItem{
 
@@ -16,6 +20,7 @@ public class Etc extends OrderItem{
     private long orderItemId;
 
     private String plateNum;
+
 
     public long getEtcId() {
         return etcId;
@@ -48,5 +53,23 @@ public class Etc extends OrderItem{
     public void setPlateNum(String plateNum) {
         this.plateNum = plateNum;
     }
+
+    public boolean isObjectLegal()
+    {
+        if(null == this.getSeqNo() ||
+                null == this.getETCCode() ||
+                null == this.getPlateNum()||
+                null ==this.getPayableAmount()||
+                0 == this.getUserId()||
+                0==this.getOrderId())
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
 
 }

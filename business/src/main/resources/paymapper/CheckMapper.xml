@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manyi.business.pay.check.support.dao.DealCheckFileDao">
+
+    <resultMap id="Result_Bill" type="com.manyi.business.pay.check.bean.CheckChannelBean">
+        <result column="BillId" property="billId"/>
+        <result column="BillNo" property="billNo"/>
+        <result column="OrderId" property="orderId"/>
+        <result column="AccountId" property="accountId"/>
+        <result column="SourceId" property="sourceId"/>
+        <result column="CreateTime" property="createTime"/>
+        <result column="Amount" property="amount"/>
+        <result column="TradeType" property="tradeType"/>
+        <result column="BusinessType" property="businessType"/>
+        <result column="TradeTime" property="tradeTime"/>
+        <result column="ChannelBillNo" property="channelBillNo"/>
+        <result column="TradeState" property="tradeState"/>
+        <result column="CheckState" property="checkState"/>
+        <result column="ChannelId" property="channelId"/>
+        <result column="ResponseTime" property="responseTime"/>
+    </resultMap>
+
+
+    <resultMap id="Result_CheckDetail" type="com.manyi.business.pay.check.support.entity.CheckDetail">
+        <result column="CheckDetailId" property="checkDetailId"/>
+        <result column="CheckId" property="checkId"/>
+        <result column="BillNo" property="billNo"/>
+        <result column="ChannelBillNo" property="channelBillNo"/>
+        <result column="State" property="state"/>
+        <result column="CreateTime" property="createTime"/>
+        <result column="DealResult" property="dealResult"/>
+        <result column="BillAmount" property="billAmount"/>
+        <result column="ChannelAmount" property="channelAmount"/>
+    </resultMap>
+
+    <!-- 将对账文件解析之后存入数据库 -->
+    <insert id="addCheckFileToDb" parameterType="com.manyi.business.pay.check.bean.CheckChannelBean">
+        INSERT INTO
+        t_checkchannel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            BillNo, PayWay, BillState, Amount, Fee, ExchangeNo, PayType,ChannelId,OrderTime
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{billNo},#{payWay},#{billState},#{amount},#{fee},#{exchangeNo},#{payType},#{channelId},#{orderTime}
+        </trim>
+    </insert>
+
+    <!-- 将对账文件解析之后存入数据库 -->
+    <insert id="addCheckFileListToDb" parameterType="java.util.List">
+        INSERT INTO
+        t_checkchannel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            BillNo, PayWay, BillState, Amount, Fee, ExchangeNo, PayType,ChannelId,OrderTime
+        </trim>
+        VALUES
+        <foreach collection="list" item="item" index="index" separator="," >
+           ( #{item.billNo},#{item.payWay},#{item.billState},#{item.amount},#{item.fee},#{item.exchangeNo},#{item.payType},#{item.channelId},#{item.orderTime})
+        </foreach>
+    </insert>
+
+
+    <!--将对账文件信息存入对账总表中-->
+    <insert id="addCheck" parameterType="com.manyi.business.pay.check.support.entity.Check" keyProperty="checkId" useGeneratedKeys="true">
+        INSERT INTO
+        t_check
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            CheckTime,CheckFileName
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            now(),#{checkFileName}
+        </trim>
+    </insert>
+
+    <!--查询账单表中存在对账明细表中不存在的账单-->
+    <select id="getBillExist" resultMap="Result_CheckDetail" parameterType="java.lang.Long">
+        SELECT a.BillNo,#{checkId} as CheckId,2 as State FROM t_bill a
+        WHERE NOT EXISTS (SELECT b.BillNo FROM t_checkchannel b WHERE a.BillNo = b.BillNo)
+        AND a.CheckState=1
+    </select>
+
+    <!--将对账产生的对账结果信息存入对账结果表-->
+    <insert id="addCheckDetail" parameterType="java.util.List">
+        INSERT INTO
+        t_checkdetail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+             BillNo,CheckId,State,ChannelBillNo,BillAmount,ChannelAmount
+        </trim>
+        VALUES
+        <foreach collection="list" item="item" index="index" separator="," >
+            ( #{item.billNo},#{item.checkId},#{item.state},#{item.channelBillNo},#{item.billAmount},#{item.channelAmount}
+            )
+        </foreach>
+    </insert>
+
+    <!--更新账单表对账状态-->
+    <update id="updateBillCheckState">
+        UPDATE t_bill a SET a.CheckState=2
+        WHERE NOT EXISTS (SELECT b.BillNo FROM t_checkchannel b WHERE a.BillNo = b.BillNo)
+        AND a.CheckState=1
+    </update>
+
+    <!--查询对账表存在账单表不存在的数据-->
+    <select id="getCheckExist" resultMap="Result_CheckDetail" parameterType="java.lang.Long">
+        select a.BillNo,a.ExchangeNo as ChannelBillNo,1 as State,#{checkId} as CheckId
+        from t_checkchannel  a
+        where not exists(select b.BillNo from t_bill b where a.BillNo = b.BillNo) AND a.CheckState=1
+    </select>
+
+    <!--更新对账表对账状态-->
+    <update id="updateCheckState">
+        UPDATE t_checkchannel a SET a.CheckState=2
+        WHERE NOT EXISTS (SELECT b.BillNo FROM t_bill b WHERE a.BillNo = b.BillNo)
+        AND a.CheckState=1
+    </update>
+
+    <!--查询账单表与对账表流水号一致，但是金额不一致的数据-->
+    <select id="getBillCheckDiff" resultMap="Result_CheckDetail" parameterType="java.lang.Long">
+        SELECT a.BillNo,3 as checkId,3 as State,a.ChannelBillNo,a.Amount as BillAmount,b.Amount AS ChannelAmount FROM t_bill a,t_checkchannel b
+        WHERE a.BillNo=b.BillNo AND a.Amount!=b.Amount AND a.CheckState=1 AND b.CheckState=1
+    </select>
+
+    <!--更新账单表与对账表金额不一致的订单状态-->
+    <update id="updateStateBillDiff">
+        UPDATE t_bill a SET a.CheckState=2 WHERE EXISTS(
+        SELECT b.BillNo FROM t_checkchannel b WHERE a.BillNo=b.BillNo
+        AND a.Amount!=b.Amount AND a.CheckState=1)
+    </update>
+
+    <!--更新对账表与账单表金额不一致的订单状态-->
+    <update id="updateStateCheckDiff">
+        UPDATE t_checkchannel  a SET a.CheckState=2 WHERE EXISTS(
+        SELECT b.BillNo FROM t_bill b WHERE a.BillNo=b.BillNo
+        AND a.Amount!=b.Amount AND a.CheckState=1)
+    </update>
+</mapper>

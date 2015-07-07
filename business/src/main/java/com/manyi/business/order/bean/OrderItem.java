@@ -1,10 +1,14 @@
 package com.manyi.business.order.bean;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.util.Date;
+
 
 /**
- * Created by Administrator on 2015/5/4.
+ * @Description: ETC业务实现类
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public class OrderItem {
 
@@ -16,9 +20,9 @@ public class OrderItem {
 
     private  String state;
 
-    private Date createTime;
+    private String createTime;
 
-    private Date  validateTime;
+    private String  validateTime;
 
     private BigDecimal payableAmount;
 
@@ -26,11 +30,12 @@ public class OrderItem {
 
     private  String seqNo;
 
-    private Date   expiredTime;
+    private String   expiredTime;
 
     private String  businessParam;
 
     private String description ;
+
 
     public String getDescription() {
         return description;
@@ -72,22 +77,6 @@ public class OrderItem {
         this.state = state;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getValidateTime() {
-        return validateTime;
-    }
-
-    public void setValidateTime(Date validateTime) {
-        this.validateTime = validateTime;
-    }
-
 
     public BigDecimal getPayableAmount() {
         return payableAmount;
@@ -114,19 +103,35 @@ public class OrderItem {
         this.seqNo = seqNo;
     }
 
-    public Date getExpiredTime() {
-        return expiredTime;
-    }
-
-    public void setExpiredTime(Date expiredTime) {
-        this.expiredTime = expiredTime;
-    }
-
     public long getUserId() {
         return userId;
     }
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getValidateTime() {
+        return validateTime;
+    }
+
+    public void setValidateTime(String validateTime) {
+        this.validateTime = validateTime;
+    }
+
+    public String getExpiredTime() {
+        return expiredTime;
+    }
+
+    public void setExpiredTime(String expiredTime) {
+        this.expiredTime = expiredTime;
     }
 }

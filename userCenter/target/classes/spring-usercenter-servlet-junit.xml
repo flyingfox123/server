@@ -10,8 +10,9 @@
        http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 	<import resource="spring-usercenter-shiro.xml"/>
+	<import resource="spring-point-servlet.xml"/>
 	<!-- 扫描web包，应用Spring的注解 -->
-	<context:component-scan base-package="com.manyi.usercenter.*;com.manyi.base.*;com.manyi.common.*" />
+	<context:component-scan base-package="com.manyi.usercenter.*;com.manyi.base.*;com.manyi.common.*;com.manyi.business.*" />
 
 	<!-- 启动注解驱动的Spring MVC功能 -->
 	<mvc:annotation-driven />
@@ -26,8 +27,7 @@
 
 	<!-- spring mybatis映射 -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.manyi.usercenter.user.support.dao;
-		com.manyi.usercenter.role.support.dao;com.manyi.usercenter.permission.support.dao;com.manyi.common.message.support.dao" />
+		<property name="basePackage" value="com.manyi.usercenter.user.support.dao;com.manyi.usercenter.role.support.dao;com.manyi.usercenter.permission.support.dao;com.manyi.common.message.support.dao;com.manyi.common.param.support.dao;com.manyi.common.messagePush.support.dao" />
 	</bean>
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -37,6 +37,7 @@
 			<list>
 				<value>classpath*:usercentermapper/*.xml</value>
 				<value>classpath*:commonmapper/*.xml</value>
+				<value>classpath*:pointmapper/*.xml</value>
 			</list>
 		</property>
 		<!--<property name="mapperLocations" value="classpath*:usercentermapper/*.xml" />-->

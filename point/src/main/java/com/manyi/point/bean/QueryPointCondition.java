@@ -6,49 +6,40 @@ import com.manyi.base.entity.State;
 import java.awt.*;
 
 /**
- * Created by Administrator on 2015/4/8.
+ * @Description:
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public class QueryPointCondition extends Pagination {
 
-    private int userId;
+    private long userId;
 
-    private String serviceId;
+    private String starttime;
 
-    private State state;
+    private String endtime;
 
-    private int level;
-
-
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
-    public String getServiceId() {
-        return serviceId;
+    public String getStarttime() {
+        return starttime;
     }
 
-    public void setServiceId(String serviceId) {
-        this.serviceId = serviceId;
+    public void setStarttime(String starttime) {
+        this.starttime = starttime;
     }
 
-
-    public State getState() {
-        return state;
+    public String getEndtime() {
+        return endtime;
     }
 
-    public void setState(State state) {
-        this.state = state;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
+    public void setEndtime(String endtime) {
+        this.endtime = endtime;
     }
 }

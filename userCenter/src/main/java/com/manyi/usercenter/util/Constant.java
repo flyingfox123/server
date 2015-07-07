@@ -12,7 +12,8 @@ public enum Constant {
     FINDPASSWORD("findPassword"),
     INDIVIDUAL("13"),
     CORPORATION("14"),
-    PICDIR("pic"),
+    PICDIR("opt/tomcat/data/pictures"),
+    PICTURES("pictures"),
     HEADPICDIR("headPic");
 
     private String value;

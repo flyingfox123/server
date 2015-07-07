@@ -5,7 +5,10 @@ import com.manyi.business.order.bean.OrderItem;
 import java.math.BigDecimal;
 
 /**
- * Created by Administrator on 2015/5/11.
+ * @Description: ETC业务实现类
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public class EtcInvoice extends OrderItem {
 
@@ -26,7 +29,17 @@ public class EtcInvoice extends OrderItem {
 
     private String param;
 
+    private String addressee;
+
     private long orderItemId;
+
+    public String getAddressee() {
+        return addressee;
+    }
+
+    public void setAddressee(String addressee) {
+        this.addressee = addressee;
+    }
 
     public long getEtcInvoiceId() {
         return etcInvoiceId;
@@ -99,4 +112,24 @@ public class EtcInvoice extends OrderItem {
     public void setOrderItemId(long orderItemId) {
         this.orderItemId = orderItemId;
     }
+
+    public boolean isObjectLegal()
+    {
+        if(null == this.getAmount() ||
+                null == this.getPhone()
+                || null == this.getInvoiceHeader()
+                || null == this.getPostAddress()
+                ||null == this.getSeqNo()
+                ||null ==this.getPayableAmount() ||
+                0 == this.getUserId()||
+                0==this.getOrderId())
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
 }

@@ -25,7 +25,8 @@
 
 	<!-- spring mybatis映射 -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.manyi.common.message.support.dao;" />
+		<property name="basePackage" value="com.manyi.common.message.support.dao;
+		                                  com.manyi.common.messagePush.support.dao;com.manyi.common.param.support.dao" />
 	</bean>
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">

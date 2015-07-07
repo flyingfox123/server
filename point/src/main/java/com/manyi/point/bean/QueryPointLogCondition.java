@@ -4,51 +4,53 @@ import com.manyi.base.entity.Pagination;
 
 import java.sql.Date;
 
-
 /**
- * Created by Administrator on 2015/4/8.
+ * @Description:
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public class QueryPointLogCondition extends Pagination {
 
-    private int pointId;
+    private long pointId;
 
-    private Date starttime;
+    private String starttime;
 
-    private Date endtime;
+    private String endtime;
 
-    private int userId;
+    private long  userId;
 
     private String eventCode;
 
-    public int getPointId() {
-        return pointId;
-    }
-
-    public void setPointId(int pointId) {
-        this.pointId = pointId;
-    }
-
-    public Date getStarttime() {
+    public String getStarttime() {
         return starttime;
     }
 
-    public void setStarttime(Date starttime) {
+    public void setStarttime(String starttime) {
         this.starttime = starttime;
     }
 
-    public Date getEndtime() {
+    public String getEndtime() {
         return endtime;
     }
 
-    public void setEndtime(Date endtime) {
+    public void setEndtime(String endtime) {
         this.endtime = endtime;
     }
 
-    public int getUserId() {
+    public long getPointId() {
+        return pointId;
+    }
+
+    public void setPointId(long pointId) {
+        this.pointId = pointId;
+    }
+
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 

@@ -7,7 +7,6 @@ import com.manyi.usercenter.role.bean.RoleResourceTreeNode;
 import com.manyi.usercenter.permission.bean.Permission;
 import com.manyi.usercenter.role.bean.SysRoleResRel;
 import com.manyi.usercenter.role.RoleResService;
-import com.manyi.usercenter.shiro.util.CurrentUserUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,12 +103,12 @@ public class RoleResServiceImpl implements RoleResService {
                 if (Boolean.valueOf(oneNode[1])) {
                     List<SysRoleResRel> list = findSysRoleRes(sysRoleResRel);
                     if (list.size() == 0) {
-                        Long userId = CurrentUserUtils.getCurrentUserId();
-                        sysRoleResRel.setCreator(userId);
-                        sysRoleResRel.setCreateTime(new Date());
-                        sysRoleResRel.setModifier(userId);
-                        sysRoleResRel.setModifyTime(new Date());
-                        grantResourceForRole(sysRoleResRel);
+//                        Long userId = CurrentUserUtils.getCurrentUserId();
+//                        sysRoleResRel.setCreator(userId);
+//                        sysRoleResRel.setCreateTime(new Date());
+//                        sysRoleResRel.setModifier(userId);
+//                        sysRoleResRel.setModifyTime(new Date());
+//                        grantResourceForRole(sysRoleResRel);
                     }
                 } else { // 如果未选中，进行删除操作
                     deleteRoleResRel(sysRoleResRel);

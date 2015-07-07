@@ -3,7 +3,6 @@ package com.manyi.usercenter.shiro.realm;
 import com.manyi.usercenter.token.JWTValidate;
 import com.manyi.usercenter.user.UserService;
 import com.manyi.usercenter.user.support.entity.BaseUser;
-import com.manyi.usercenter.shiro.util.ShiroUser;
 import com.manyi.usercenter.permission.PermissionService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;

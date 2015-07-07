@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manyi.business.pay.basemanage.support.dao.BankInfoDao">
+
+    <resultMap id="Result_BankInfo" type="com.manyi.business.pay.basemanage.support.entity.BankInfo">
+        <result column="BankInfoId" property="bankInfoId"/>
+        <result column="BankCode" property="bankCode"/>
+        <result column="BankName" property="bankName"/>
+        <result column="BankTypeNo" property="bankTypeNo"/>
+        <result column="SingleDayLimit" property="singleDayLimit"/>
+        <result column="SingleLimit" property="singleLimit"/>
+    </resultMap>
+
+    <!-- 新增银行信息 -->
+    <insert id="addBankInfo" parameterType="com.manyi.business.pay.basemanage.support.entity.BankInfo">
+        INSERT INTO
+        t_bankinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            BankInfoId, BankCode, BankName,BankTypeNo, SingleDayLimit, SingleLimit
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{BankInfoId},#{BankCode},#{BankName},#{BankTypeNo},#{SingleDayLimit},#{SingleLimit}
+        </trim>
+    </insert>
+
+    <!--查询银行信息-->
+    <select id="getBankInfoAll" resultMap="Result_BankInfo">
+        SELECT BankInfoId, BankCode, BankName,BankTypeNo, SingleDayLimit, SingleLimit FROM t_bankinfo
+
+    </select>
+
+</mapper>

@@ -11,12 +11,30 @@ public class Vehicle {
     private String plateNo;
     private String vehicleBrand;
     private double loadHeight;
-    private int axlesNum;
+    private String axlesNum;
     private String plateLength;
     private String plateType;
     private String luCard;
     private String oilWear;
     private Date createTime;
+    private String loginName;
+    private Long vehicleId;
+
+    public Long getVehicleId() {
+        return vehicleId;
+    }
+
+    public void setVehicleId(Long vehicleId) {
+        this.vehicleId = vehicleId;
+    }
+
+    public String getLoginName() {
+        return loginName;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
 
     public Long getId() {
         return id;
@@ -58,11 +76,11 @@ public class Vehicle {
         this.loadHeight = loadHeight;
     }
 
-    public int getAxlesNum() {
+    public String getAxlesNum() {
         return axlesNum;
     }
 
-    public void setAxlesNum(int axlesNum) {
+    public void setAxlesNum(String axlesNum) {
         this.axlesNum = axlesNum;
     }
 

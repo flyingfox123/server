@@ -24,7 +24,7 @@
         <result column="remarks" property="remarks"/>
         <result column="opUserId" property="opUserId"/>
         <result column="eventCode" property="eventCode"/>
-        <result column="eventName" property="eventName"/>
+        <result column="description" property="description"/>
         <result column="eventType" property="eventType"/>
         <result column="userId" property="userId"/>
     </resultMap>
@@ -79,7 +79,7 @@
     </select>
 
     <!-- 获取事件详情 -->
-    <select id="getEventByCode" resultType="com.manyi.base.entity.OpEvent">
+    <select id="getEventByCode" resultType="com.manyi.point.bean.OpEvent">
         SELECT
         <include refid="EVENT_BASE"/>
         FROM  t_pointevent
@@ -140,12 +140,6 @@
             <if test="userId != 0">
                 AND userId = #{userId}
             </if>
-            <if test="level != 0">
-                AND level = #{level}
-            </if>
-            <if test="state != null">
-                AND state = #{state}
-            </if>
         </trim>
         <if test="pageSize != 0">
             limit #{pageNum},#{pageSize}
@@ -161,9 +155,6 @@
             <if test="userId != 0">
                 AND userId = #{userId}
             </if>
-            <if test="level != 0">
-                AND level = #{level}
-            </if>
         </trim>
     </select>
 
@@ -172,7 +163,7 @@
         SELECT
         p.id AS id, p.pointId AS pointId,p.calcFormula AS calcFormula,p.createTime AS createTime,
         p.Point AS value, p.remarks AS remarks,p.opUserId AS opUserId, e.eventCode  AS eventCode,
-        e.name AS eventName, e.type AS eventType,o.userId AS userId
+        e.Description AS description, e.type AS eventType,o.userId AS userId
         FROM t_pointlog AS p ,t_pointevent AS e ,t_point AS o
         <trim prefix="where" prefixOverrides="AND">
             <if test="pointId != 0">
@@ -185,10 +176,20 @@
             <if test="eventCode != null">
                 AND  p.eventCode = #{eventCode}
             </if>
+
+            <if test="starttime != null">
+                AND  p.createtime >= #{starttime}
+            </if>
+
+            <if test="endtime != null">
+                AND  p.createtime &lt;= #{endtime}
+            </if>
+
             <if test="1 == 1">
                 AND  p.eventCode  = e.eventCode
             </if>
         </trim>
+        ORDER BY createTime DESC
         <if test="pageSize != 0">
             limit #{pageNum},#{pageSize}
         </if>

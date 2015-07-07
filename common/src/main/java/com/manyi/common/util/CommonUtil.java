@@ -11,7 +11,6 @@ import java.util.regex.Pattern;
  */
 public class CommonUtil {
 
-    private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
     /**
      * 验证手机号
      * @param str

@@ -4,8 +4,12 @@ import com.manyi.base.entity.Pagination;
 
 import java.util.List;
 
+
 /**
- * Created by Administrator on 2015/5/5.
+ * @Description: ETC业务实现类
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public class QueryOrderItemResult  extends Pagination{
 

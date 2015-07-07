@@ -1,17 +1,20 @@
 package com.manyi.point.bean;
 
 /**
- * Created by Administrator on 2015/4/8.
+ * @Description:
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public class UpdateGrowthParam extends PointParam{
 
     private  int newGrowth;
     //操作员更新积分行为
-    public static String eventCode = "0000002";
+    public static final String eventCode = "0000002";
 
-    public  UpdateGrowthParam(int userId1,String ServiceId1 ,String opUserId1 , int newGrowth1)
+    public  UpdateGrowthParam(long userId1, int newGrowth1)
     {
-        super(userId1, ServiceId1,eventCode, opUserId1);
+        super(userId1);
         this.newGrowth = newGrowth1;
     }
 

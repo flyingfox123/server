@@ -3,7 +3,10 @@ package com.manyi.business.etc.bean;
 import java.util.List;
 
 /**
- * Created by Administrator on 2015/5/14.
+ * @Description: ETC业务实现类
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public class ETCPreChargeRequest {
 
@@ -11,7 +14,17 @@ public class ETCPreChargeRequest {
 
     private Integer state;
 
+    private String amount;
+
     private List<EtcResult> list;
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
 
     public String getOrderSeq() {
         return orderSeq;
@@ -37,4 +50,23 @@ public class ETCPreChargeRequest {
     public void setList(List<EtcResult> list) {
         this.list = list;
     }
+
+    public boolean  isObjectLegal()
+    {
+
+        if(null== this.getOrderSeq() || null ==this.getList())
+        {
+            return false;
+
+        }
+        for(EtcResult re : this.getList())
+        {
+            if(null == re.getOrderItemSeq() || null == re.getState())
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

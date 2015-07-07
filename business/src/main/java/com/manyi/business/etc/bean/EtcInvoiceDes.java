@@ -2,8 +2,12 @@ package com.manyi.business.etc.bean;
 
 import java.math.BigDecimal;
 
+
 /**
- * Created by Administrator on 2015/5/17.
+ * @Description: ETC业务实现类
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public class EtcInvoiceDes {
 
@@ -14,6 +18,16 @@ public class EtcInvoiceDes {
     private String postAddress;
 
     private String  phone;
+
+    private String addressee;
+
+    public String getAddressee() {
+        return addressee;
+    }
+
+    public void setAddressee(String addressee) {
+        this.addressee = addressee;
+    }
 
     public String getInvoiceHeader() {
         return invoiceHeader;

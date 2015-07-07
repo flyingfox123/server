@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manyi.business.pay.check.support.dao.CheckManageDao">
+
+    <resultMap id="Result_checkDetail" type="com.manyi.business.pay.check.support.entity.CheckDetail">
+        <result column="BillId" property="billId"/>
+        <result column="BillNo" property="billNo"/>
+        <result column="OrderId" property="orderId"/>
+        <result column="AccountId" property="accountId"/>
+        <result column="StateCn" property="stateCn"/>
+        <result column="BillAmount" property="billAmount"/>
+        <result column="ChannelAmount" property="channelAmount"/>
+    </resultMap>
+
+
+    <!--查询账单表中存在对账明细表中不存在的账单-->
+    <select id="getSumGroupByDay" resultMap="Result_checkDetail" parameterType="com.manyi.business.pay.check.bean.CheckDetailBean">
+        select count(*) as count,State,date_format(Createtime,'%Y-%m-%d')
+        as createDate from t_checkdetail t
+        <where>
+            <if test="createDateStart!=null">date_format(Createtime,'%Y-%m-%d')&gt;=#{createDateStart}</if>
+            <if test="createDateEnd!=null">AND date_format(Createtime,'%Y-%m-%d')&lt;=#{createDateEnd}</if>
+        </where>
+        group by createDate,t.State  order by createDate
+    </select>
+
+
+    <select id="getCheckDetail" resultMap="Result_checkDetail" parameterType="com.manyi.business.pay.check.bean.CheckDetailBean">
+        SELECT
+        CheckDetailId,
+        CheckId,
+        BillNo,
+        ChannelBillNo,
+        State,
+        CreateTime,
+        BillAmount,
+        ChannelAmount,
+        date_format(Createtime,'%Y-%m-%d') AS CreateDate,
+        DealResult,
+        CASE WHEN State=1 THEN '满易网无'
+        WHEN State=2 THEN '满易网有'
+        WHEN State=3 THEN '数据不一致'
+        END as StateCn
+        FROM
+        t_checkdetail t
+        <where>
+            <if test="state!=0">t.State=#{state}</if>
+            <if test="createDateStart!=null"> AND date_format(Createtime,'%Y-%m-%d')&gt;=#{createDateStart}</if>
+            <if test="createDateEnd!=null">AND date_format(Createtime,'%Y-%m-%d')&lt;=#{createDateEnd}</if>
+        </where>
+        order by CreateDate DESC
+    </select>
+
+
+</mapper>

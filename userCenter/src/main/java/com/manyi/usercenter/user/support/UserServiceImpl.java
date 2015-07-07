@@ -4,18 +4,17 @@ import com.manyi.base.entity.Constant;
 import com.manyi.base.entity.Type;
 import com.manyi.base.exception.BusinessException;
 import com.manyi.common.message.MessageService;
+import com.manyi.usercenter.event.RegisterSuccessEvent;
 import com.manyi.usercenter.shiro.util.PasswordHelper;
 import com.manyi.usercenter.user.UserService;
 import com.manyi.usercenter.user.bean.*;
 import com.manyi.usercenter.user.support.dao.UserRoleDao;
-import com.manyi.usercenter.user.support.entity.BaseUser;
-import com.manyi.usercenter.user.support.entity.Corporation;
-import com.manyi.usercenter.user.support.entity.Individual;
-import com.manyi.usercenter.user.support.entity.SysUser;
+import com.manyi.usercenter.user.support.entity.*;
 import com.manyi.usercenter.user.support.dao.UserDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -30,7 +29,7 @@ public class UserServiceImpl implements UserService {
 
     //private static final Properties properties = ReadPropertiesUtil.readProperties("user.properties");
     //private Properties properties = ReadPropertiesUtil.readProperties("user.properties");
-
+    public static final char ISDEFAULT = 'Y';
     @Autowired
     private UserDao userDao;
 
@@ -39,6 +38,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private MessageService messageService;
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Override
     public BaseUser getUserByName(String username) {
@@ -51,8 +53,90 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BaseUser getUserByEtc(String etcNo) {
+    public List<PlatUser> querySysUser(PlatUser platUser) {
+
+        if(null != platUser && 0 != platUser.getPageSize() &&platUser.getPageNum()>0)
+        {
+            platUser.setPageNum((platUser.getPageNum()-1)*platUser.getPageSize());
+        }
+
+        return userDao.querySysUser(platUser);
+    }
+
+    @Override
+    public int querySysUserCount(PlatUser platUser) {
+        return userDao.querySysUserCount(platUser);
+    }
+
+    @Override
+    public Individual getUserByEtc(String etcNo) {
+        VehicleBean vehicleBean = new VehicleBean();
+        vehicleBean.setLuCard(etcNo);
+        List<Vehicle> vehicleList = userDao.findVehicle(vehicleBean);
+        if (vehicleList.size()>0){
+            Vehicle vehicle = vehicleList.get(0);
+            List<Individual> individuals = userDao.getIndividual(vehicle.getLoginName());
+            if (individuals.size()>0){
+                return individuals.get(0);
+            }
+        }
         return null;
+    }
+
+    @Override
+    public UserInfo getUserAndVehicleInfo(PlatUser platUser) {
+        UserInfo userInfo = new UserInfo();
+        BaseUser baseUser = userDao.getUser(platUser);
+        if (baseUser!=null){
+            userInfo.setId(baseUser.getId());
+            userInfo.setState(baseUser.getState());
+            userInfo.setCreateTime(baseUser.getCreateTime());
+            userInfo.setLoginName(baseUser.getLoginName());
+            userInfo.setType(baseUser.getType());
+            long id = baseUser.getId();
+            if (Constant.Individual.equals(baseUser.getType())){
+                Individual individual = userDao.getIndividualById(baseUser.getId());
+                userInfo.setIndividual(individual);
+            }
+            VehicleBean vehicleBean = new VehicleBean();
+            vehicleBean.setUserId(id);
+            List<Vehicle> vehicleList = userDao.findVehicle(vehicleBean);
+            if (vehicleList.size()>0){
+                userInfo.setVehicle(vehicleList.get(0));
+            }
+        }
+
+        return userInfo;
+    }
+
+    @Override
+    public List<UserVehicle> getUserInfoList(List<PlatUser> platUserList) {
+        List<UserVehicle> infoList = new ArrayList<UserVehicle>();
+        for (PlatUser platUser:platUserList){
+            UserVehicle userVehicle = new UserVehicle();
+            userVehicle.setLoginName(platUser.getLoginName());
+            userVehicle.setName(platUser.getName());
+            BaseUser baseUser = null;
+            if (platUser.getLoginName()!=null&&!"".equals(platUser.getLoginName())){
+                baseUser = userDao.getUser(platUser);
+            }
+
+            if (baseUser!=null){
+                long id = baseUser.getId();
+                VehicleBean vehicleBean = new VehicleBean();
+                vehicleBean.setUserId(id);
+                List<Vehicle> vehicleList = userDao.findVehicle(vehicleBean);
+                if (vehicleList.size()>0){
+                    Vehicle vehicle=vehicleList.get(0);
+                    if (vehicle.getPlateNo()!=null&&!"".equals(vehicle.getPlateNo())){
+                        userVehicle.setLuCard(vehicle.getLuCard());
+                        userVehicle.setPlateNo(vehicle.getPlateNo());
+                        infoList.add(userVehicle);
+                    }
+                }
+            }
+        }
+        return infoList;
     }
 
     @Override
@@ -85,15 +169,15 @@ public class UserServiceImpl implements UserService {
         sysUser.setCreator(1);  // 先写死一个id，之后改成由ShiroUser里获取
         sysUser.setName(platUser.getName());
         userDao.createSysUser(sysUser);
-        System.out.println("当前插入的个人用户id为：" + sysUser.getId());
+        System.out.println("当前插入的平台用户id为：" + sysUser.getId());
     }
 
     @Override
     public void updateSysUser(long userId, String state, String name) {
 
-        if (null != state && "" != state) {
-            userDao.updateSysUserStatus(userId, state);
-        }
+//        if (null != state && "" != state) {
+//            userDao.updateSysUserStatus(userId, state);
+//        }
         if (null != name && "" != name) {
             userDao.updateSysUserName(userId, name);
         }
@@ -142,6 +226,36 @@ public class UserServiceImpl implements UserService {
 
         //增加个人用户角色对应关系
         userRoleDao.addUserRole(Long.valueOf(baseUser.getId()),Long.valueOf(com.manyi.usercenter.util.Constant.INDIVIDUAL.getValue()));
+
+        //注册车辆信息
+        VehicleBean vehicleBean = new VehicleBean();
+        vehicleBean.setUserId(baseUser.getId());
+        userDao.addVehicle(vehicleBean);
+        applicationContext.publishEvent(new RegisterSuccessEvent(baseUser));
+    }
+
+    /**
+     *查询司机用户 zhaoyuxin
+     * @param individualBean
+     * @return
+     */
+    public List<Individual> findIndividual(IndividualBean individualBean){
+        if(null != individualBean && 0 != individualBean.getPageSize() &&individualBean.getPageNum()>0)
+        {
+            individualBean.setPageNum((individualBean.getPageNum()-1)*individualBean.getPageSize());
+        }
+        List<Individual> individual =  userDao.findIndividual(individualBean);
+        return individual;
+    }
+
+    /**
+     *查询司机用户数量 zhaoyuxin
+     * @param individualBean
+     * @return
+     */
+    public int findIndividualCount(IndividualBean individualBean){
+        int count =  userDao.findIndividualCount(individualBean);
+        return count;
     }
 
     /**
@@ -198,13 +312,29 @@ public class UserServiceImpl implements UserService {
         userDao.updateCorporater(corporation);
     }
 
+    public  List<CorpUser> queryCorporationInfo(Corporation corporation){
+        if(null != corporation && 0 != corporation.getPageSize() &&corporation.getPageNum()>0)
+        {
+            corporation.setPageNum((corporation.getPageNum()-1)*corporation.getPageSize());
+        }
+        List<CorpUser> corpUsers = userDao.queryCorporationInfo(corporation);
+        return corpUsers;
+    }
+
+    public  int queryCorporationCount(Corporation corporation){
+        return  userDao.queryCorporationCount(corporation);
+    }
+
     @Override
     public boolean checkCurrentPwd(long userId, String password) {
 
         BaseUser baseUser = userDao.getBaseUserById(userId);
+        if (baseUser==null){
+            return false;
+        }
         String pwd = PasswordHelper.encryptPassword(password, baseUser.getSecretKey());
         boolean result = false;
-        if (null != baseUser && null != baseUser.getPassword()) {
+        if (null != baseUser.getPassword()) {
             if (pwd.equals(baseUser.getPassword())) {
                 result = true;
             }
@@ -264,5 +394,55 @@ public class UserServiceImpl implements UserService {
         userRoleDao.addUserRole(Long.valueOf(userId),Long.valueOf(roleId));
     }
 
+    @Override
+    public List<Vehicle> findVehicle(VehicleBean vehicleBean) {
+        List<Vehicle> vehicleList = userDao.findVehicle(vehicleBean);
+        return vehicleList;
+    }
 
+    @Override
+    public void updateVehicle(VehicleBean vehicleBean) {
+        userDao.updateVehicle(vehicleBean);
+    }
+
+    @Override
+    public void addAddress(AddressBean addressBean) {
+        userDao.addAddress(addressBean);
+    }
+
+    @Override
+    public List<Address> findAddress(AddressBean addressBean) {
+        List<Address> addressList = userDao.findAddress(addressBean);
+        return addressList;
+    }
+
+    @Override
+    public void updateAddress(AddressBean addressBean) {
+        userDao.updateAddress(addressBean);
+    }
+
+    @Override
+    public void deleteAddress(AddressBean addressBean) {
+        userDao.deleteAddress(addressBean);
+    }
+
+    @Override
+    public void updateDefAddress(AddressBean addressBean) {
+        userDao.setAllAddressNoDef(addressBean);
+        addressBean.setIsDefault(ISDEFAULT);
+        userDao.updateAddress(addressBean);
+    }
+
+    public void disableUser(long userId){
+        userDao.updateSysUserStatus(userId, Constant.DISABLE );
+    }
+
+    /**
+     * 通过id查询基础用户
+     * @param userId
+     * @return
+     */
+    public BaseUser findBaseUserById(long userId) {
+        return userDao.getBaseUserById(userId);
+    }
 }

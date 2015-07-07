@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manyi.business.pay.bill.support.dao.BillDao">
+
+    <resultMap id="Result_Bill" type="com.manyi.business.pay.bill.support.entity.Bill">
+        <result column="BillId" property="billId"/>
+        <result column="BillNo" property="billNo"/>
+        <result column="OrderId" property="orderId"/>
+        <result column="OrderNo" property="orderNo"/>
+        <result column="AccountId" property="accountId"/>
+        <result column="SourceId" property="sourceId"/>
+        <result column="CreateTime" property="createTime"/>
+        <result column="Amount" property="amount"/>
+        <result column="TradeType" property="tradeType"/>
+        <result column="BusinessType" property="businessType"/>
+        <result column="TradeTime" property="tradeTime"/>
+        <result column="ChannelBillNo" property="channelBillNo"/>
+        <result column="TradeState" property="tradeState"/>
+        <result column="CheckState" property="checkState"/>
+        <result column="ChannelId" property="channelId"/>
+        <result column="ResponseTime" property="responseTime"/>
+    </resultMap>
+
+    <!-- 新增账单信息 -->
+    <insert id="createBill" parameterType="com.manyi.business.pay.bill.bean.BillBean">
+        INSERT INTO
+        t_bill
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            BillNo, OrderId, OrderNo,AccountId, SourceId, Amount, TradeType, BusinessType,ChannelBillNo,TradeState,ChannelId,TradeTime
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{billNo},#{orderId},#{orderNo},#{accountId},#{sourceId},#{amount},#{tradeType},#{businessType},#{channelBillNo},#{tradeState},#{channelId},#{tradeTime}
+        </trim>
+    </insert>
+
+    <!--查询根据账单-->
+    <select id="findBill" resultMap="Result_Bill">
+        SELECT
+        BillId,BillNo, OrderId, OrderNo, t_bill.AccountId, SourceId,t_bill.CreateTime,Amount, TradeType,
+        BusinessType,TradeTime,ChannelBillNo,TradeState,CheckState,ChannelId,ResponseTime
+        from t_bill,t_account
+        <where>
+            <if test="userId != 0">t_account.UserId=#{userId}</if>
+            AND t_account.AccountId=t_bill.AccountId
+            <if test="billNo != null">AND BillNo=#{billNo}</if>
+            <if test="businessType != 0">AND BusinessType=#{businessType}</if>
+        </where>
+        ORDER BY TradeTime DESC
+        <if test="pageSize != 0">
+            limit #{pageNum},#{pageSize}
+        </if>
+    </select>
+
+    <!--修改账单-->
+    <update id="updateBill" parameterType="com.manyi.business.pay.bill.bean.BillBean">
+        UPDATE
+        t_bill
+        <set>
+            <if test="channelBillNo != null">ChannelBillNo = #{channelBillNo},</if>
+            <if test="tradeState != null">TradeState = #{tradeState},</if>
+            <if test="tradeTime != null">TradeTime = #{tradeTime},</if>
+            ResponseTime = now(),
+        </set>
+        <where>
+            <if test="billNo!=''">BillNo = #{billNo}</if>
+        </where>
+    </update>
+
+    <!--查询未处理账单-->
+    <select id="findUnDealBill" resultMap="Result_Bill">
+        SELECT
+        BillId,BillNo, OrderId, AccountId, SourceId,CreateTime,Amount, TradeType,
+        BusinessType,TradeTime,ChannelBillNo,TradeState,CheckState,ChannelId,ResponseTime
+        from t_bill
+        WHERE TradeState=0
+    </select>
+
+    <!--查询条件账单-->
+    <select id="findBillForRefund" resultMap="Result_Bill">
+        SELECT
+        BillId,BillNo, OrderId, AccountId, SourceId,CreateTime,Amount, TradeType,
+        BusinessType,TradeTime,ChannelBillNo,TradeState,CheckState,ChannelId,ResponseTime
+        from t_bill
+        WHERE OrderNo=#{orderNo} AND BusinessType=#{businessType}
+        AND TradeType=#{tradeType} AND TradeState=#{tradeState}
+    </select>
+
+
+</mapper>

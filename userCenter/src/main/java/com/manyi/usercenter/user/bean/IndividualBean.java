@@ -1,12 +1,14 @@
 package com.manyi.usercenter.user.bean;
 
+import com.manyi.base.entity.Pagination;
+
 import java.io.Serializable;
 import java.sql.Date;
 
 /**
  * Created by zhangyufeng on 2015/5/26.
  */
-public class IndividualBean implements Serializable {
+public class IndividualBean  extends Pagination implements Serializable {
 
     private long id;
     private long userId;

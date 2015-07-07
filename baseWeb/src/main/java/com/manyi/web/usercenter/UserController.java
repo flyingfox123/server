@@ -6,15 +6,12 @@ import com.manyi.base.exception.BusinessException;
 import com.manyi.bean.JsonResult;
 import com.manyi.common.bean.response.ResponseBean;
 import com.manyi.common.util.CommonUtil;
+import com.manyi.common.util.ReadPropertiesUtil;
 import com.manyi.usercenter.exception.UserGetMsgCodeException;
 import com.manyi.usercenter.shiro.util.PasswordHelper;
 import com.manyi.usercenter.user.UserService;
-import com.manyi.usercenter.user.bean.IndividualBean;
-import com.manyi.usercenter.user.bean.MsgCode;
-import com.manyi.usercenter.user.bean.PlatUser;
-import com.manyi.usercenter.user.bean.UserBean;
-import com.manyi.usercenter.user.support.entity.BaseUser;
-import com.manyi.usercenter.user.support.entity.Individual;
+import com.manyi.usercenter.user.bean.*;
+import com.manyi.usercenter.user.support.entity.*;
 import com.manyi.usercenter.util.Constant;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -34,17 +31,23 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Created by Magic on 2015/4/15.
+ * @Description:
+ * @author ZhangYufeng
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
-
 @Controller
 @RequestMapping("/usercenter")
 public class UserController {
 
     private final static Logger logger = LoggerFactory.getLogger(UserController.class);
+
+    public static  final String DEFAULT_PASSWORD = ReadPropertiesUtil.readProperties("user.properties").getProperty("defaultPassword");
 
     @Autowired
     private UserService userservice;
@@ -55,10 +58,18 @@ public class UserController {
      */
     @RequestMapping("/sysUser/select")
     @ResponseBody
-    public List<PlatUser> findSysUser() {
-        List<PlatUser> sysSysUser = userservice.queryAllSysUsers();
-
-        return sysSysUser;
+    public Map findSysUser(int page , int size ,long userId,String loginName) {
+        PlatUser platUser = new PlatUser();
+        platUser.setUserId(userId);
+        platUser.setLoginName(loginName);
+        platUser.setPageNum(page);
+        platUser.setPageSize(size);
+        List<PlatUser> sysUser = userservice.querySysUser(platUser);
+        int totalCount = userservice.querySysUserCount(platUser);
+        Map resultMap = new HashMap();
+        resultMap.put("list",sysUser);
+        resultMap.put("totalCount",totalCount);
+        return resultMap;
     }
 
 
@@ -82,6 +93,15 @@ public class UserController {
     @ResponseBody
     public ResponseBean registerIndividual(@RequestBody UserBean userBean) throws BusinessException {
         ResponseBean responseBean = new ResponseBean();
+        if (userBean==null){
+            throw new BusinessException(Type.PARA_NULL);
+        }
+        BaseUser baseUser = userservice.getUserByName(userBean.getLoginName());
+        if (baseUser!=null){
+            responseBean.setState(State.FAIL.getString());
+            responseBean.setErrMsg("用户已存在,请直接登录");
+            return responseBean;
+        }
         if (null != userBean) {
             if (!CommonUtil.isPassWord(userBean.getPassWord())){
                 throw new BusinessException(Type.PASSWORD_WRONG);
@@ -104,9 +124,9 @@ public class UserController {
     public JsonResult updateSysUser(@RequestBody PlatUser sysUser) {
         if (null != sysUser) {
             try {
-               // userservice.updateSysUser(sysUser);
+               userservice.updateSysUser(sysUser.getUserId(),sysUser.getState(),sysUser.getName());
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("修改系统用户异常", e);
             }
         }
         return new JsonResult(JsonResult.SUCCESS, "操作成功");
@@ -127,6 +147,16 @@ public class UserController {
             throw new BusinessException(Type.PARA_NULL);
         }
         responseBean.setState(State.SUCCESS.getString());
+        return responseBean;
+    }
+
+    @RequestMapping("/auth/individual/getUserInfoList")
+    @ResponseBody
+    public ResponseBean getUserInfoList(@RequestBody List<PlatUser> platUserList) throws BusinessException {
+        ResponseBean responseBean = new ResponseBean();
+        List<UserVehicle> userVehicleList = userservice.getUserInfoList(platUserList);
+        responseBean.setState(State.SUCCESS.getString());
+        responseBean.setBody(userVehicleList);
         return responseBean;
     }
 
@@ -207,7 +237,7 @@ public class UserController {
             try {
                 userservice.deleteSysUser(id);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("删除系统用户异常", e);
             }
         }
         return new JsonResult(JsonResult.SUCCESS, "操作成功");
@@ -225,6 +255,9 @@ public class UserController {
     public ResponseBean sendMsgCode(@RequestBody MsgCode messageCode) throws Exception {
         ResponseBean responseBean = new ResponseBean();
         String cellPhone=null;
+        if (messageCode==null){
+            throw new BusinessException(Type.PARA_NULL);
+        }
         BaseUser baseUser = userservice.getUserByName(messageCode.getPhone());
         if (baseUser!=null){
             responseBean.setState(State.FAIL.getString());
@@ -293,6 +326,9 @@ public class UserController {
     public ResponseBean sendMegCodeForResetPass(@RequestBody MsgCode messageCode) throws Exception {
         String cellPhone=null;
         ResponseBean responseBean = new ResponseBean();
+        if(messageCode==null){
+            throw new BusinessException(Type.PARA_NULL);
+        }
         BaseUser baseUser = userservice.getUserByName(messageCode.getPhone());
         if (baseUser==null){
             responseBean.setState(State.FAIL.getString());
@@ -376,33 +412,54 @@ public class UserController {
         }
 
         //上传文件的物理路径.../baseWeb/pic/hedPic/userId/xxx.jpg
-        String uploadPath=request.getSession().getServletContext().getRealPath(Constant.PICDIR.getValue() + "//" + userId + "//" +Constant.HEADPICDIR.getValue());
+        //String uploadPath=request.getSession().getServletContext().getRealPath(Constant.PICDIR.getValue() + "//" + userId + "//" +Constant.HEADPICDIR.getValue());
+        //String uploadPath="F://"+Constant.PICDIR.getValue() + "//" + userId + "//" +Constant.HEADPICDIR.getValue();
+        String uploadPath="//"+Constant.PICDIR.getValue() + "//" + userId + "//" +Constant.HEADPICDIR.getValue();
 
         File uploadDir=new File(uploadPath);
         if(!uploadDir.exists()){
             uploadDir.mkdirs();
         }
-        File uploadFile=new File(uploadPath + "/" + userId+"."+ext);
+        long timeStamp = System.currentTimeMillis();
+        File uploadFile=new File(uploadPath + "/" + timeStamp+"."+ext);
         file.transferTo(uploadFile);
         logger.debug("userId:" + userId + ",上传头像成功");
         responseBean.setState(State.SUCCESS.getString());
-        String headPicUrl=CommonUtil.getBasePath(request)+"/"+Constant.PICDIR.getValue() + "/" + userId + "/" +Constant.HEADPICDIR.getValue()+"/"+ userId+"."+ext;
+        String headPicUrl=CommonUtil.getBasePath(request)+"/"+Constant.PICTURES.getValue() + "/" + userId + "/" +Constant.HEADPICDIR.getValue()+"/"+ timeStamp+"."+ext;
         IndividualBean individualBean = new IndividualBean();
         individualBean.setUserId(Long.valueOf(userId));
-        individualBean.setHeadPic("/"+Constant.PICDIR.getValue() + "/" + userId + "/" +Constant.HEADPICDIR.getValue()+"/"+ userId+"."+ext);
+        individualBean.setHeadPic(Constant.PICTURES.getValue() + "/" + userId + "/" +Constant.HEADPICDIR.getValue()+"/"+ timeStamp+"."+ext);
         userservice.updateIndividual(individualBean);
         responseBean.setBody(headPicUrl);
         return responseBean;
     }
 
-    @RequestMapping("/download")
-    public ResponseEntity<byte[]> download() throws IOException {
-        String path="D:\\worktool\\apache-tomcat-7.0.57\\webapps\\baseWeb\\pic\\63\\headPic\\63.jpg";
+//    @RequestMapping("/download")
+//    public ResponseEntity<byte[]> download() throws IOException {
+//        String path="F:\\pic\\63\\headPic\\63.jpg";
+//        File file=new File(path);
+//        HttpHeaders headers = new HttpHeaders();
+//        String fileName=new String("63.jpg".getBytes("UTF-8"),"iso-8859-1");//为了解决中文名称乱码问题
+//        headers.setContentDispositionFormData("attachment", fileName);
+//        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+//        return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),
+//                headers, HttpStatus.CREATED);
+//    }
+
+    @RequestMapping("/auth/individual/download")
+    public ResponseEntity<byte[]> download(@RequestBody IndividualBean individualBean) throws IOException {
+        ResponseBean responseBean = new ResponseBean();
+        String headPic = individualBean.getHeadPic();
+        String path="//"+headPic;
         File file=new File(path);
         HttpHeaders headers = new HttpHeaders();
         String fileName=new String("63.jpg".getBytes("UTF-8"),"iso-8859-1");//为了解决中文名称乱码问题
         headers.setContentDispositionFormData("attachment", fileName);
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        ResponseEntity<byte[]> responseEntity = new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),
+                headers, HttpStatus.CREATED);
+        responseBean.setState(State.SUCCESS.getString());
+        responseBean.setBody(responseEntity);
         return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file),
                 headers, HttpStatus.CREATED);
     }
@@ -419,8 +476,148 @@ public class UserController {
             return responseBean;
         }
         Individual individual = individualList.get(0);
-        individual.setHeadPic(CommonUtil.getBasePath(request)+individual.getHeadPic());
+        if (!"".equals(individual.getHeadPic())){
+            individual.setHeadPic(CommonUtil.getBasePath(request)+"/"+individual.getHeadPic());
+        }
+        responseBean.setState(State.SUCCESS.getString());
         responseBean.setBody(individual);
+        return responseBean;
+    }
+
+    /**
+     * 增加车辆信息
+     * @param vehicleBean
+     * @return
+     * @throws BusinessException
+     */
+    @RequestMapping("/auth/vehicle/addVehicle")
+    @ResponseBody
+    public ResponseBean addVehicle(@RequestBody VehicleBean vehicleBean) throws BusinessException {
+        ResponseBean responseBean = new ResponseBean();
+        if (vehicleBean==null){
+            throw new BusinessException(Type.PARA_NULL);
+        }
+        userservice.addVehicle(vehicleBean);
+        responseBean.setState(State.SUCCESS.getString());
+        return responseBean;
+    }
+
+    /**
+     * 查询车辆信息
+     * @param vehicleBean
+     * @return
+     * @throws BusinessException
+     */
+    @RequestMapping("/auth/vehicle/findVehicle")
+    @ResponseBody
+    public ResponseBean findVehicle(@RequestBody VehicleBean vehicleBean) throws BusinessException {
+        ResponseBean responseBean = new ResponseBean();
+        if(vehicleBean==null){
+            throw new BusinessException(Type.PARA_NULL);
+        }
+        if (vehicleBean.getId()==0&&vehicleBean.getUserId()==0&&vehicleBean.getLuCard()==null){
+            throw new BusinessException(Type.PARA_NULL);
+        }
+        List<Vehicle> vehicleList = userservice.findVehicle(vehicleBean);
+        responseBean.setState(State.SUCCESS.getString());
+        responseBean.setBody(vehicleList);
+        return responseBean;
+    }
+
+    /**
+     * 更新车辆信息
+     * @param vehicleBean
+     * @return
+     * @throws BusinessException
+     */
+    @RequestMapping("/auth/vehicle/updateVehicle")
+    @ResponseBody
+    public ResponseBean updateVehicle(@RequestBody VehicleBean vehicleBean) throws BusinessException {
+        ResponseBean responseBean = new ResponseBean();
+        if (vehicleBean==null||vehicleBean.getUserId()==0){
+            throw new BusinessException(Type.PARA_NULL);
+        }
+        userservice.updateVehicle(vehicleBean);
+        responseBean.setState(State.SUCCESS.getString());
+        return responseBean;
+    }
+
+    /**
+     * 增加地址信息
+     * @param addressBean
+     * @return
+     * @throws BusinessException
+     */
+    @RequestMapping("/auth/address/addAddress")
+    @ResponseBody
+    public ResponseBean addAddress(@RequestBody AddressBean addressBean) throws BusinessException {
+        ResponseBean responseBean = new ResponseBean();
+        if (addressBean==null||addressBean.getUserId()==0){
+            throw new BusinessException(Type.PARA_NULL);
+        }
+        userservice.addAddress(addressBean);
+        responseBean.setState(State.SUCCESS.getString());
+        return responseBean;
+    }
+
+    /**
+     * 查找地址信息
+     * @param addressBean
+     * @return
+     * @throws BusinessException
+     */
+    @RequestMapping("/auth/address/findAddress")
+    @ResponseBody
+    public ResponseBean findAddress(@RequestBody AddressBean addressBean) throws BusinessException {
+        ResponseBean responseBean = new ResponseBean();
+        if (addressBean==null){
+            throw new BusinessException(Type.PARA_NULL);
+        }
+        List<Address> addressList = userservice.findAddress(addressBean);
+        responseBean.setState(State.SUCCESS.getString());
+        responseBean.setBody(addressList);
+        return responseBean;
+    }
+
+    /**
+     * 修改地址信息
+     * @param addressBean
+     * @return
+     * @throws BusinessException
+     */
+    @RequestMapping("/auth/address/updateAddress")
+    @ResponseBody
+    public ResponseBean updateAddress(@RequestBody AddressBean addressBean) throws BusinessException {
+        ResponseBean responseBean = new ResponseBean();
+        if (addressBean==null){
+            throw new BusinessException(Type.PARA_NULL);
+        }
+        userservice.updateAddress(addressBean);
+        responseBean.setState(State.SUCCESS.getString());
+        return responseBean;
+    }
+
+    @RequestMapping("/auth/address/deleteAddress")
+    @ResponseBody
+    public ResponseBean deleteAddress(@RequestBody AddressBean addressBean) throws BusinessException {
+        ResponseBean responseBean = new ResponseBean();
+        if (addressBean==null){
+            throw new BusinessException(Type.PARA_NULL);
+        }
+        userservice.deleteAddress(addressBean);
+        responseBean.setState(State.SUCCESS.getString());
+        return responseBean;
+    }
+
+    @RequestMapping("/auth/address/updateDefAddress")
+    @ResponseBody
+    public ResponseBean updateDefAddress(@RequestBody AddressBean addressBean) throws BusinessException {
+        ResponseBean responseBean = new ResponseBean();
+        if (addressBean==null){
+            throw new BusinessException(Type.PARA_NULL);
+        }
+        userservice.updateDefAddress(addressBean);
+        responseBean.setState(State.SUCCESS.getString());
         return responseBean;
     }
 
@@ -442,4 +639,67 @@ public class UserController {
         return responseBean;
     }
 
+    /**
+     * 查询所有个人用户
+     * @return
+     */
+    @RequestMapping("/Individual/select")
+    @ResponseBody
+    public Map findIndividual(int page , int size ,long userId,String loginName) {
+        IndividualBean individualBean = new IndividualBean();
+        individualBean.setPhone(loginName);
+        individualBean.setUserId(userId);
+        individualBean.setPageSize(size);
+        individualBean.setPageNum(page);
+        List<Individual> indiviList = userservice.findIndividual(individualBean);
+        int totalCount = userservice.findIndividualCount(individualBean);
+        Map resultMap = new HashMap();
+        resultMap.put("list",indiviList);
+        resultMap.put("totalCount",totalCount);
+        return resultMap;
+    }
+
+    /**
+     * 查询企业用户信息
+     * @return
+     */
+    @RequestMapping("/Corporation/select")
+    @ResponseBody
+    public Map queryCorporationInfo(int page , int size ,long userId,String loginName) {
+        Corporation corporation = new Corporation();
+        corporation.setUserId(userId);
+        corporation.setPhone(loginName);
+        corporation.setPageNum(page);
+        corporation.setPageSize(size);
+        List<CorpUser> corpUsers = userservice.queryCorporationInfo(corporation);
+        int totalCount = userservice.queryCorporationCount(corporation);
+        Map resultMap = new HashMap();
+        resultMap.put("list",corpUsers);
+        resultMap.put("totalCount",totalCount);
+        return resultMap;
+    }
+
+    /**
+     * created by zhaoyuxin
+     * 重置密码
+     * @return
+     */
+    @RequestMapping("/user/resetPassword")
+    @ResponseBody
+    public JsonResult resetPassword(@RequestBody String loginName) {
+        userservice.updatePassword(loginName,DEFAULT_PASSWORD);
+        return new JsonResult(JsonResult.SUCCESS, "操作成功");
+    }
+
+    /**
+     * created by zhaoyuxin
+     * 停用用户
+     * @return
+     */
+    @RequestMapping("/user/disableUser")
+    @ResponseBody
+    public JsonResult disableUser(@RequestBody long userId) {
+        userservice.disableUser(userId);
+        return new JsonResult(JsonResult.SUCCESS, "操作成功");
+    }
 }

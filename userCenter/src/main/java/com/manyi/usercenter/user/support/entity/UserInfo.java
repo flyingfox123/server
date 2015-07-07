@@ -2,6 +2,7 @@ package com.manyi.usercenter.user.support.entity;
 
 
 import java.sql.Date;
+import java.util.List;
 
 /**
  * Created by zhangyufeng on 2015/5/27 0027.
@@ -14,8 +15,10 @@ public class UserInfo {
     private String type;
     private String State;
     private Date createTime;
+    private String name;
 
     private Vehicle vehicle;
+    private List<Address> addressList;
     private Individual individual;
     private Corporation corporation;
     private SysUser sysUser;
@@ -26,6 +29,22 @@ public class UserInfo {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Address> getAddressList() {
+        return addressList;
+    }
+
+    public void setAddressList(List<Address> addressList) {
+        this.addressList = addressList;
     }
 
     public String getLoginName() {

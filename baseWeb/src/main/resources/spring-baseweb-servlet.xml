@@ -13,8 +13,10 @@
 	<import resource="spring-business-servlet.xml"/>
 	<import resource="spring-common-servlet.xml"/>
 	<import resource="spring-usercenter-shiro.xml"/>
+	<import resource="spring-point-servlet.xml"/>
+	<import resource="spring-timeTask-servlet.xml"/>
 	<!-- 扫描web包，应用Spring的注解 -->
-	<context:component-scan base-package="com.manyi.*" />
+	<context:component-scan base-package="com.manyi.web*" />
 
 	<!-- 启动注解驱动的Spring MVC功能 -->
 	<mvc:annotation-driven />
@@ -52,6 +54,8 @@
 				<value>classpath*:businessmapper/*.xml</value>
 				<value>classpath*:usercentermapper/*.xml</value>
 				<value>classpath*:commonmapper/*.xml</value>
+				<value>classpath*:pointmapper/*.xml</value>
+				<value>classpath*:paymapper/*.xml</value>
 			</list>
 		</property>
 	</bean>

@@ -1,0 +1,42 @@
+<style type="text/css">
+    .table tr td{
+        min-width:60px;
+    }
+    .table tr td:nth-child(3),.table tr th:nth-child(3){
+        min-width:100px;
+        text-align:center;
+
+    }
+    #modal{ width: 600px;}
+</style>
+<script type="text/javascript">
+           $(function(){
+               $("#modal").parent().parent().css("width","1000px");
+           })
+</script>
+<div id="modal">
+    <div class="modal-header">
+        <h4 class="modal-header">异常详情</h4>
+    </div>
+    <div class='modal-body'>
+        <table class="table table-condensed">
+            <tr>
+                <th>类别</th><th>账单编号</th><th>对账结果</th><th>金额</th>
+            </tr>
+            <tr>
+                <td>对账单</td><td>{{messageMy.billNo}}</td><td>{{messageMy.stateCn}}</td><td>{{messageZd.channelAmount}}</td>
+            </tr>
+            <tr>
+                <td>满易网</td><td>{{messageZd.billNo}}</td><td>{{messageZd.stateCn}}</td><td>{{messageZd.billAmount}}</td>
+            </tr>
+            <tr><td></td><td></td><td></td><td></td></tr>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-warning" ng-click="cancel()">确定</button>
+</div>
+</div>

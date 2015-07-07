@@ -1,0 +1,21 @@
+<div class='panel panel-info'>
+    <div class="panel-heading">
+        <h4 class="panel-title">Apk上传</h4>
+    </div>
+    <div class='panel-body'>
+        <div id="modal">
+            <form name="form" id="form" method="post" enctype="multipart/form-data" ng-pristine action="apkManage/upload">
+            <div class="modal-body">
+                     APK： <input type="file"  ng-model="file1" name="file1" required class="fileno">
+                     二维码： <input type="file"  ng-model="file2" name="file2" required class="fileno">
+                     版本号: <input type="text" name="version"  ng-model="version" >
+            </div>
+            <div class="modal-footer">
+                <!--<button class="btn btn-primary" ng-click="doUpload(file,version)">上传</button>-->
+                <input type="submit" value="上传" />
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+</div>

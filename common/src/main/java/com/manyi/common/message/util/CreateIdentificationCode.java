@@ -1,15 +1,22 @@
 package com.manyi.common.message.util;
 
 /**
- * 生成6位数字短信验证码
- * Created by zhaoyuxin on 2015/5/4 0004.
+ * @Description: 生成数字短信验证码
+ * @author zhaoyuxin
+ * @version: 1.0.0  2015-05-04
+ * @reviewer:
  */
 public class CreateIdentificationCode {
+    //验证码位数
+    private final static int count=6;
+    //数字10
+    private final static int num_10=10;
+
     public static String createIdentificationCode(){
-        String  num = "";
-        for (int i = 0; i < 6; i++) {
-            num = num + (int)(Math.random() * 10);
+        StringBuilder  num = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            num = num.append ((int)(Math.random() * num_10));
         }
-        return num;
+        return num.toString();
     }
 }

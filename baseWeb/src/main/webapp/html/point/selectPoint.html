@@ -1,0 +1,74 @@
+<style type="text/css">
+    .table tr td{
+        min-width:60px;
+    }
+    .table tr td:nth-child(3),.table tr th:nth-child(3){
+        min-width:100px;
+        text-align:center;
+
+    }
+</style>
+<div class='panel panel-info'>
+    <div class="panel-heading">
+        <h4 class="panel-title">用户积分</h4>
+    </div>
+    <div class='panel-body'>
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <th>用户</th>
+                <th>总积分</th>
+                <th>用户等级</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat='message in pointList'>
+                <td>{{message.userId}}</td>
+
+                <td>{{message.point}}</td>
+
+                <td>{{message.level}}</td>
+
+                <td>
+                    <div class='btn-group'>
+                        <a class='btn btn-mini dropdown-toggle' data-toggle='dropdown'
+                           href='javascript:void(0);'> <i class='glyphicon glyphicon-list'></i> <span
+                                class='caret'></span>
+                        </a>
+                        <ul class='dropdown-menu pull-right'>
+                            <li>
+                                <a href="javascript:void(0);" ng-click="getPointLog($index)">
+                                    <i class='glyphicon glyphicon-trash'></i> 查看积分历史
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <ul class="pagination" ng-show="totalPage>1">
+            <li ng-class="{true:'active'}[currentPage==1]"><a href="javascript:void(0)"
+                                                              ng-click  ="currentPage=1;load()">首页</a></li>
+            <li ng-class="{true:'disabled'}[currentPage==1]"><a href="javascript:void(0);" ng-click="prev()">上一页</a></li>
+            <li ng-repeat="page in pages"><a href="javascript:void(0);" ng-click="loadPage(page)">{{ page }}</a></li>
+            <li ng-class="{true:'disabled'}[currentPage==totalPage]"><a href="javascript:void(0);" ng-click="next()">下一页</a>
+            </li>
+            <li ng-class="{true:'active'}[currentPage==totalPage]"><a href="javascript:void(0)"
+
+                                                                      ng-click="currentPage=totalPage;load()">末页</a></li>
+
+            <select autofocus="autofocus" ng-model="pageSize"  ng-change="currentPage=1;load()" >
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+        </ul>
+
+    </div>
+</div>
+</div>

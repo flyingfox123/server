@@ -1,7 +1,10 @@
 package com.manyi.common.message.bean;
 
 /**
- * Created by zhaoyuxin on 2015/5/11 0011.
+ * @Description: 短信参数
+ * @author zhaoyuxin
+ * @version: 1.0.0  2015-05-11.
+ * @reviewer:
  */
 public class DataJson {
     //手机号

@@ -4,15 +4,24 @@ package com.manyi.usercenter.user.bean;
  * Created by zhangyufeng on 2015/5/27 0027.
  */
 public class VehicleBean {
+    private Long id;
     private Long userId;
     private String plateNo;
     private String vehicleBrand;
     private double loadHeight;
-    private int axlesNum;
+    private String axlesNum;
     private String plateLength;
     private String plateType;
     private String luCard;
     private String oilWear;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getUserId() {
         return userId;
@@ -46,11 +55,11 @@ public class VehicleBean {
         this.loadHeight = loadHeight;
     }
 
-    public int getAxlesNum() {
+    public String getAxlesNum() {
         return axlesNum;
     }
 
-    public void setAxlesNum(int axlesNum) {
+    public void setAxlesNum(String axlesNum) {
         this.axlesNum = axlesNum;
     }
 

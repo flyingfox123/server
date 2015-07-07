@@ -1,9 +1,15 @@
 package com.manyi.business.etc.bean;
 
+
 /**
- * Created by Administrator on 2015/5/15.
+ * @Description: ETC业务实现类
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public class EtcDescription {
+
+    private long id ;
 
     private String ETCCode;
 
@@ -23,5 +29,13 @@ public class EtcDescription {
 
     public void setPlateNum(String plateNum) {
         this.plateNum = plateNum;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

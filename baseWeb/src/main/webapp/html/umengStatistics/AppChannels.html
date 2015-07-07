@@ -1,0 +1,61 @@
+<div class='panel panel-info'>
+    <div class="panel-heading">
+        <h4 class="panel-title">App渠道列表</h4>
+    </div>
+    <div class='panel-body'>
+        <div id="modal">
+            <div class="modal-body">
+                <form>
+                    App: <select ng-model="channelsapp" ng-options="channelsapp.name for channelsapp in channelsapps"></select>
+                    日期: <input onclick="WdatePicker();"  type="text" name="channeldate" onchange="dealwithdate(this.value)"  />
+                    <script type="application/javascript">
+                        function dealwithdate(channeldate) {
+                            document.getElementById("dateText").value = channeldate;
+                        }
+                    </script>
+                    <input id="dateText" type="hidden" ng-model="channeldate" />
+                    <button class="btn btn-primary" ng-click="loadCondition()">查询</button>
+                </form>
+            </div>
+        </div>
+        <table class="table table-bordered table-striped table-condensed">
+            <thead>
+            <tr>
+                <th>启动数</th>
+                <th>新增用户</th>
+                <th>活跃用户</th>
+                <th>总用户数</th>
+                <th>使用时长</th>
+                <th>当前渠道新增用户占当日新增比例</th>
+                <th>渠道名称</th>
+                <th>渠道ID</th>
+                <th>用户数在总用户数中的比例</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="data in AppChannels">
+                <td>{{data.launch}}</td>
+                <td>{{data.install}}</td>
+                <td>{{data.active_user}}</td>
+                <td>{{data.total_install}}</td>
+                <td>{{data.duration}}</td>
+                <td>{{data.total_install_rate}}</td>
+                <td>{{data.channel}}</td>
+                <td>{{data.id}}</td>
+                <td>{{data.install_rate}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <ul class="pagination" ng-show="totalPage>0">
+            <li ng-class="{true:'active'}[currentPage==1]"><a href="javascript:void(0)"
+                                                              ng-click  ="currentPage=1;load()">首页</a></li>
+            <li ng-class="{true:'disabled'}[currentPage==1]"><a href="javascript:void(0);" ng-click="prev()">上一页</a></li>
+            <li ng-repeat="page in pages"><a href="javascript:void(0);" ng-click="loadPage(page)">{{ page }}</a></li>
+            <li ng-class="{true:'disabled'}[currentPage==totalPage]"><a href="javascript:void(0);" ng-click="next()">下一页</a>
+            </li>
+            <li ng-class="{true:'active'}[currentPage==totalPage]"><a href="javascript:void(0)"
+                                                                      ng-click="currentPage=totalPage;load()">末页</a></li>
+        </ul>
+    </div>
+</div>
+</div>

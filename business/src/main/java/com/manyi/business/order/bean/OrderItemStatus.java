@@ -1,23 +1,30 @@
 
 package com.manyi.business.order.bean;
 
-/**
- * Created by Administrator on 2015/5/4.
- */
 
+/**
+ * @Description: ETC业务实现类
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
+ */
 public class OrderItemStatus {
 
-    public static String PENDING = "pending";
+    private OrderItemStatus()
+    {}
 
-    public static String CANCELED = "canceled";
 
-    public static String PAYING = "paying";
+    public static final String PENDING = "pending";
 
-    public static String PAYED = "payed";
+    public static final String CANCELED = "canceled";
 
-    public static String DRAWBACK = "drawback";
+    public static final String PAYING = "paying";
 
-    public static String SUCCESS = "success";
+    public static final String PAYED = "payed";
 
-    public static String FAILED = "failed";
+    public static final String DRAWBACK = "drawback";
+
+    public static final String SUCCESS = "success";
+
+    public static final String FAILED = "failed";
 }

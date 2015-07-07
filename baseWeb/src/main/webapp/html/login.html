@@ -11,8 +11,8 @@
     <form>
         <section class="loginBox row-fluid">
             <h2>登录</h2>
-            <div id="message" ng-show="result.result=='failure'">
-                <p style="color: #c9302c">{{result.message}}</p>
+            <div id="message" ng-show="result.state=='failure'">
+                <p style="color: #c9302c">{{result.errMsg}}</p>
             </div>
             <div class="form-group">
                 <input class="form-control" type="text" ng-model="User.loginName" id="username" name="loginName" placeholder="账号">

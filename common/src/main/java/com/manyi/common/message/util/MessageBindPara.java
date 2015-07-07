@@ -4,8 +4,10 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * 短信绑定参数
- * Created by Zhaoyuxin on 2015/4/28 0028.
+ * @Description: 短信绑定参数
+ * @author zhaoyuxin
+ * @version: 1.0.0  2015-04-28.
+ * @reviewer:
  */
 public  class MessageBindPara {
     public  static String MessageBindPara(String Content,Map<String,String> Paras) {

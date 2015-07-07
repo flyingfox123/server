@@ -13,7 +13,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Author  zhaoyuxin Reviewer:
+ * @author zhaoyuxin
+ * @version 1.0.0 2015-05-05
+ * @Description: 查询未发送短信
+ * @reviewer:
  */
 @Component
 public class QueryUnsentMessageTask {
@@ -21,34 +24,34 @@ public class QueryUnsentMessageTask {
     private static final Logger logger = LoggerFactory.getLogger(QueryUnsentMessageTask.class);
 
     @Autowired
-    public MessageServiceImpl messageServiceImpl;
+    private MessageServiceImpl messageServiceImpl;
 
     //短信队列
-    public static ConcurrentLinkedQueue<MessageSend> messageSendQueue;
-
-    //短信队列长度
-    public static int messageLength = Integer.parseInt(ReadPropertiesUtil.readProperties("message.properties").getProperty("messageLength"));
+    private final static ConcurrentLinkedQueue<MessageSend> messageSendQueue = new ConcurrentLinkedQueue<MessageSend>();
 
     //是否开始查询
-    public  static AtomicBoolean isBeginSend = new AtomicBoolean(false);
+    private final static AtomicBoolean isBeginSend = new AtomicBoolean(false);
 
-    public void run() {
+    public void run() throws InterruptedException {
 
-        if (messageSendQueue == null) {
-            messageSendQueue = new ConcurrentLinkedQueue<MessageSend>();
-        }
         //队列为空且未满，则查询未发送短信入队列
-        if (messageSendQueue.isEmpty() == true &&(isBeginSend.get()==false)) {
-            {
-                logger.info("开始查询");
-                List<MessageSend> messageSendList = messageServiceImpl.queryUnsentMessage();
-                logger.info("结束查询：未发送短信条数为" + messageSendList.size());
-                for (MessageSend messageSend : messageSendList) {
-                    messageSendQueue.offer(messageSend);
-                }
+        if (messageSendQueue.isEmpty() == true && (isBeginSend.get() == false)) {
+            logger.info("开始查询");
+            List<MessageSend> messageSendList = messageServiceImpl.queryUnsentMessage();
+            logger.info("结束查询：未发送短信条数为" + messageSendList.size());
+            for (MessageSend messageSend : messageSendList) {
+                messageSendQueue.offer(messageSend);
             }
             isBeginSend.set(true);
         }
+    }
+
+    public static ConcurrentLinkedQueue<MessageSend> getMessageSendQueue() {
+        return messageSendQueue;
+    }
+
+    public static AtomicBoolean getIsBeginSend() {
+        return isBeginSend;
     }
 
 

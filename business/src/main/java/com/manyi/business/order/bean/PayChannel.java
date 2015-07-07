@@ -1,11 +1,18 @@
 package com.manyi.business.order.bean;
 
+
 /**
- * Created by Administrator on 2015/5/17.
+ * @Description: ETC业务实现类
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public class PayChannel {
 
-    public static int BANK_CHANNEL = 1 ;
+    private PayChannel()
+    {}
 
-    public static int XL_CHANNEL = 2 ;
+    public static final int BANK_CHANNEL = 1 ;
+
+    public static final int XL_CHANNEL = 2 ;
 }

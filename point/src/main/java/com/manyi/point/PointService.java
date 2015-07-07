@@ -1,7 +1,7 @@
 package com.manyi.point;
 
 /**
- * Created by Administrator on 2015/4/8.
+ * Created by liukaihua on 2015/6/9.
  */
 
 import com.manyi.base.exception.BusinessException;
@@ -10,12 +10,15 @@ import com.manyi.point.support.entity.PointLog;
 
 import java.util.*;
 
- /**
-    * 积分服务接口
-  */
+/**
+ * @Description:
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
+ */
 public interface PointService {
 
-     int addPointAndGrow(PointParam request) throws BusinessException;
+//     int addPointAndGrow(PointParam request) throws BusinessException;
     /**
      * 增加积分
      */
@@ -23,7 +26,7 @@ public interface PointService {
     /**
      * 增加成长值
      * */
-    int addGrowth(PointParam request) throws BusinessException;
+//    int addGrowth(PointParam request) throws BusinessException;
     /**
      *使用积分
      */
@@ -35,11 +38,11 @@ public interface PointService {
     /**
      * 更新成长值
      * */
-    int updateGrowth(UpdateGrowthParam  request) throws BusinessException;
+//    int updateGrowth(UpdateGrowthParam  request) throws BusinessException;
     /**
      * 查询用户积分、成长值详情
      * */
-    Point queryUserPoint(String serviceId , int userId);
+    Point queryUserPoint(String serviceId , long userId);
 
     /**
      * 条件查询积分、成长值详情
@@ -55,7 +58,7 @@ public interface PointService {
      /**
       * 查询用户成长值日志
       * */
-     PointLogResult queryUserGrowthLog(QueryPointLogCondition condition);
+   //  PointLogResult queryUserGrowthLog(QueryPointLogCondition condition);
 
 
 }

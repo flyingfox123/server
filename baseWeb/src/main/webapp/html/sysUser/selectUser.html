@@ -1,21 +1,26 @@
 <div class='panel panel-info'>
     <div class="panel-heading">
-        <h4 class="panel-title">用户管理</h4>
+        <h4 class="panel-title">系统用户管理</h4>
 
         <div class="pull-right">
             <a href="javascript:void(0);" ng-click="addUser()"><span class="badge">创建用户</span></a>
         </div>
     </div>
-    <div id="message" class="alert alert-success" ng-show="jsonResult">
-        {{jsonResult.message}}
+    <div id="modal">
+        <div class="modal-body">
+            <form>
+                登陆名称: <input type="text"  ng-model="loginName" >
+                <button class="btn btn-primary" ng-click="loadCondition()">查询</button>
+                <button  class="btn btn-primary" type="reset"  ng-click="reset()">清空</button>
+            </form>
+        </div>
     </div>
     <div class='panel-body'>
         <table class="table table-bordered table-striped table-condensed">
             <thead>
             <tr>
-                <th>id</th>
+                <th>序号</th>
                 <th>登陆名称</th>
-                <th>类型</th>
                 <th>状态</th>
                 <th>创建时间</th>
                 <th>操作</th>
@@ -25,8 +30,10 @@
             <tr ng-repeat='user in sysUser'>
                 <td>{{$index+1}}</td>
                 <td>{{user.loginName}}</td>
-                <td>{{user.type}}</td>
-                <td>{{user.state}}</td>
+                <td ng-switch on="user.state">
+                    <span style="color: green" ng-switch-when="E">正常</span>
+                    <span style="color: red" ng-switch-when="D">停用</span>
+                </td>
                 <td>{{user.createTime}}</td>
                 <td>
                     <div class='btn-group'>
@@ -41,8 +48,13 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0);" ng-click="deleteColumn(user.id)">
-                                    <i class='glyphicon glyphicon-trash'></i> 删除
+                                <a href="javascript:void(0);" ng-click="resetPassword(user.loginName)">
+                                    <i class='glyphicon glyphicon-wrench'></i>重置密码
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" ng-click="disableUser($index)">
+                                    <i class='glyphicon glyphicon-trash'></i> 停用
                                 </a>
                             </li>
                         </ul>
@@ -51,6 +63,23 @@
             </tr>
             </tbody>
         </table>
+        <ul class="pagination" ng-show="totalPage>0">
+            <li ng-class="{true:'active'}[currentPage==1]"><a href="javascript:void(0)"
+                                                              ng-click  ="currentPage=1;load()">首页</a></li>
+            <li ng-class="{true:'disabled'}[currentPage==1]"><a href="javascript:void(0);" ng-click="prev()">上一页</a></li>
+            <li ng-repeat="page in pages"><a href="javascript:void(0);" ng-click="loadPage(page)">{{ page }}</a></li>
+            <li ng-class="{true:'disabled'}[currentPage==totalPage]"><a href="javascript:void(0);" ng-click="next()">下一页</a>
+            </li>
+            <li ng-class="{true:'active'}[currentPage==totalPage]"><a href="javascript:void(0)"
+                                                                      ng-click="currentPage=totalPage;load()">末页</a></li>
+            <select autofocus="autofocus" ng-model="pageSize"  ng-change="currentPage=1;load()" >
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+        </ul>
     </div>
 </div>
 </div>

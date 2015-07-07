@@ -12,6 +12,21 @@
     </resultMap>
 
 
+    <!-- 订单-->
+    <resultMap id="EtcItemResultMap" type="com.manyi.business.etc.bean.Etc">
+        <result column="orderItemId" property="orderItemId"/>
+        <result column="ETCCode" property="ETCCode"/>
+        <result column="plateNum" property="plateNum"/>
+        <result column="orderId" property="orderId"/>
+        <result column="userId" property="userId"/>
+        <result column="seqNo" property="seqNo"/>
+        <result column="payableAmount" property="payableAmount"/>
+        <result column="state" property="state"/>
+    </resultMap>
+
+
+
+
     <!-- 创建ETC -->
     <insert id="addETC" parameterType="com.manyi.business.etc.bean.Etc"
             useGeneratedKeys="true" keyProperty="id">
@@ -30,9 +45,9 @@
             useGeneratedKeys="true" keyProperty="id">
         INSERT INTO
         t_etcinvoice
-        (invoiceHeader, amount, postAddress,phone,orderItemId)
+        (invoiceHeader, amount, postAddress,phone,orderItemId,addressee)
         values
-        (#{invoiceHeader},#{amount},#{postAddress},#{phone},#{orderItemId})
+        (#{invoiceHeader},#{amount},#{postAddress},#{phone},#{orderItemId},#{addressee})
     </insert>
 
 
@@ -79,6 +94,50 @@
         WHERE
         userId = #{userId}
         ORDER BY num DESC
+    </select>
+
+    <!-- 获取订单对应的订单项-->
+    <select id="queryEtcOrderItem"  resultType="com.manyi.business.etc.bean.Etc">
+        SELECT
+        id, ETCCode, plateNum
+        FROM  t_etc
+        WHERE
+        orderItemId = #{orderItemId}
+    </select>
+
+    <delete id="deleteETC">
+        DELETE FROM
+        t_etc
+        WHERE orderItemId = #{orderItemId}
+    </delete>
+
+
+    <delete id="deleteETCInvoice">
+        DELETE FROM
+        t_etcinvoice
+        WHERE orderItemId = #{orderItemId}
+    </delete>
+
+    <!-- 获取订单对应的订单项-->
+    <select id="queryETCChargeHistory"  resultType="com.manyi.business.etc.bean.EtcDescription">
+        SELECT
+        ETCCode, plateNum
+        FROM  t_etccounter
+        WHERE
+        userId = #{userId}
+        ORDER BY num DESC
+    </select>
+
+
+    <!-- 获取订单对应的订单项-->
+    <select id="queryEtcItems"  resultMap="EtcItemResultMap">
+        SELECT
+        e.ETCCode,e.orderItemId, e.plateNum,o.orderId,o.userId,o.payableAmount,o.seqNo,o.state
+        FROM  t_etc e ,t_orderitem o
+        WHERE
+        o.orderId = #{orderId}
+        AND
+        e.orderItemId=o.id
     </select>
 
 </mapper>

@@ -3,7 +3,6 @@ package com.manyi.usercenter.role.support;
 import com.manyi.usercenter.role.RoleService;
 import com.manyi.usercenter.role.bean.SysRole;
 import com.manyi.usercenter.role.support.dao.RoleDao;
-import com.manyi.usercenter.shiro.util.CurrentUserUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -6,6 +6,8 @@ import com.auth0.jwt.JWTVerifyException;
 import com.manyi.common.redis.RedisClientTemplate;
 import com.manyi.usercenter.user.UserService;
 import com.manyi.usercenter.user.support.entity.BaseUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +22,7 @@ import java.util.Map;
  */
 @Service
 public class JWTValidate {
-
+    private final static Logger logger = LoggerFactory.getLogger(JWTValidate.class);
     @Autowired
     private RedisClientTemplate redisClient;
 
@@ -67,9 +69,11 @@ public class JWTValidate {
                 return true;
             }
         }catch (JWTExpiredException e){
+            logger.error("token超过有效期",e);
             //newToken = jwtCreater.createToken(loginName, baseUser.getSecretKey(), String.valueOf(baseUser.getId()));
             return false;
         }catch (SignatureException e){
+            logger.error("token SignatureException",e);
             return false;
         }
         return false;

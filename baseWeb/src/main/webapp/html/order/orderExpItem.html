@@ -1,0 +1,86 @@
+<div id="modal">
+    <div class="panel-heading">
+        <h4 class="panel-title">异常订单详情</h4>
+    </div>
+
+    <div class='panel-body'>
+        <div id="modal1">
+            <div class="modal-body">
+                <form>
+                    订单号: <input  type="text"  ng-model="message.seqNo" disabled="true">
+
+                    状态: <input  type="text" ng-model="message.state"  disabled="true" >
+                </form>
+                 <br/>
+                <form>
+                    用户姓名: <input  type="text"  ng-model="message.driverName" disabled="true" >
+                    电话: <input  type="text" ng-model="message.loginName" disabled="true">
+                </form>
+            </div>
+        </div>
+        <div id="item">
+            <div class="panel-heading">
+           <h4 class="panel-heading">预充值明细</h4>
+            </div>
+       </div>
+
+    <div class='panel-body'>
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <td colspan="2">车牌号</td>
+                <td colspan="2">鲁通卡号</td>
+                <td colspan="2">预充值金额</td>
+                <td colspan="2">预充值状态</td>
+                <!--<td colspan="2">状态最后时间</td>-->
+            </tr>
+            <tr>
+                <th >满易网</th>
+                <th>信联</th>
+
+                <th>满易网</th>
+                <th>信联</th>
+
+                <th>满易网</th>
+                <th>信联</th>
+
+                <th>满易网</th>
+                <th>信联</th>
+
+                <!--<th>满易网</th>-->
+                <!--<th>信联</th>-->
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat='item in expItemList'>
+                <!--<td  ng-show="item.plate1!=item.plate2">{{item.plate1}}</td>-->
+                <td ><input ng-disabled="item.plate1==item.plate2"   class="input1" type="text" ng-model="item.plate1"></td>
+                <td>{{item.plate2}}</td>
+
+                <!--<td>{{item.card1}}</td>-->
+                <td ><input ng-disabled="item.card1==item.card2"  type="text" ng-model="item.card1"></td>
+                <td>{{item.card2}}</td>
+
+                <td>{{item.amount1}}</td>
+                <td>{{item.amount2}}</td>
+
+                <!--<td>{{item.state1}}</td>-->
+                <td >
+                    <select ng-disabled="item.state1==item.state2" autofocus="autofocus" ng-model="item.state1">
+                        <option value="成功">成功</option>
+                        <option value="失败">失败</option>
+                    </select>
+                </td>
+                <td>{{item.state2}}</td>
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-warning" ng-click="cancel()">确定</button>
+</div>
+</div>

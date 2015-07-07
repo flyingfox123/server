@@ -1,7 +1,10 @@
 package com.manyi.point.bean;
 
 /**
- * Created by Administrator on 2015/4/8.
+ * @Description:
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 import java.util.*;
 

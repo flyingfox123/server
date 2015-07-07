@@ -17,7 +17,10 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * Created by Magic on 2015/1/6.
+ * @author ZhangYuFeng on 2015/6/15 0015,15:11.
+ * @Description:
+ * @version: 1.0.0
+ * @reviewer:
  */
 
 @Controller
@@ -59,7 +62,7 @@ public class RoleController {
                         return new JsonResult("success", "操作成功");
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error("",e);
                 }
                 return new JsonResult("failure", "服务器出错啦");
             }
@@ -87,7 +90,7 @@ public class RoleController {
                         jsonResult.setMessage("操作成功");
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error("",e);
                 }
             }
         }
@@ -111,7 +114,7 @@ public class RoleController {
                     jsonResult.setMessage("操作成功");
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("",e);
             }
         }
         return jsonResult;

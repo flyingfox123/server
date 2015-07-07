@@ -14,28 +14,29 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * 组装发送短信需要的json格式的参数
- * Created by zhaoyuxin on 2015/5/5.
+ * @Description: 组装发送短信需要的json格式的参数
+ * @author zhaoyuxin
+ * @version: 1.0.0  2015-05-05.
+ * @reviewer:
  */
 public class MessageParaToJson {
 
     //请求代码
-    public static String reqCode=ReadPropertiesUtil.readProperties("message.properties").getProperty("reqCode");
+    private static String reqCode=ReadPropertiesUtil.readProperties("message.properties").getProperty("reqCode");
     //令牌
-    public static String tokenId= ReadPropertiesUtil.readProperties("message.properties").getProperty("tokenId");
+    private static String tokenId= ReadPropertiesUtil.readProperties("message.properties").getProperty("tokenId");
     //签名
-    public static String sign=ReadPropertiesUtil.readProperties("message.properties").getProperty("sign");
+    private static String sign=ReadPropertiesUtil.readProperties("message.properties").getProperty("sign");
     //发送通道号
-    public static String channelID=ReadPropertiesUtil.readProperties("message.properties").getProperty("channelID");
+    private static String channelID=ReadPropertiesUtil.readProperties("message.properties").getProperty("channelID");
 
     public static String messageParaToJson(String mobile, String content) throws JsonProcessingException {
         UUID uuid = UUID.randomUUID();
-        DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         Date date = new Date();
-        String sendTime = df.format(date);
+        String sendTime = dateFormat.format(date);
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> map = new HashMap<String, Object>();
-        //Object obj=new Object();
         ReqHeaderJson reqHeaderJson = new ReqHeaderJson();
         reqHeaderJson.setReqCode(reqCode);
         reqHeaderJson.setReqTime(sendTime);

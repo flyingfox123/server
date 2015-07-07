@@ -1,18 +1,35 @@
 package com.manyi.point.support.dao;
 
-import com.manyi.point.support.entity.DimensionExp;
+import com.manyi.point.bean.PointEvent;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 /**
- * Created by Administrator on 2015/4/24.
+ * @Description:
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public interface ExpDao {
+//
+//    /**
+//     *
+//     * @param code
+//     * @return
+//     */
+//    List<DimensionExp>  getExpList(String code);
+
 
     /**
-     *
-     * @param code
+     * 根据事件ID获取事件
+     * @param eventCode
      * @return
      */
-    List<DimensionExp>  getExpList(String code);
+    PointEvent getPointEventByCode(@Param("eventCode")String eventCode);
+
+
+
+
+
 }

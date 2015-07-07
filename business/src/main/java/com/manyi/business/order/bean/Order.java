@@ -1,12 +1,19 @@
 package com.manyi.business.order.bean;
 
+import org.springframework.dao.DataAccessResourceFailureException;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
+
 /**
- * Created by Administrator on 2015/5/4.
+ * @Description: ETC业务实现类
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public class Order  {
 
@@ -16,9 +23,9 @@ public class Order  {
 
     private String state;
 
-    private Date createTime;
+    private String createTime;
 
-    private Date validateTime;
+    private String validateTime;
 
     private BigDecimal paidAmount;
 
@@ -34,10 +41,17 @@ public class Order  {
 
     private String description;
 
-    private int itemNum;
+    List<OrderItem> itemList;
 
-    List<String> itemSeqs;
+    public List<OrderItem> getItemList() {
 
+
+        return itemList;
+    }
+
+    public void setItemList(List<OrderItem> itemList) {
+        this.itemList = itemList;
+    }
 
     public int getType() {
         return type;
@@ -53,22 +67,6 @@ public class Order  {
 
     public void setPayChannel(int payChannel) {
         this.payChannel = payChannel;
-    }
-
-    public List<String> getItemSeqs() {
-        return itemSeqs;
-    }
-
-    public void setItemSeqs(List<String> itemSeqs) {
-        this.itemSeqs = itemSeqs;
-    }
-
-    public int getItemNum() {
-        return itemNum;
-    }
-
-    public void setItemNum(int itemNum) {
-        this.itemNum = itemNum;
     }
 
     public String getDescription() {
@@ -111,21 +109,7 @@ public class Order  {
         this.state = state;
     }
 
-    public Date getCreateTime() {
-        return createTime;
-    }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getValidateTime() {
-        return validateTime;
-    }
-
-    public void setValidateTime(Date validateTime) {
-        this.validateTime = validateTime;
-    }
 
     public BigDecimal getPaidAmount() {
         return paidAmount;
@@ -152,6 +136,19 @@ public class Order  {
         this.discountAmount = discountAmount;
     }
 
+    public String getCreateTime() {
+        return createTime;
+    }
 
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
 
+    public String getValidateTime() {
+        return validateTime;
+    }
+
+    public void setValidateTime(String validateTime) {
+        this.validateTime = validateTime;
+    }
 }

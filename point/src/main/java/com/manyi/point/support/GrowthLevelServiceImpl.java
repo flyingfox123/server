@@ -11,13 +11,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Created by Administrator on 2015/4/10.
+ * @Description:
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 @Service("growthLevelService")
 public class GrowthLevelServiceImpl implements GrowthLevelService
 {
 
-    public static int SUCCESS= 0;
+    public static final  int SUCCESS= 0;
     @Autowired
     private GrowthLevelDao levelDao;
 

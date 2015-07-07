@@ -1,7 +1,10 @@
 package com.manyi.common.message.bean;
 
 /**
- * Created by zhaoyuxin on 2015/5/11 0011.
+ * @Description: 是否验证码bean
+ * @author zhaoyuxin
+ * @version: 1.0.0  2015-05-11.
+ * @reviewer:
  */
 public class ReqHeaderJson {
     //请求代码(从请求中直接返回)

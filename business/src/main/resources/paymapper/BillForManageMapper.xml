@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manyi.business.pay.bill.support.dao.BillForManageDao">
+
+    <resultMap id="Result_Bill" type="com.manyi.business.pay.bill.support.entity.Bill">
+        <result column="BillId" property="billId"/>
+        <result column="BillNo" property="billNo"/>
+        <result column="OrderId" property="orderId"/>
+        <result column="OrderNo" property="orderNo"/>
+        <result column="AccountId" property="accountId"/>
+        <result column="SourceId" property="sourceId"/>
+        <result column="CreateTime" property="createTime"/>
+        <result column="Amount" property="amount"/>
+        <result column="TradeType" property="tradeType"/>
+        <result column="BusinessType" property="businessType"/>
+        <result column="TradeTime" property="tradeTime"/>
+        <result column="ChannelBillNo" property="channelBillNo"/>
+        <result column="TradeState" property="tradeState"/>
+        <result column="CheckState" property="checkState"/>
+        <result column="ChannelId" property="channelId"/>
+        <result column="ResponseTime" property="responseTime"/>
+        <result column="TradeTypeCn" property="tradeTypeCn"/>
+        <result column="CheckStateCn" property="checkStateCn"/>
+        <result column="TradeStateCn" property="tradeStateCn"/>
+        <result column="SourceIdCn" property="sourceIdCn"/>
+    </resultMap>
+
+
+
+    <!--查询根据账单-->
+    <select id="findBill" resultMap="Result_Bill">
+        SELECT
+        BillId,BillNo, OrderId, OrderNo, t_bill.AccountId, SourceId,t_bill.CreateTime,Amount,
+        BusinessType,TradeTime,ChannelBillNo,ChannelId,ResponseTime,TradeType,CheckState,TradeState,
+        CASE WHEN TradeType=1 THEN '付款'
+        WHEN TradeType=2 THEN '收款'
+        WHEN TradeType=3 THEN '退款'
+        END as TradeTypeCn,
+        CASE WHEN CheckState=1 THEN '未对账'
+        WHEN CheckState=2 THEN '已对账'
+        END AS CheckStateCn,
+        CASE WHEN TradeState=1 THEN '待处理'
+        WHEN TradeState=2 THEN '支付成功'
+        WHEN TradeState=3 THEN '支付失败'
+        WHEN TradeState=4 THEN '受理成功'
+        WHEN TradeState=5 THEN '受理失败'
+        WHEN TradeState=6 THEN '退款待审核'
+        WHEN TradeState=7 THEN '受理超时'
+        END AS TradeStateCn,
+        CASE WHEN SourceId=1 THEN '手机'
+        WHEN SourceId=2 THEN 'PC'
+        END AS SourceIdCn
+        from t_bill
+        <where>
+            <if test="accountId > 0">AND AccountId=#{accountId}</if>
+            <if test="billNo != null">AND BillNo=#{billNo}</if>
+            <if test="minAmount != null">AND Amount &gt;=#{minAmount}</if>
+            <if test="maxAmount != null">AND Amount &lt;=#{maxAmount}</if>
+            <if test="tradeTimeStart != null">AND DATE_Format(tradeTime,'%Y-%m-%d') &gt;= DATE_Format(#{tradeTimeStart},'%Y-%m-%d')</if>
+            <if test="tradeTimeEnd != null">AND DATE_Format(tradeTime,'%Y-%m-%d') &lt;= DATE_Format(#{tradeTimeEnd},'%Y-%m-%d')</if>
+            <if test="tradeState != 0">AND TradeState=#{tradeState}</if>
+            <if test="checkState != 0">AND CheckState=#{checkState}</if>
+            <if test="tradeType != 0">AND TradeType= #{tradeType}</if>
+        </where>
+        ORDER BY TradeTime DESC
+        <if test="pageSize != 0">
+            limit #{pageNum},#{pageSize}
+        </if>
+    </select>
+
+    <!--查询账单总页数-->
+    <select id="getBillCount" resultType="int">
+        SELECT
+        count(*)
+        from t_bill
+        <where>
+            <if test="accountId > 0">AND AccountId=#{accountId}</if>
+            <if test="billNo != null">AND BillNo=#{billNo}</if>
+            <if test="tradeState != 0">AND TradeState=#{tradeState}</if>
+            <if test="checkState != 0">AND CheckState=#{checkState}</if>
+            <if test="minAmount != null">AND Amount &gt;=#{minAmount}</if>
+            <if test="maxAmount != null">AND Amount &lt;=#{maxAmount}</if>
+            <if test="tradeType != 0">AND TradeType= #{tradeType}</if>
+            <if test="tradeTimeStart != null">AND DATE_Format(tradeTime,'%Y-%m-%d') &gt;= DATE_Format(#{tradeTimeStart},'%Y-%m-%d')</if>
+            <if test="tradeTimeEnd != null">AND DATE_Format(tradeTime,'%Y-%m-%d') &lt;= DATE_Format(#{tradeTimeEnd},'%Y-%m-%d')</if>
+        </where>
+    </select>
+
+</mapper>

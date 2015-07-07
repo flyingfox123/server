@@ -1,6 +1,5 @@
 package com.manyi.point.support.dao;
 
-import com.manyi.base.entity.OpEvent;
 import com.manyi.point.bean.*;
 import com.manyi.point.support.entity.GrowthLevels;
 import com.manyi.point.support.entity.PointLog;
@@ -10,7 +9,10 @@ import java.util.List;
 
 
 /**
- * Created by Administrator on 2015/4/9.
+ * @Description:
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public interface PointDao {
 
@@ -19,7 +21,7 @@ public interface PointDao {
      * @param serviceId
      * @return
      */
-    Point getPointByUser(@Param("serviceId")String serviceId , @Param("userId") int userId);
+    Point getPointByUser(@Param("serviceId")String serviceId , @Param("userId") long userId);
 
     /**
      * 根据事件ID获取事件

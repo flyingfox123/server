@@ -6,10 +6,15 @@ import com.manyi.business.order.bean.QueryOrderCondition;
 import com.manyi.business.order.bean.QueryOrderItemCondition;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+
 /**
- * Created by Administrator on 2015/5/4.
+ * @Description: ETC业务实现类
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public interface OrderDao {
 
@@ -43,7 +48,7 @@ public interface OrderDao {
      * 创建订单项
      * @param item
      */
-    void creatOrderItem(OrderItem item);
+    void createOrderItem(OrderItem item);
 
     /**
      * 更新订单
@@ -85,14 +90,14 @@ public interface OrderDao {
      * @param condition
      * @return
      */
-    int queryOrderPageCount(QueryOrderCondition condition);
+    Integer queryOrderPageCount(QueryOrderCondition condition);
 
     /**
      * 查询订单项数量
      * @param condition
      * @return
      */
-    int queryOrderItemCount(QueryOrderItemCondition condition);
+    Integer queryOrderItemCount(QueryOrderItemCondition condition);
 
 
     /**
@@ -101,4 +106,20 @@ public interface OrderDao {
      */
     OrderItem getOrderItemById(@Param("id") long id);
 
+    /**
+     * 根据时间计算订单费用
+     * @param startTime
+     * @param endTime
+     * @param userId
+     * @param type
+     * @return
+     */
+    Double computeOrderAmount(@Param("startTime")String startTime,@Param("endTime") String endTime, @Param("userId")long userId, @Param("type")int type);
+
+    /**
+     * 查询未完成订单
+     * @param condition
+     * @return
+     */
+    List<Order> queryUnfinishedOrder(QueryOrderCondition condition);
 }

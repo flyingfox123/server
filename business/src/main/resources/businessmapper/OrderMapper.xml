@@ -102,7 +102,7 @@
 
 
     <!-- 创建订单项 -->
-    <insert id="creatOrderItem" parameterType="com.manyi.business.order.bean.OrderItem"
+    <insert id="createOrderItem" parameterType="com.manyi.business.order.bean.OrderItem"
             useGeneratedKeys="true" keyProperty="id">
         INSERT INTO
         t_orderItem
@@ -254,6 +254,51 @@
             </if>
         </trim>
     </select>
+
+
+
+    <!-- 条件查询订单数量 -->
+    <select id="computeOrderAmount" resultType="java.lang.Double" >
+        SELECT
+        SUM(paidAmount)  AS amount
+        FROM t_order
+        WHERE   createtime >= #{startTime}
+        AND createtime &lt;= #{endTime}
+        AND state !='pending'
+        AND state != 'paying'
+        AND state != 'canceled'
+        AND type = #{type}
+        AND userId = #{userId}
+    </select>
+
+    <!-- 条件查询订单 -->
+    <select id="queryUnfinishedOrder" resultMap="OrderResultMap" parameterType="com.manyi.business.order.bean.QueryOrderCondition">
+        SELECT
+        <include refid="ORDER_BASE"/>
+        FROM t_order
+        <trim prefix="where" prefixOverrides="AND">
+            <if test="seqNo != null">
+                AND seqNo = #{seqNo}
+            </if>
+            <if test="state != null">
+                AND state != 'success'
+                AND state != 'drawback'
+                AND state != 'canceled'
+            </if>
+            <if test="userId != 0">
+                AND userId = #{userId}
+            </if>
+            <if test="type != 0">
+                AND type = #{type}
+            </if>
+
+        </trim>
+        ORDER BY createTime DESC
+        <if test="pageSize != 0">
+            limit #{pageNum},#{pageSize}
+        </if>
+    </select>
+
 
 
 </mapper>

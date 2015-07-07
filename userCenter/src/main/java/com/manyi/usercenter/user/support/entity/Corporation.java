@@ -1,12 +1,14 @@
 package com.manyi.usercenter.user.support.entity;
 
+import com.manyi.base.entity.Pagination;
+
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by Magic on 2015/4/16.
  */
-public class Corporation implements Serializable {
+public class Corporation  extends Pagination implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

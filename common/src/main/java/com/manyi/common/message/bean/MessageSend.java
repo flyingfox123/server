@@ -5,7 +5,10 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 /**
- * Created by Administrator on 2015/5/4.
+ * @Description: 短信发送bean
+ * @author zhaoyuxin
+ * @version: 1.0.0  2015-05-04.
+ * @reviewer:
  */
 public class MessageSend {
 

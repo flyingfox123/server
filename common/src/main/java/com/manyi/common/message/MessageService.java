@@ -11,7 +11,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Administrator on 2015/5/4 .
+ * @Description: 短信Service
+ * @author zhaoyuxin
+ * @version: 1.0.0  2015-05-04.
+ * @reviewer:
  */
 public interface MessageService {
 
@@ -87,15 +90,6 @@ public interface MessageService {
     public boolean sendMessageCode(String mobile,String type,String templateId) throws Exception;
 
     /**
-     * 发送短信接口（外部调用）
-     * @param mobile
-     * @param templateId
-     * @param paras
-     * @return
-     */
-    public void sendMessageService(String userId,String mobile,String type,String templateId,Map paras) throws BusinessException;
-
-    /**
      *
      * @param userId
      * @param mobile
@@ -105,4 +99,60 @@ public interface MessageService {
      * @throws Exception
      */
     public void sendRealtimeMessage(String userId,String mobile,String type,String templateId,Map paras) throws Exception;
+
+    /**
+     * 注册钱包发送短信验证码
+     * @param mobile
+     * @return
+     * @throws Exception
+     */
+    public boolean  sendMessageCodeForPurse(String mobile)throws Exception;
+
+
+    /**
+     *验证注册钱包的验证码
+     * @param mobile
+     * @param code
+     * @return
+     * @throws BusinessException
+     */
+    public boolean isIdentificationCodeValidForPurse(String mobile,String code) throws BusinessException;
+
+
+    /**
+     *验证找回密码的验证码
+     * @param mobile
+     * @param code
+     * @return
+     * @throws BusinessException
+     */
+    public boolean isIdentificationCodeValidForFindPwd(String mobile,String code) throws BusinessException;
+
+
+    /**
+     *验证注册验证码
+     * @param mobile
+     * @param code
+     * @return
+     * @throws BusinessException
+     */
+    public boolean isIdentificationCodeValidForRegister(String mobile,String code) throws BusinessException;
+
+
+    /**
+     * 注册发送短信验证码
+     * @param mobile
+     * @return
+     * @throws Exception
+     */
+    public boolean  sendMessageCodeForRegister(String mobile)throws Exception;
+
+
+    /**
+     * 找回密码发送短信验证码
+     * @param mobile
+     * @return
+     * @throws Exception
+     */
+    public boolean  sendMessageCodeForFindPwd(String mobile)throws Exception;
 }

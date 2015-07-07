@@ -9,9 +9,12 @@ import com.manyi.point.bean.GrowthLevel;
 
 import java.util.*;
 
-  /**
-   *   成长值服务接口
-  * */
+/**
+ * @Description:
+ * @author LiuKaihua
+ * @version 1.0.0 2015-06-11
+ * @reviewer
+ */
 public interface GrowthLevelService {
     /**
      * 增加一个级别

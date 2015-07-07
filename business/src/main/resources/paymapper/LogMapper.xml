@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manyi.business.pay.log.support.dao.LogDao">
+
+    <!-- 请求报文记录 -->
+    <insert id="addRequestStr" parameterType="com.manyi.business.pay.log.bean.BillInterLogBean" keyProperty="billInterLogId" useGeneratedKeys="true">
+        INSERT INTO
+        t_billinterlog
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            BillId, ReqMessage, ReqTime
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{billId},#{reqMessage},now()
+        </trim>
+    </insert>
+
+    <!--返回报文记录-->
+    <update id="addResponseStr" parameterType="com.manyi.business.pay.log.bean.BillInterLogBean">
+        UPDATE
+        t_billinterlog
+        <set>
+            RespMessage = #{respMessage} , RespTime=now()
+        </set>
+        where
+            BillInterLogId=#{billInterLogId}
+    </update>
+
+</mapper>

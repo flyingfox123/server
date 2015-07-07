@@ -81,6 +81,7 @@
                 /usercenter/sentMessageCode = anon
                 /usercenter/unauthorized = anon
                 /html/** = anon
+                /pictures/** = anon
                 /static/** = anon
                 /index.html = anon
                 /logout = logout

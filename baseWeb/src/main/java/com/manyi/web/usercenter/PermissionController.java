@@ -16,9 +16,11 @@ import javax.validation.Valid;
 import java.util.List;
 
 /**
- * Created by Magic on 2015/4/11.
+ * @author ZhangYuFeng on 2015/6/15 0015,15:11.
+ * @Description:
+ * @version: 1.0.0
+ * @reviewer:
  */
-
 @Controller
 @RequestMapping("/admin/sysResource")
 public class PermissionController {
@@ -58,7 +60,7 @@ public class PermissionController {
                     permissionService.addPermission(permission);
                     return new JsonResult("success", "操作成功");
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error("",e);
                 }
             }
         }
@@ -81,7 +83,7 @@ public class PermissionController {
                     permissionService.updatePermission(permission);
                     return new JsonResult("success", "操作成功");
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error("",e);
                 }
             }
         }
@@ -101,7 +103,7 @@ public class PermissionController {
                 permissionService.deletePermission(id);
                 return new JsonResult("success", "操作成功");
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("",e);
             }
         }
         return new JsonResult("failure", "验证不通过，无法删除");

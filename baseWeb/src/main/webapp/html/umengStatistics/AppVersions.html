@@ -1,0 +1,43 @@
+<div class='panel panel-info'>
+    <div class="panel-heading">
+        <h4 class="panel-title">App版本列表</h4>
+    </div>
+    <div class='panel-body'>
+        <div id="modal">
+            <div class="modal-body">
+                <form>
+                    App: <select ng-model="versionpp" ng-options="versionpp.name for versionpp in versionpps"></select>
+                    日期: <input onclick="WdatePicker();"  type="text" name="versiondate" onchange="dealwithdate(this.value)"  />
+                    <script type="application/javascript">
+                        function dealwithdate(versiondate) {
+                            document.getElementById("dateText").value = versiondate;
+                        }
+                    </script>
+                    <input id="dateText" type="hidden" ng-model="versiondate" />
+                    <button class="btn btn-primary" ng-click="loadVersions(versionpp)">查询</button>
+                </form>
+            </div>
+        </div>
+        <table class="table table-bordered table-striped table-condensed">
+            <thead>
+            <tr>
+                <th>新增用户</th>
+                <th>活跃用户</th>
+                <th>版本号</th>
+                <th>该版本总新增用户</th>
+                <th>今日新增占该版本总新增的比例</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="data in AppVersionsData">
+                <td>{{data.install}}</td>
+                <td>{{data.active_user}}</td>
+                <td>{{data.version}}</td>
+                <td>{{data.total_install}}</td>
+                <td>{{data.total_install_rate}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>

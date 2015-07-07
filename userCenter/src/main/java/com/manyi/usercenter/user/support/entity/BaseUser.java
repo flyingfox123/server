@@ -1,7 +1,7 @@
 package com.manyi.usercenter.user.support.entity;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  * Created by Magic on 2015/4/15.

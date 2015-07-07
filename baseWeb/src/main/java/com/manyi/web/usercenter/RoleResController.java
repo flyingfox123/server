@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 /**
- * Created by Magic on 2015/2/27.
+ * @author ZhangYuFeng on 2015/6/15 0015,15:11.
+ * @Description:
+ * @version: 1.0.0
+ * @reviewer:
  */
-
 @Controller
 @RequestMapping("/admin/sysRoleRes")
 public class RoleResController {
@@ -40,7 +42,7 @@ public class RoleResController {
             // 获取组装后的树节点
             list = roleResService.findAllRoleResoByRoleId(roleId);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("",e);
         }
         return list;
     }
@@ -56,8 +58,8 @@ public class RoleResController {
         try {
             roleResService.grantAuth(grantAuth);
         } catch (Exception e) {
-            e.printStackTrace();
-            new JsonResult(JsonResult.FAILURE, e.getClass() + "\t" + e.getMessage());
+            logger.error("",e);
+            return new JsonResult(JsonResult.FAILURE, e.getClass() + "\t" + e.getMessage());
         }
         return new JsonResult(JsonResult.SUCCESS,"授权成功");
     }

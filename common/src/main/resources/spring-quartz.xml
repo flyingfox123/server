@@ -17,6 +17,8 @@
 		<property name="targetMethod">
 			<value>run</value>
 		</property>
+		<!--是否并发执行-->
+		<property name="concurrent" value="false"></property>
 	</bean>
 
 	<!-- 定义触发时间 -->
@@ -27,7 +29,7 @@
 		<!-- cron表达式 -->
 		<property name="cronExpression">
 			<!--每分钟执行-->
-			<value>/10 * * * * ?</value>
+			<value> 0 0/5 * * * ?</value>
 		</property>
 	</bean>
 
@@ -46,7 +48,7 @@
 			<value>run</value>
 		</property>
 		<!--是否并发执行-->
-		<!--<property name="concurrent" value="false"></property>-->
+		<property name="concurrent" value="false"></property>
 	</bean>
 
 	<!-- 定义触发时间 -->
@@ -57,19 +59,19 @@
 		<!-- cron表达式 -->
 		<property name="cronExpression">
 			<!--每分钟执行-->
-			<value>/15 * * * * ?</value>
+			<value>30 0/5 * * * ?</value>
 		</property>
 	</bean>
 	 <!--总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序-->
 	<bean id="quartzScheduler"
 		  class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-		<property name="quartzProperties">
-			<props>
-				<prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop>
-				<!--最大线程数量-->
-				<prop key="org.quartz.threadPool.threadCount">3</prop>
-			</props>
-		</property>
+		<!--<property name="quartzProperties">-->
+			<!--<props>-->
+				<!--<prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop>-->
+				<!--&lt;!&ndash;最大线程数量&ndash;&gt;-->
+				<!--<prop key="org.quartz.threadPool.threadCount">3</prop>-->
+			<!--</props>-->
+		<!--</property>-->
 		<property name="triggers">
 			<list>
 				<ref bean="doQueryTime" />

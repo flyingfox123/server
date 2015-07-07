@@ -2,9 +2,7 @@ package com.manyi.usercenter.user;
 
 import com.manyi.base.exception.BusinessException;
 import com.manyi.usercenter.user.bean.*;
-import com.manyi.usercenter.user.support.entity.BaseUser;
-import com.manyi.usercenter.user.support.entity.Corporation;
-import com.manyi.usercenter.user.support.entity.Individual;
+import com.manyi.usercenter.user.support.entity.*;
 
 import java.util.List;
 import java.util.Set;
@@ -33,7 +31,21 @@ public interface UserService {
      * @param etcNo
      * @return
      */
-    BaseUser getUserByEtc(String etcNo);
+    Individual getUserByEtc(String etcNo);
+
+    /**
+     * 根据用户基础信息查询用户详细信息，包括地址信息，车辆信息
+     * @param platUser
+     * @return
+     */
+    UserInfo getUserAndVehicleInfo(PlatUser platUser);
+
+    /**
+     * 获取用户信息列表
+     * @param platUserList
+     * @return
+     */
+    List<UserVehicle> getUserInfoList(List<PlatUser> platUserList);
 
     /**
      * 查询所有平台用户
@@ -41,6 +53,17 @@ public interface UserService {
      */
     List<PlatUser> queryAllSysUsers();
 
+    /**
+     * 查询平台用户
+     * @return
+     */
+    List<PlatUser> querySysUser(PlatUser platUser);
+
+    /**
+     * 查询平台用户数量
+     * @return
+     */
+    int querySysUserCount(PlatUser platUser);
     /**
      * 添加平台用户
      * @param platUser
@@ -70,6 +93,18 @@ public interface UserService {
      * @param userBean
      */
     void registerIndividual(UserBean userBean);
+    /**
+     *查询司机用户
+     * @param individualBean
+     * @return
+     */
+    List<Individual> findIndividual(IndividualBean individualBean);
+    /**
+     *查询司机用户数量
+     * @param individualBean
+     * @return
+     */
+    int findIndividualCount(IndividualBean individualBean);
 
     /**
      * 修改司机用户
@@ -166,5 +201,80 @@ public interface UserService {
      */
     void addUserRole(String userId,String roleId);
 
+    /**
+     * 增加车辆信息
+     * @param vehicleBean
+     */
     void addVehicle(VehicleBean vehicleBean);
+
+    /**
+     * 查询车辆信息
+     * @param vehicleBean
+     * @return
+     */
+    List<Vehicle> findVehicle(VehicleBean vehicleBean) throws BusinessException;
+
+    /**
+     * 更新修改车辆信息
+     * @param vehicleBean
+     */
+    void updateVehicle(VehicleBean vehicleBean);
+
+    /**
+     * 增加地址信息
+     * @param addressBean
+     */
+    void addAddress(AddressBean addressBean);
+
+    /**
+     * 查找地址信息
+     * @param addressBean
+     * @return
+     */
+    List<Address> findAddress(AddressBean addressBean);
+
+    /**
+     * 更新修改地址信息
+     * @param addressBean
+     */
+    void updateAddress(AddressBean addressBean);
+
+    /**
+     * 删除地址
+     * @param addressBean
+     */
+    void deleteAddress(AddressBean addressBean);
+
+    /**
+     * 修改默认地址
+     * @param addressBean
+     */
+    void updateDefAddress(AddressBean addressBean);
+
+    /**
+     * 停用用户
+     * @param userId
+     */
+    void disableUser(long userId);
+
+    /**
+     * 查询企业用户
+     * @param corporation
+     * @return
+     */
+    List<CorpUser> queryCorporationInfo(Corporation corporation);
+
+    /**
+     * 查询企业用户数量
+     * @param corporation
+     * @return
+     */
+    int queryCorporationCount(Corporation corporation);
+
+    /**
+     * 通过id查询基础用户
+     * @param userId
+     * @return
+     */
+    BaseUser findBaseUserById(long userId);
 }

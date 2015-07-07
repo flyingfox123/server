@@ -43,8 +43,7 @@ public class StatelessAuthcFilter extends AuthorizationFilter {
             //委托给Realm进行登录
             getSubject(request, response).login(stateLessToken);
         } catch (Exception e) {
-            logger.debug("模拟登录失败："+e.getMessage());
-            e.printStackTrace();
+            logger.debug("模拟登录失败：",e);
             //onLoginFail(response); //6、登录失败
             return false;
         }

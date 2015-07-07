@@ -6,12 +6,21 @@ import java.sql.Date;
  * Created by zhangyufeng on 2015/5/13 0013.
  */
 public class UserBean {
+    private Long id;
     private String loginName;
     private String passWord;
     private String secreKey;
     private String type;
     private String state;
     private Date createTime;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getLoginName() {
         return loginName;

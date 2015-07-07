@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.manyi.common.param.support.dao.ParamDao">
+
+    <resultMap id="Result_Param" type="com.manyi.common.param.support.entity.Param">
+        <id column="ParamId" property="paramId"/>
+        <result column="ParamNameCn" property="paramNameCn"/>
+        <result column="ParamNameEn" property="paramNameEn"/>
+        <result column="ParamCode" property="paramCode"/>
+        <result column="ParamValue" property="paramValue"/>
+        <result column="Description" property="description"/>
+    </resultMap>
+
+    <!--查询配置参数-->
+    <select id="getParamList" resultMap="Result_Param">
+        SELECT
+        ParamId,ParamNameCn,ParamNameEn,ParamCode,ParamValue,Description
+        FROM t_param WHERE ParamNameEn=#{paramNameEn}
+    </select>
+
+</mapper>

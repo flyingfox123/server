@@ -1,0 +1,66 @@
+<style type="text/css">
+    .table tr td{
+        min-width:60px;
+    }
+    .table tr td:nth-child(3),.table tr th:nth-child(3){
+        min-width:100px;
+        text-align:center;
+
+    }
+    #modal{ width: 600px;}
+</style>
+<script type="text/javascript">
+           $(function(){
+               $("#modal").parent().parent().css("width","1000px");
+           })
+</script>
+<div id="modal">
+    <div class="modal-header">
+        <h4 class="modal-header">账单详情</h4>
+    </div>
+    <div class='modal-body'>
+        <table class="table table-condensed">
+
+            <tr>
+                <th>账户号</th><td>{{message.accountId}}</td>
+            </tr>
+            <tr>
+                <th>账户名称</th><td>{{realName}}</td>
+            </tr>
+            <tr>
+                <th>账单编号</th><td>{{message.billNo}}</td>
+            </tr>
+
+            <tr>
+                <th>交易状态</th><td>{{message.tradeStateCn}}</td>
+            </tr>
+
+            <tr>
+                <th>对账状态</th><td>{{message.checkStateCn}}</td>
+            </tr>
+
+            <tr>
+                <th>来源标识</th><td>{{message.sourceIdCn}}</td>
+            </tr>
+
+            <tr>
+                <th>交易金额</th><td>{{message.amount}}</td>
+            </tr>
+
+            <tr>
+                <th>交易类型</th><td>{{message.tradeTypeCn}}</td>
+            </tr>
+
+            <tr>
+                <th>交易时间</th><td>{{message.tradeTime}}</td>
+            </tr>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-warning" ng-click="cancel()">确定</button>
+</div>
+</div>

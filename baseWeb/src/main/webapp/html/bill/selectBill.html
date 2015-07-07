@@ -1,0 +1,87 @@
+<div class='panel panel-info'>
+    <div class="panel-heading">
+        <h4 class="panel-title">账单查询</h4>
+    </div>
+    <div class='panel-body'>
+        <div id="modal">
+            <div class="modal-body">
+                <form>
+                    账户ID: <input  type="text" ng-model="billBean.accountId" >&nbsp;&nbsp;
+                    账单号: <input  type="text"  ng-model="billBean.billNo" >&nbsp;&nbsp;
+                    交易状态:<select autofocus="autofocus" ng-model="billBean.tradeState">
+                    <option value="">全部</option>
+                    <option value="1">待处理</option>
+                    <option value="2">支付成功</option>
+                    <option value="3">支付失败</option>
+                    <option value="4">受理成功</option>
+                    <option value="5">受理失败</option>
+                    <option value="6">退款待审核</option>
+                    <option value="7">受理超时</option>
+                    </select>&nbsp;&nbsp;
+                    对账状态:<select autofocus="autofocus" ng-model="billBean.checkState">
+                        <option value="">全部</option>
+                        <option value="1">未对账</option>
+                        <option value="2">已对账</option>
+                    </select>
+                   <br/><br/> 交易金额:<input  type="text" ng-model="billBean.minAmount" >元-<input  type="text" ng-model="billBean.maxAmount">元&nbsp;&nbsp;
+                    交易类型:<select autofocus="autofocus" ng-model="billBean.tradeType">
+                    <option value="">全部</option>
+                    <option value="1">付款</option>
+                    <option value="2">收款</option>
+                    <option value="3">退款</option>
+                    </select>&nbsp;&nbsp;
+                    交易日期: <input onclick="WdatePicker();"  type="text" name="tradeTimeStart" onchange="" ng-model="billBean.tradeTimeStart" />-
+                    <input onclick="WdatePicker();"  type="text" name="tradeTimeEnd" onchange="" ng-model="billBean.tradeTimeEnd"/>
+                    <button class="btn btn-primary" ng-click="query()">查询</button>
+                    <button  class="btn btn-primary" type="reset"  ng-click="reset()">清空</button>
+                </form>
+            </div>
+        </div>
+        <table class="table table-bordered table-striped table-condensed">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>账户号</th>
+                <th>账单编号 </th>
+                <th>交易状态</th>
+                <th>对账状态</th>
+                <th>交易金额</th>
+                <th>交易类型</th>
+                <th>交易时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat='bill in billList'>
+                <td>{{$index+1}}</td>
+                <td>{{bill.accountId}}</td>
+                <td>{{bill.billNo}}</td>
+                <td>{{bill.tradeStateCn}}</td>
+                <td>{{bill.checkStateCn}}</td>
+                <td>{{bill.amount}}</td>
+                <td>{{bill.tradeTypeCn}}</td>
+                <td>{{bill.tradeTime}}</td>
+                <td>
+                    <div class='btn-group'>
+                        <a class='btn btn-mini dropdown-toggle' data-toggle='dropdown'
+                           href='javascript:void(0);'> <i class='glyphicon glyphicon-list'></i> <span
+                                class='caret'></span>
+                        </a>
+                        <ul class='dropdown-menu pull-right'>
+                            <li>
+                                <a href="javascript:void(0);" ng-click="getOrderItem($index)">
+                                    <i class='glyphicon glyphicon-wrench'></i> 查看账单详情
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+
+
+</div>
+
+</div>

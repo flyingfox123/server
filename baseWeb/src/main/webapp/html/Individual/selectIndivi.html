@@ -1,0 +1,73 @@
+<div class='panel panel-info'>
+    <div class="panel-heading">
+        <h4 class="panel-title">个人用户管理</h4>
+    </div>
+    <div id="modal">
+        <div class="modal-body">
+            <form>
+                用户手机: <input type="text"  ng-model="loginName" >
+                <button class="btn btn-primary" ng-click="loadCondition()">查询</button>
+                <button  class="btn btn-primary" type="reset"  ng-click="reset()">清空</button>
+            </form>
+        </div>
+    </div>
+    <div class='panel-body'>
+        <table class="table table-bordered table-striped table-condensed">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>司机姓名</th>
+                <th>手机号</th>
+                <th>生日</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat='user in individual'>
+                <td>{{$index+1}}</td>
+                <td>{{user.driverName}}</td>
+                <td>{{user.phone}}</td>
+                <td>{{user.birthDay}}</td>
+                <td ng-switch on="user.state">
+                    <span style="color: green" ng-switch-when="E">正常</span>
+                    <span style="color: red" ng-switch-when="D">停用</span>
+                </td>
+                <td>
+                    <div class='btn-group'>
+                        <a class='btn btn-mini dropdown-toggle' data-toggle='dropdown'
+                           href='javascript:void(0);'> <i class='glyphicon glyphicon-list'></i> <span
+                                class='caret'></span>
+                        </a>
+                        <ul class='dropdown-menu pull-right'>
+                            <li>
+                                <a href="javascript:void(0);" ng-click="disableUser($index)">
+                                    <i class='glyphicon glyphicon-trash'></i> 停用
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <ul class="pagination" ng-show="totalPage>0">
+            <li ng-class="{true:'active'}[currentPage==1]"><a href="javascript:void(0)"
+                                                              ng-click  ="currentPage=1;load()">首页</a></li>
+            <li ng-class="{true:'disabled'}[currentPage==1]"><a href="javascript:void(0);" ng-click="prev()">上一页</a></li>
+            <li ng-repeat="page in pages"><a href="javascript:void(0);" ng-click="loadPage(page)">{{ page }}</a></li>
+            <li ng-class="{true:'disabled'}[currentPage==totalPage]"><a href="javascript:void(0);" ng-click="next()">下一页</a>
+            </li>
+            <li ng-class="{true:'active'}[currentPage==totalPage]"><a href="javascript:void(0)"
+                                                                      ng-click="currentPage=totalPage;load()">末页</a></li>
+            <select autofocus="autofocus" ng-model="pageSize"  ng-change="currentPage=1;load()" >
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+            </select>
+        </ul>
+    </div>
+</div>
+</div>

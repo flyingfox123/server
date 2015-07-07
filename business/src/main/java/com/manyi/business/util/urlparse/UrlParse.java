@@ -1,5 +1,8 @@
 package com.manyi.business.util.urlparse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.Properties;
 
@@ -8,11 +11,12 @@ import java.util.Properties;
  */
 public class UrlParse {
     private static final Properties properties = new Properties();
+    private  static final Logger logger = LoggerFactory.getLogger(UrlParse.class);
     static {
         try {
-            properties.load(UrlParse.class.getClassLoader().getResourceAsStream("uploadConst.properties"));
+            properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("uploadConst.properties"));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("读取配置文件失败",e);
         }
     }
 

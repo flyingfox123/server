@@ -8,6 +8,8 @@ public enum Type
 
     //正确返回
     SUCCESS("success"),
+    //正确返回
+    FAILED("failed"),
     // 系统错误
     SYSTEM_ERROR( "01000" ),
     // 内部错误错误
@@ -39,11 +41,27 @@ public enum Type
     NO_EXP( "02005" ),
     PARAM_ERROR("000006"),
 
-   ORDER_STATUS_ERROR("000007"),
+
+
+    ORDER_STATUS_ERROR("000007"),
     PARA_NULL("005001"),
     PHONEERR_NULL("005002"),
     PASSWORD_WRONG("005003"),
-    NOTPIC("005004")
+    NOTPIC("005004"),
+
+    // 支付
+    // 账户不存在,请实名开通!
+    ACC_NOT_EXIST("006001"),
+    // 未匹配出银行，请手动选择!
+    NO_MATCH_BANK("006002"),
+    // 发送验证码失败
+    SEND_CODE_FAIL("006003"),
+    // 短信验证失败
+    CODE_CHECK_FAIL("006004"),
+    // 实名认证失败
+    AUTH_REALINFO_FAIL("006005"),
+    // 该信息已被他人认证过
+    AUTH_REPEAT("006006"),
     ;
 
 

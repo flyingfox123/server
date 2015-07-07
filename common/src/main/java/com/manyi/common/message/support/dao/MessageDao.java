@@ -8,7 +8,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * Created by zhaoyuxin on 2015/5/4.
+ * @Description: 短信Dao
+ * @author zhaoyuxin
+ * @version: 1.0.0  2015-05-04.
+ * @reviewer:
  */
 @Repository
 public interface MessageDao {

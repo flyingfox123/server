@@ -1,0 +1,50 @@
+<style type="text/css">
+    .table tr td{
+        min-width:60px;
+    }
+    .table tr td:nth-child(3),.table tr th:nth-child(3){
+        min-width:100px;
+        text-align:center;
+
+    }
+</style>
+<div id="modal">
+    <div class="modal-header">
+        <h4 class="modal-header">用户积分日志</h4>
+    </div>
+    <div class='modal-body'>
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>事件</th>
+                <th>创建时间</th>
+                <th>积分</th>
+                <th>操作人</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat='message in pointLogList'>
+                <td>{{message.id}}</td>
+
+                <td>{{message.description}}</td>
+
+                <td>{{message.createTime}}</td>
+
+                <td>{{message.value}}</td>
+
+                <td>{{message.opUserId}}</td>
+
+
+
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-warning" ng-click="cancel()">确定</button>
+</div>
+</div>

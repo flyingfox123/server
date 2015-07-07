@@ -1,7 +1,11 @@
 package com.manyi.usercenter.user.bean;
 
+
 /**
- * Created by zhangyufeng on 2015/5/13 0013.
+ * @Description:
+ * @author ZhangYufeng
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public class MsgCode {
     private String phone;

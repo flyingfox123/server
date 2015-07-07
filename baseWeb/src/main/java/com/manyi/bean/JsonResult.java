@@ -6,10 +6,13 @@ import org.springframework.validation.FieldError;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 操作
- * Created by Magic on 2015/1/15.
+ * @Description:
+ * @author wangpengfei
+ * @version 1.0.0 2015-06-11
+ * @reviewer
  */
 public class JsonResult {
 
@@ -22,14 +25,13 @@ public class JsonResult {
     private String message = "成功";
     private String result = "success";
 
-    public String errorMsg;
 
     public JsonResult(String result, String message) {
         this.result = result;
         this.message = message;
     }
 
-    private Map<String, String> map = new HashMap<String, String>();
+    private ConcurrentHashMap <String, String> map = new ConcurrentHashMap<String, String>();
 
     public JsonResult(Errors errors) {
         this(FAILURE, "错误");
@@ -43,13 +45,13 @@ public class JsonResult {
     }
 
     public String getErrorMsg() {
-        String errorMsg = "";
-        Iterator it = map.keySet().iterator();
-        while(it.hasNext()) {
-            String key = (String) it.next();
-            errorMsg += map.get(key) + "，";
+        StringBuilder errorMsg = new StringBuilder();
+        Iterator iterator = map.keySet().iterator();
+        while(iterator.hasNext()) {
+            String key = (String) iterator.next();
+            errorMsg.append(map.get(key) + "，");
         }
-        return errorMsg;
+        return errorMsg.toString();
     }
 
     public String getMessage() {

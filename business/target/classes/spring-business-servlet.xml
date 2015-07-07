@@ -3,6 +3,7 @@
 	   xmlns:mvc="http://www.springframework.org/schema/mvc"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	   xmlns:context="http://www.springframework.org/schema/context"
+
 	   xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
@@ -10,7 +11,9 @@
 
 	<!-- 扫描web包，应用Spring的注解 -->
 	<context:component-scan base-package="com.manyi.business.*" />
-
+	 <import resource="spring-usercenter-servlet-junit.xml"/>
+	<import resource="spring-point-servlet.xml"/>
+	<import resource="spring-common-servlet.xml"/>
 	<!-- 启动注解驱动的Spring MVC功能 -->
 	<context:annotation-config />
 	<mvc:annotation-driven>
@@ -18,6 +21,9 @@
 			<!--<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>-->
 		<!--</mvc:message-converters>-->
 	</mvc:annotation-driven>
+
+	<!-- 开启@AspectJ AOP代理 -->
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
 
 	<!-- 自定义任务 -->
 	<!-- <bean id="syncIndexAction" init-method="init" class="com.xhrd.jcms.commons.task.SyncIndex" /> -->
@@ -30,17 +36,27 @@
 
 	<!-- spring mybatis映射 -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.manyi.business.carriersign.support.dao;
+		<property name="basePackage" value="com.manyi.business.etc.support.dao;
 		                                      com.manyi.business.order.support.dao;
-		                                      com.manyi.business.etc.support.dao" />
+		                                      com.manyi.business.highwaytoll.support.dao;
+		                                      com.manyi.business.pay.*.support.dao" />
 	</bean>
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
-		<property name="typeAliasesPackage" value="com.manyi.business.carriersign.bean
-		                                           ,com.manyi.business.order.bean,
+		<property name="typeAliasesPackage" value="com.manyi.business.order.bean,
+		                                           com.manyi.business.highwaytoll.bean,
 		                                          com.manyi.business.etc.bean "/>
-		<property name="mapperLocations" value="classpath*:businessmapper/*.xml" />
+		<property name="mapperLocations"  >
+
+			<list>
+				<value>classpath*:businessmapper/*.xml</value>
+				<value>classpath*:usercentermapper/*.xml</value>
+				<value>classpath*:commonmapper/*.xml</value>
+				<value>classpath*:pointmapper/*.xml</value>
+				<value>classpath*:paymapper/*.xml</value>
+			</list>
+		</property>
 	</bean>
 
 	<aop:config>

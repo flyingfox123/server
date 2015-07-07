@@ -1,5 +1,7 @@
 package com.manyi.usercenter.user.bean;
 
+import com.manyi.base.entity.Pagination;
+
 import java.io.Serializable;
 import java.sql.Date;
 
@@ -7,7 +9,7 @@ import java.sql.Date;
 /**
  * Created by Magic on 2015/4/16.
  */
-public class PlatUser implements Serializable {
+public class PlatUser  extends Pagination implements Serializable{
 
     private long id;
     private String loginName;

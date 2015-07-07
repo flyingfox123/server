@@ -1,6 +1,115 @@
-<!-- 左侧菜单 -->
-<ul class="nav nav-pills nav-stacked">
-    <li class="active"><a href="javascript:void(0);" ng-click="userManage()">用户管理</a></li>
-    <li><a href="javascript:void(0);" ng-click="roleManage()">角色管理</a></li>
-    <li><a href="javascript:void(0);" ng-click="resourceManage()">权限管理</a></li>
-</ul>
+<nav class="navbar navbar-inverse" role="navigation">
+    <div>
+        <ul class="nav navbar-nav">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle">
+                    用户管理<b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="divider"></li>
+                    <li class="active"><a href="javascript:void(0);" ng-click="userManage()">运营管理员管理</a></li>
+                    <li class="divider"></li>
+                    <li><a href="javascript:void(0);" ng-click="indiviManage()">个人用户管理</a></li>
+                    <li class="divider"></li>
+                    <li><a href="javascript:void(0);" ng-click="corpManage()">企业用户管理</a></li>
+                    <li class="divider"></li>
+                    <li><a href="javascript:void(0);" ng-click="roleManage()">角色管理</a></li>
+                    <li class="divider"></li>
+                    <li><a href="javascript:void(0);" ng-click="resourceManage()">权限管理</a></li>
+                    <li class="divider"></li>
+                </ul>
+            </li>
+
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle">
+                    订单管理<b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="divider"></li>
+                    <li><a href="javascript:void(0);" ng-click="orderManage()">订单管理</a></li>
+                    <li class="divider"></li>
+                    <li><a href="javascript:void(0);" ng-click="orderExpManage()">异常订单管理</a></li>
+                    <li class="divider"></li>
+                </ul>
+            </li>
+
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle">
+                    账单管理<b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="divider"></li>
+                    <li><a href="javascript:void(0);" ng-click="billManage()">账单查询</a></li>
+                    <li class="divider"></li>
+
+                    <li class="divider"></li>
+                    <li><a href="javascript:void(0);" ng-click="checkManage()">对账异常查询</a></li>
+                    <li class="divider"></li>
+
+                    <li class="divider"></li>
+                    <li><a href="javascript:void(0);" ng-click="checkDetailManage()">对账异常详情</a></li>
+                    <li class="divider"></li>
+                </ul>
+            </li>
+
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle">
+                    客户端管理<b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="divider"></li>
+                    <li><a href="javascript:void(0);" ng-click="apkUpload()">apk上传</a></li>
+                    <li class="divider"></li>
+                </ul>
+            </li>
+
+
+
+
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle">
+                    前端运营管理<b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="divider"></li>
+                    <li><a href="javascript:void(0);" ng-click="baseDataManage()">Apps基本数据</a></li>
+                    <li class="divider"></li>
+                    <li><a href="javascript:void(0);" ng-click="appChannelnsManage()">渠道列表</a></li>
+                    <li class="divider"></li>
+                    <li><a href="javascript:void(0);" ng-click="appVersionsManage()">版本列表</a></li>
+                    <li class="divider"></li>
+                    <li><a href="javascript:void(0);" ng-click="appTodayManage()">今日数据列表</a></li>
+                    <li class="divider"></li>
+                    <li><a href="javascript:void(0);" ng-click="appYesterdayManage()">昨日数据列表</a></li>
+                    <li class="divider"></li>
+                    <li><a href="javascript:void(0);" ng-click="appAnydateManage()">任意日期数据列表</a></li>
+                    <li class="divider"></li>
+                </ul>
+            </li>
+
+
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle">
+                    积分管理<b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="divider"></li>
+                    <li><a href="javascript:void(0);" ng-click="pointManage()">用户积分管理</a></li>
+                    <li class="divider"></li>
+                </ul>
+            </li>
+
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle">
+                    支付管理<b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="divider"></li>
+                    <li><a href="javascript:void(0);" ng-click="accountManage()">账户管理</a></li>
+                    <li class="divider"></li>
+                </ul>
+            </li>
+
+        </ul>
+    </div>
+</nav>
